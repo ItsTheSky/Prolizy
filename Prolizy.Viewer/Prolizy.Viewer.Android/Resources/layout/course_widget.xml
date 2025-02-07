@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/Widget_Layout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="12dp"
+              android:background="@drawable/widget_background" android:gravity="center">
+
+    <!-- En-tête avec le statut et l'heure -->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="8dp">
+
+        <!-- Statut (Cours Actuel/Prochain Cours) -->
+        <TextView
+                android:id="@+id/Widget_PanelTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"/>
+
+        <!-- Horaires dans un badge -->
+        <TextView
+                android:id="@+id/Widget_CourseTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/time_badge_background"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <!-- Nom du cours -->
+    <TextView
+            android:id="@+id/Widget_CourseTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:paddingBottom="8dp"/>
+
+    <!-- Conteneur pour la salle et le professeur -->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+        <!-- Badge de salle -->
+        <TextView
+                android:id="@+id/Widget_CourseRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:background="@drawable/room_badge_background"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                android:drawableStart="@drawable/ic_room"
+                android:drawablePadding="4dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_marginEnd="8dp" android:gravity="left|center_vertical"/>
+
+        <!-- Professeur -->
+        <TextView
+                android:id="@+id/Widget_CourseTeacher"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                android:textAlignment="viewStart"
+                android:textColor="#E0E0E0"
+                android:drawableStart="@drawable/ic_teacher"
+                android:drawablePadding="4dp"
+                android:ellipsize="end"
+                android:maxLines="1" android:gravity="left|center_vertical"/>
+    </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:textColor="#80E0E0E0"
+            android:text="Cliquez pour plus d'informations"
+            android:textFontWeight="300"
+            android:drawablePadding="4dp"
+            android:ellipsize="end"
+            android:maxLines="1" android:layout_gravity="center" android:paddingTop="10px"/>
+
+</LinearLayout>

@@ -1,0 +1,115 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Prolizy.Viewer.ViewModels.Sacoche"
+             xmlns:controls="using:Prolizy.Viewer.Controls"
+             xmlns:utilities="using:Prolizy.Viewer.Utilities"
+             xmlns:fluent="using:FluentIcons.Avalonia.Fluent"
+             xmlns:controls1="using:FluentAvalonia.UI.Controls"
+             xmlns:sacoche="clr-namespace:Prolizy.Viewer.Controls.Sacoche"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+             x:DataType="vm:SacochePaneViewModel"
+             x:Class="Prolizy.Viewer.Views.Panes.SacochePane">
+    
+    <Grid>
+        <Grid RowDefinitions="Auto,Auto,*" Margin="10">
+            <TextBlock Text="Compétences"
+                      FontSize="24" FontWeight="Bold"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      TextAlignment="Center"
+                      Grid.Row="0"/>
+            
+            <Grid Grid.Row="1" ColumnDefinitions="*,*">
+                <TextBlock Grid.Column="0" 
+                          Text="{Binding Student.FullName, FallbackValue=Chargement...}" 
+                          FontWeight="SemiBold" FontSize="16"
+                          HorizontalAlignment="Stretch" TextAlignment="Center" 
+                          IsVisible="{x:Static utilities:Settings.IsNotAnonymous}" />
+                <Button Grid.Column="1" Content="Rafraîchir" 
+                        HorizontalAlignment="Stretch" 
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding RefreshEvalsCommand}"/>
+            </Grid>
+            
+            <Grid Grid.Row="2">
+                <TabControl Classes="centered">
+                    <TabItem>
+                        <TabItem.Header>
+                            <fluent:SymbolIcon HorizontalAlignment="Center" VerticalAlignment="Center" Symbol="List" />
+                        </TabItem.Header>
+                        <TabItem.Content>
+                            <controls:Card HorizontalAlignment="Stretch" 
+                                           VerticalAlignment="Stretch"
+                                           Margin="0,5" 
+                                           VerticalContentAlignment="Top">
+                                <ScrollViewer>
+                                    <sacoche:ListEvaluation DataContext="{Binding ListViewModel}" />
+                                </ScrollViewer>
+                            </controls:Card>
+                        </TabItem.Content>
+                    </TabItem>
+                    <TabItem>
+                        <TabItem.Header>
+                            <fluent:SymbolIcon HorizontalAlignment="Center" VerticalAlignment="Center" Symbol="Receipt" />
+                        </TabItem.Header>
+                        <TabItem.Content>
+                            <controls:Card HorizontalAlignment="Stretch" 
+                                           VerticalAlignment="Stretch"
+                                           Margin="0,5" 
+                                           VerticalContentAlignment="Top">
+                                <sacoche:ReleveEvaluation DataContext="{Binding ReleveViewModel}" />
+                            </controls:Card>
+                        </TabItem.Content>
+                    </TabItem>
+                    <TabItem>
+                        <TabItem.Header>
+                            <fluent:SymbolIcon HorizontalAlignment="Center" VerticalAlignment="Center" Symbol="DataArea" />
+                        </TabItem.Header>
+                        <TabItem.Content>
+                            <controls:Card HorizontalAlignment="Stretch" 
+                                           VerticalAlignment="Stretch"
+                                           Margin="0,5" 
+                                           VerticalContentAlignment="Stretch">
+                                <sacoche:GraphiqueEvaluation DataContext="{Binding GraphiqueViewModel}" />
+                            </controls:Card>
+                        </TabItem.Content>
+                    </TabItem>
+                </TabControl>
+                
+                <Border Background="{DynamicResource CalendarViewBackground}"
+                        IsVisible="{Binding IsLoading}"
+                        CornerRadius="10" ClipToBounds="True">
+                    <StackPanel HorizontalAlignment="Center" 
+                              VerticalAlignment="Center"
+                              Spacing="5">
+                        <TextBlock Text="Chargement ..."
+                                 FontSize="18" FontWeight="SemiBold"
+                                 HorizontalAlignment="Center"/>
+                        <ProgressBar IsIndeterminate="True"
+                                   Width="200" Height="20"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+        
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                Background="{DynamicResource CalendarViewBackground}"
+                IsVisible="{Binding !IsSacocheAvailable}">
+            <StackPanel Orientation="Vertical" 
+                      HorizontalAlignment="Center"
+                      Spacing="10" 
+                      VerticalAlignment="Center">
+                <TextBlock Text="SACoche n'est pas configuré!"
+                         FontWeight="SemiBold" />
+                <Button Content="Configurer" 
+                        Classes="accent" 
+                        HorizontalAlignment="Center"
+                        Command="{Binding ConfigureSacocheCommand}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

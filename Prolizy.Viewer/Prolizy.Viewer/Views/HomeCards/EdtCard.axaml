@@ -1,0 +1,57 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Prolizy.Viewer.Controls"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:homeCards="clr-namespace:Prolizy.Viewer.Views.HomeCards"
+             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             Height="200"
+             x:DataType="homeCards:EdtCardViewModel"
+             x:Class="Prolizy.Viewer.Views.HomeCards.EdtCard">
+    <Button Classes="card" IsEnabled="{Binding Item}">
+        <avalonia:SpacedGrid RowDefinitions="Auto,*,*,*" RowSpacing="5"
+                             ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10"
+                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+            <StackPanel Grid.Row="0" Grid.Column="0" Opacity="0.8" Grid.ColumnSpan="2"
+                        Orientation="Horizontal" Spacing="5">
+                <fluent:SymbolIcon Symbol="Calendar" />
+                <TextBlock VerticalAlignment="Center" Text="Prochain cours" />
+            </StackPanel>
+
+            <Border Grid.Row="1" Grid.RowSpan="3" Grid.Column="0"
+                    Background="{Binding BackgroundColor, FallbackValue={x:Static Brushes.Red}}"
+                    MaxHeight="100" Margin="0,-5"
+                    Width="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    CornerRadius="15" ClipToBounds="True">
+                <Image Source="avares://Prolizy.Viewer/Assets/course-overlay.png"
+                       HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                       Stretch="UniformToFill" StretchDirection="DownOnly" />
+            </Border>
+
+            <TextBlock FontSize="18" Grid.Row="1" Grid.Column="1" FontWeight="SemiBold"
+                       TextWrapping="Wrap" Text="{Binding Item.Subject, FallbackValue=Introuvable}" />
+
+            <controls:Card HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1"
+                           VerticalAlignment="Stretch"
+                           Classes="badge badge-soft">
+                <TextBlock Text="{Binding Item.Room, FallbackValue=Introuvable}" />
+            </controls:Card>
+
+            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" 
+                        Spacing="5" Opacity="0.8"
+                        VerticalAlignment="Top">
+                <fluent:SymbolIcon Symbol="PersonAccounts" />
+                <TextBlock FontWeight="SemiLight" VerticalAlignment="Center" Text="{Binding Item.Professor, FallbackValue=Introuvable}" />
+            </StackPanel>
+            
+            <fluent:SymbolIcon Grid.Row="0" Grid.RowSpan="4"
+                               Grid.Column="2" VerticalAlignment="Center"
+                               FontSize="26" Symbol="ChevronRight" />
+
+        </avalonia:SpacedGrid>
+    </Button>
+</UserControl>

@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
+        <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+        <PublishTrimmed>false</PublishTrimmed>
+        <AssemblyVersion>1.2.0</AssemblyVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.1.4" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.4" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.4" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.4" />
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0.4" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+        <PackageReference Include="FluentAvaloniaUI" Version="2.1.0" />
+        <PackageReference Include="FluentIcons.Avalonia.Fluent" Version="1.1.265" />
+        <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5" />
+        <PackageReference Include="SpacedGrid-Avalonia" Version="11.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Prolizy.API\Prolizy.API.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Controls\Bulletin\BulletinLoginDialog.axaml.cs">
+        <DependentUpon>SacocheLoginStep.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\SettingsMenu\SettingsSub.axaml" />
+    </ItemGroup>
+</Project>

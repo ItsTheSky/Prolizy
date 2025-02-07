@@ -1,0 +1,110 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Prolizy.Viewer.Controls"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:edt="clr-namespace:Prolizy.Viewer.Controls.Edt"
+             xmlns:viewModels="clr-namespace:Prolizy.Viewer.ViewModels"
+             xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:TimeTableViewModel"
+             x:Class="Prolizy.Viewer.Views.Panes.TimeTablePane">
+    <Grid>
+        <avalonia:SpacedGrid RowDefinitions="Auto,*" RowSpacing="10"
+                             Margin="10">
+
+            <TextBlock Text="Emploi du temps"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       Grid.Row="0" />
+            <RefreshContainer Grid.Row="1" PullDirection="TopToBottom"
+                              RefreshRequested="RefreshContainer_OnRefreshRequested">
+                <ScrollViewer>
+                    <controls:Card VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+
+                        <avalonia:SpacedGrid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="10"
+                                             ColumnDefinitions="*,*,*" ColumnSpacing="10">
+
+                            <Button Grid.Column="0" Grid.ColumnSpan="3"
+                                    Command="{Binding ChangeDateCommand}"
+                                    HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <markupExtensions:SymbolIcon Symbol="Calendar" />
+                                    <TextBlock Text="Changer la Date" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button Grid.Row="1" Grid.Column="0" Classes="transparent"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{Binding GoToPreviousDayCommand}">
+                                <TextBlock Text="{Binding DisplayNextDay}"
+                                           HorizontalAlignment="Center" FontSize="12" Margin="-2"
+                                           VerticalAlignment="Center" />
+                            </Button>
+
+                            <Button Grid.Row="1" Grid.Column="1" Classes="info"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{Binding DoNothingCommand}">
+                                <TextBlock Text="{Binding DisplayCurrentDay}"
+                                           HorizontalAlignment="Center" FontSize="12" Margin="-2"
+                                           VerticalAlignment="Center" />
+                            </Button>
+
+                            <Button Grid.Row="1" Grid.Column="2" Classes="transparent"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{Binding GoToNextDayCommand}">
+                                <TextBlock Text="{Binding DisplayPreviousDay}"
+                                           HorizontalAlignment="Center" FontSize="12" Margin="-2"
+                                           VerticalAlignment="Center" />
+                            </Button>
+
+                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+                                <ScrollViewer IsVisible="{Binding !IsDisplayList}">
+                                    <edt:DailyScheduleControl Name="DailyControl" />
+                                </ScrollViewer>
+                                <ScrollViewer IsVisible="{Binding IsDisplayList}">
+                                    <edt:ScheduleListControl Name="ListControl" />
+                                </ScrollViewer>
+                            </Grid>
+
+                            <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch"
+                                    Command="{Binding GoToPreviousDayCommand}"
+                                    Classes="transparent"
+                                    Content="{markupExtensions:SymbolIcon Symbol=ArrowLeft}" />
+
+                            <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch"
+                                    Command="{Binding GoToTodayCommand}"
+                                    Content="{markupExtensions:SymbolIcon Symbol=Home}" />
+
+                            <Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch"
+                                    Command="{Binding GoToNextDayCommand}"
+                                    Classes="transparent"
+                                    Content="{markupExtensions:SymbolIcon Symbol=ArrowRight}" />
+
+                        </avalonia:SpacedGrid>
+
+                    </controls:Card>
+                </ScrollViewer>
+            </RefreshContainer>
+        </avalonia:SpacedGrid>
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Background="{DynamicResource CalendarViewBackground}"
+                IsVisible="{Binding !IsEdtAvailable}">
+
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
+                        Spacing="10" VerticalAlignment="Center">
+
+                <TextBlock Text="L'emploi du temps n'est pas configuré!"
+                           FontWeight="SemiBold" />
+                <Button Content="Configurer" Classes="accent" HorizontalAlignment="Center"
+                        Command="{Binding ConfigureEdtCommand}" />
+
+            </StackPanel>
+
+        </Border>
+    </Grid>
+</UserControl>

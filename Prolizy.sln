@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prolizy", "Prolizy\Prolizy.csproj", "{776A81F4-399D-40FC-99C8-C09C359FDCC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prolizy.API", "Prolizy.API\Prolizy.API.csproj", "{4A7F6704-9D1F-4270-B3FB-85EB7A143035}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prolizy.Viewer", "Prolizy.Viewer\Prolizy.Viewer\Prolizy.Viewer.csproj", "{30859616-DB6C-4BB7-8064-B278B4DB8680}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prolizy.Viewer.Android", "Prolizy.Viewer\Prolizy.Viewer.Android\Prolizy.Viewer.Android.csproj", "{41D0AB12-82FB-49A6-9AD5-2369E94F49B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prolizy.Viewer.Desktop", "Prolizy.Viewer\Prolizy.Viewer.Desktop\Prolizy.Viewer.Desktop.csproj", "{9B740ED3-AA48-4377-BA0A-F20BC3D4E1AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prolizy.Viewer.iOS", "Prolizy.Viewer\Prolizy.Viewer.iOS\Prolizy.Viewer.iOS.csproj", "{6BA461EA-332A-4CB0-9812-E2A02F6AB49B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prolizy.Viewer.Browser", "Prolizy.Viewer\Prolizy.Viewer.Browser\Prolizy.Viewer.Browser.csproj", "{F4E094AB-89C4-43CE-BF15-5695717BBFA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{776A81F4-399D-40FC-99C8-C09C359FDCC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{776A81F4-399D-40FC-99C8-C09C359FDCC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{776A81F4-399D-40FC-99C8-C09C359FDCC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{776A81F4-399D-40FC-99C8-C09C359FDCC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A7F6704-9D1F-4270-B3FB-85EB7A143035}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A7F6704-9D1F-4270-B3FB-85EB7A143035}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A7F6704-9D1F-4270-B3FB-85EB7A143035}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A7F6704-9D1F-4270-B3FB-85EB7A143035}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30859616-DB6C-4BB7-8064-B278B4DB8680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30859616-DB6C-4BB7-8064-B278B4DB8680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30859616-DB6C-4BB7-8064-B278B4DB8680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30859616-DB6C-4BB7-8064-B278B4DB8680}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41D0AB12-82FB-49A6-9AD5-2369E94F49B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41D0AB12-82FB-49A6-9AD5-2369E94F49B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41D0AB12-82FB-49A6-9AD5-2369E94F49B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41D0AB12-82FB-49A6-9AD5-2369E94F49B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41D0AB12-82FB-49A6-9AD5-2369E94F49B4}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{9B740ED3-AA48-4377-BA0A-F20BC3D4E1AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B740ED3-AA48-4377-BA0A-F20BC3D4E1AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B740ED3-AA48-4377-BA0A-F20BC3D4E1AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B740ED3-AA48-4377-BA0A-F20BC3D4E1AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BA461EA-332A-4CB0-9812-E2A02F6AB49B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BA461EA-332A-4CB0-9812-E2A02F6AB49B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BA461EA-332A-4CB0-9812-E2A02F6AB49B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E094AB-89C4-43CE-BF15-5695717BBFA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E094AB-89C4-43CE-BF15-5695717BBFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4E094AB-89C4-43CE-BF15-5695717BBFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E094AB-89C4-43CE-BF15-5695717BBFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

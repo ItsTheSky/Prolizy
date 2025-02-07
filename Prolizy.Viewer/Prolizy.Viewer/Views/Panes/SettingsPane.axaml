@@ -1,0 +1,167 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:viewModels="clr-namespace:Prolizy.Viewer.ViewModels"
+             xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:sacoche="clr-namespace:Prolizy.Viewer.ViewModels.Sacoche"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:SettingsPaneViewModel"
+             x:Class="Prolizy.Viewer.Views.Panes.SettingsPane">
+    <avalonia:SpacedGrid RowDefinitions="Auto,*" RowSpacing="10"
+                         Margin="10">
+        
+        <TextBlock Text="Paramètres"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Center"
+                   TextAlignment="Center"
+                   Grid.Row="0"/>
+        
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Orientation="Vertical" Spacing="10">
+                <!-- <controls:SettingsExpander Header="Wizard" Description="Ouvrir à nouveau le Wizard pour la configuration initiale de l'application"
+                                           IsClickEnabled="True" Command="{Binding OpenWizardCommand}" /> -->
+                
+                <controls:SettingsExpander Header="Emploi du temps"
+                                           Description="Paramètres en lien avec l'EDT"
+                                           IconSource="{markupExtensions:SymbolIconSource Symbol=Calendar}">
+                    <controls:SettingsExpander.Footer>
+                        <Grid>
+                            <avalonia:SpacedGrid ColumnDefinitions="*,Auto" ColumnSpacing="20"
+                                                 IsVisible="{Binding EdtModuleEnabled}"
+                                                 RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                                
+                                <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="danger" HorizontalAlignment="Stretch"
+                                        Command="{Binding DisableEdtModuleCommand}">
+                                    Désactiver ce module
+                                </Button>
+                            
+                                <!-- <TextBlock Grid.Row="1" Grid.Column="0" Text="Système de Cache" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" />
+                                <ToggleSwitch Grid.Row="1" Grid.Column="1" OnContent="Oui" OffContent="Non"
+                                              IsChecked="{Binding Caching}" /> -->
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Meilleurs Descriptions" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" />
+                                <ToggleSwitch Grid.Row="2" Grid.Column="1" OnContent="Oui" OffContent="Non"
+                                              IsChecked="{Binding BetterDescription}" />
+                                
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Mode d'Affichage" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" />
+                                <ToggleSwitch Grid.Row="3" Grid.Column="1" OnContent="Liste" OffContent="Timeline"
+                                              IsChecked="{Binding ShowAsList}" />
+                                
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Thème de Couleur" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" />
+                                <ComboBox Grid.Row="4" Grid.Column="1"
+                                          SelectedIndex="{Binding SelectedIndex}" 
+                                          SelectedItem="{Binding ColorScheme}">
+                                    <ComboBoxItem Content="Classique" Tag="3" />
+                                    <ComboBoxItem Content="Tomate" Tag="5" />
+                                    <ComboBoxItem Content="Par Matière" Tag="6" />
+                                </ComboBox>
+
+                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Groupe à Afficher" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" />
+                                <Button Grid.Row="5" Grid.Column="1" Content="Modifier" Width="100" Command="{Binding OpenEditGroupDialogCommand}" />
+                            
+                                <TextBlock Grid.Row="6" Grid.Column="0" Text="Overlays" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" />
+                                <ToggleSwitch Grid.Row="6" Grid.Column="1" OnContent="Activés" OffContent="Désactivés"
+                                              IsChecked="{Binding Overlay}" />
+                                
+                            </avalonia:SpacedGrid>
+                            <Button IsVisible="{Binding !EdtModuleEnabled}" Classes="accent" Content="Activer" Command="{Binding EnableEdtModuleCommand}" />
+                        </Grid>
+                    </controls:SettingsExpander.Footer>
+                </controls:SettingsExpander>
+                
+                <controls:SettingsExpander Header="SACoche"
+                                           Description="Paramètres en lien avec SACoche"
+                                           IconSource="{markupExtensions:SymbolIconSource Symbol=Trophy}">
+                    <controls:SettingsExpander.Footer>
+                        <Grid HorizontalAlignment="Stretch">
+                            <avalonia:SpacedGrid ColumnDefinitions="*,Auto" ColumnSpacing="20"
+                                                 RowDefinitions="Auto,Auto" HorizontalAlignment="Stretch"
+                                                 IsVisible="{Binding SacModuleEnabled}">
+                                
+                                <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="danger" HorizontalAlignment="Stretch"
+                                        Command="{Binding DisableSacModuleCommand}">
+                                    Désactiver ce module
+                                </Button>
+                        
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Clé d'API" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" />
+                                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                                    <Button Content="Modifier" Width="100" Command="{x:Static sacoche:SacochePaneViewModel.ConfigureSacocheCommand}" />
+                                    <Button Classes="danger" Padding="2" Content="{markupExtensions:SymbolIcon Symbol=Delete}" Command="{Binding ClearApiKeyCommand}" />
+                                </StackPanel>
+                        
+                            </avalonia:SpacedGrid>
+                            <Button IsVisible="{Binding !SacModuleEnabled}" Classes="accent" Content="Activer" Command="{Binding EnableSacModuleCommand}" HorizontalAlignment="Stretch" />
+                        </Grid>
+                    </controls:SettingsExpander.Footer>
+                </controls:SettingsExpander>
+                
+                <controls:SettingsExpander Header="Bulletin"
+                                           Description="Paramètres en lien avec le bulletin"
+                                           IconSource="{markupExtensions:SymbolIconSource Symbol=Document}">
+                    <controls:SettingsExpander.Footer>
+                        <Grid HorizontalAlignment="Stretch">
+                            <avalonia:SpacedGrid ColumnDefinitions="*,Auto" ColumnSpacing="20"
+                                                 RowDefinitions="Auto,Auto,Auto" HorizontalAlignment="Stretch"
+                                                 IsVisible="{Binding BulletinModuleEnabled}">
+                                
+                                <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="danger" HorizontalAlignment="Stretch"
+                                        Command="{Binding DisableBulletinModuleCommand}">
+                                    Désactiver ce module
+                                </Button>
+                        
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Identifiants" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" />
+                                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                                    <Button Content="Modifier" Width="100" Command="{Binding OpenBulletinWizardCommand}" />
+                                    <Button Classes="danger" Padding="2" Content="{markupExtensions:SymbolIcon Symbol=Delete}" Command="{Binding ClearBulletinCredentialsCommand}" />
+                                </StackPanel>
+                                
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Liaison avec l'EDT" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" />
+                                <ToggleSwitch Grid.Row="2" Grid.Column="1" OnContent="Oui" OffContent="Non"
+                                              IsChecked="{Binding IsEditLinked}" />
+                        
+                            </avalonia:SpacedGrid>
+                            <Button IsVisible="{Binding !BulletinModuleEnabled}" Classes="accent" Content="Activer" Command="{Binding EnableBulletinModuleCommand}" HorizontalAlignment="Stretch" />
+                        </Grid>
+                    </controls:SettingsExpander.Footer>
+                </controls:SettingsExpander>
+                
+                <controls:SettingsExpander Header="Mode Débug"
+                                           Description="Activer le mode débug pour afficher des informations supplémentaires">
+                    <controls:SettingsExpander.Footer>
+                        <ToggleSwitch OnContent="Activer" OffContent="Désactiver"
+                                      IsChecked="{Binding Debug}" />
+                    </controls:SettingsExpander.Footer>
+                </controls:SettingsExpander>
+                
+                <controls:SettingsExpander Header="Mode Anonyme" IsVisible="{Binding Debug}"
+                                           Description="Si activé, n'affiche pas le nom/prénom de SACoche et du bulletin">
+                    <controls:SettingsExpander.Footer>
+                        <ToggleSwitch OnContent="Activer" OffContent="Désactiver"
+                                      IsChecked="{Binding AnonymousMode}" />
+                    </controls:SettingsExpander.Footer>
+                </controls:SettingsExpander>
+                
+                <controls:SettingsExpander Header="Dossier de données"
+                                           IconSource="{markupExtensions:SymbolIconSource Symbol=FolderOpen}"
+                                           Command="{Binding OpenDataFolderCommand}"
+                                           IsClickEnabled="True"
+                                           IsVisible="{OnPlatform True, Android=False}"
+                                           Footer="{markupExtensions:SymbolIcon Symbol=ArrowUpRight}"
+                                           Description="Ouvrir le dossier de données de l'application"/>
+                
+                <controls:SettingsExpander Header="Crédits et Licence"
+                                           IconSource="{markupExtensions:SymbolIconSource Symbol=SearchInfo}"
+                                           Command="{Binding DisplayCreditsCommand}"
+                                           IsClickEnabled="True"
+                                           Footer="{markupExtensions:SymbolIcon Symbol=ArrowUpRight}"
+                                           Description="Afficher les crédits et la licence de l'application"/>
+            </StackPanel>
+        </ScrollViewer>
+        
+    </avalonia:SpacedGrid>
+</UserControl>

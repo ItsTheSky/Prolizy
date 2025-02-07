@@ -1,0 +1,88 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Prolizy.Viewer"
+             xmlns:styling="clr-namespace:FluentAvalonia.Styling;assembly=FluentAvalonia"
+             xmlns:converters="clr-namespace:Prolizy.Viewer.Utilities.Converters"
+             x:Class="Prolizy.Viewer.App"
+             RequestedThemeVariant="Dark">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Resources>
+        <FontFamily x:Key="Fixel">avares://Prolizy.Viewer/Assets/Fixel</FontFamily>
+    </Application.Resources>
+
+    <Application.Styles>
+        <styling:FluentAvaloniaTheme CustomAccentColor="BlueViolet" />
+
+        <StyleInclude Source="avares://Prolizy.Viewer/Styles/ButtonStyles.axaml" />
+        <StyleInclude Source="avares://Prolizy.Viewer/Styles/Badges.axaml" />
+        <StyleInclude Source="avares://Prolizy.Viewer/Styles/CenteredTabControlStyle.axaml" />
+        <StyleInclude Source="avares://Prolizy.Viewer/Styles/TextStyles.axaml" />
+        <StyleInclude Source="avares://Prolizy.Viewer/Styles/StrechingDialogStyle.axaml" />
+        
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://Prolizy.Viewer/Styles/ThemeColors.axaml" />
+                <ResourceInclude Source="avares://Prolizy.Viewer/Styles/Cards.axaml" />
+                <ResourceInclude Source="avares://Prolizy.Viewer/Styles/WizardContentDialogStyle.axaml" />
+                <ResourceInclude Source="avares://Prolizy.Viewer/Styles/CenteredCheckboxStyle.axaml" />
+                <ResourceInclude Source="avares://Prolizy.Viewer/Styles/CenteredRadioButton.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+        <Color x:Key="LayerFillColorDefault">#383A3A3A</Color>
+
+        <!-- Converters -->
+        <converters:IntConverter x:Key="IntConverter" />
+        <converters:TextToBrushConverter x:Key="TextToBrushConverter" />
+
+        <converters:IsGreaterThanConverter x:Key="IsGreaterThanConverter" />
+        <converters:IsLessThanConverter x:Key="IsLessThanConverter" />
+        
+        <!-- Gradient Scheme -->
+        <ConicGradientBrush x:Key="PurpleGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#02041F" Offset="0"/>
+                <GradientStop Color="#240331" Offset="0.33"/>
+                <GradientStop Color="#4A022E" Offset="0.66"/>
+                <GradientStop Color="#5F0641" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+        
+        <ConicGradientBrush x:Key="RedGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#18021F" Offset="0"/>
+                <GradientStop Color="#310318" Offset="0.33"/>
+                <GradientStop Color="#4A1202" Offset="0.66"/>
+                <GradientStop Color="#5F1506" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+        
+        <ConicGradientBrush x:Key="GreenGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#1F0E02" Offset="0"/>
+                <GradientStop Color="#273103" Offset="0.33"/>
+                <GradientStop Color="#0A4A02" Offset="0.66"/>
+                <GradientStop Color="#145F06" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+        
+        <ConicGradientBrush x:Key="CyanGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#0E1F02" Offset="0"/>
+                <GradientStop Color="#033115" Offset="0.33"/>
+                <GradientStop Color="#02464A" Offset="0.66"/>
+                <GradientStop Color="#065F5F" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+        
+        <SolidColorBrush x:Key="BasicBackgroundBrush">#383A3A3A</SolidColorBrush>
+    </Application.Resources>
+</Application>

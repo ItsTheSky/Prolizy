@@ -1,0 +1,87 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <ScrollViewer Classes="fade-edges" Height="200">
+                <StackPanel Spacing="20">
+                    <TextBlock Text="Test Content" Background="Brown" />
+                    <TextBlock Text="More Content" Background="Brown" />
+                    <TextBlock Text="Test Content" Background="Brown" />
+                    <TextBlock Text="More Content" Background="Brown" />
+                    <TextBlock Text="Test Content" Background="Brown" />
+                    <TextBlock Text="More Content" Background="Brown" />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="ScrollViewer.fade-edges">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
+                    <Panel Grid.Column="0" Grid.Row="0">
+                        <ScrollContentPresenter Name="PART_ContentPresenter"
+                                              Background="{TemplateBinding Background}"
+                                              VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}"
+                                              HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
+                                              Padding="{TemplateBinding Padding}">
+                            <ScrollContentPresenter.GestureRecognizers>
+                                <ScrollGestureRecognizer 
+                                    CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+                                    CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
+                                    IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}"/>
+                            </ScrollContentPresenter.GestureRecognizers>
+                        </ScrollContentPresenter>
+
+                        <!-- Fade overlays -->
+                        <Border Name="TopFade" 
+                                Height="40"
+                                VerticalAlignment="Top" 
+                                IsVisible="{Binding #PART_VerticalScrollBar.Value, Converter={StaticResource IsGreaterThanConverter}, ConverterParameter=0}"
+                                ZIndex="100">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,80%">
+                                    <GradientStop Offset="0" Color="{DynamicResource ScrollBarThumbBackgroundColor}"/>
+                                    <GradientStop Offset="1" Color="#00000000"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        
+                        <Border Name="BottomFade"
+                                Height="40"
+                                VerticalAlignment="Bottom"
+                                IsVisible="{Binding #PART_VerticalScrollBar.Value, Converter={StaticResource IsLessThanConverter}, ConverterParameter={Binding #PART_VerticalScrollBar.Maximum}}"
+                                ZIndex="100">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                    <GradientStop Offset="0" Color="#00000000"/>
+                                    <GradientStop Offset="1" Color="#FF000000"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                    </Panel>
+
+                    <!-- Scrollbars -->
+                    <ScrollBar Name="PART_VerticalScrollBar"
+                             Grid.Column="1"
+                             Grid.Row="0"
+                             Orientation="Vertical"
+                             HorizontalAlignment="Right"
+                             Visibility="{TemplateBinding VerticalScrollBarVisibility}"/>
+
+                    <ScrollBar Name="PART_HorizontalScrollBar"
+                             Grid.Column="0"
+                             Grid.Row="1"
+                             Orientation="Horizontal"
+                             VerticalAlignment="Bottom"
+                             Visibility="{TemplateBinding HorizontalScrollBarVisibility}"/>
+
+                    <Panel Name="PART_ScrollBarsSeparator" 
+                           Grid.Row="1" 
+                           Grid.Column="1" 
+                           Background="{DynamicResource ScrollViewerScrollBarsSeparatorBackground}"/>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

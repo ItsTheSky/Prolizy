@@ -1,0 +1,26 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:controls="clr-namespace:Prolizy.Viewer.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="controls:WelcomeChoicesViewModel"
+             x:Class="Prolizy.Viewer.Controls.WelcomeChoices">
+    <StackPanel Orientation="Vertical" Spacing="5" Name="MaPanel">
+        <TextBlock>Bienvenue sur Prolizy! Veuillez choisir vos modules ci-dessous:</TextBlock>
+        
+        <ItemsControl ItemsSource="{Binding Choices}">
+            <ItemsControl.DataTemplates>
+                <DataTemplate x:DataType="controls:ModuleChoice">
+                    <CheckBox IsChecked="{Binding IsSelected}">
+                        <StackPanel Orientation="Vertical" Spacing="2" Margin="10,0,0,0">
+                            <TextBlock FontWeight="SemiBold" FontSize="18" Text="{Binding Module.Name}" />
+                            <TextBlock Text="{Binding Module.Description}" />
+                        </StackPanel>
+                    </CheckBox>
+                </DataTemplate>
+            </ItemsControl.DataTemplates>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

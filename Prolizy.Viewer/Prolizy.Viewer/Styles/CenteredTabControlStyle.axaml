@@ -1,0 +1,17 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20" Width="400">
+            
+            <TabControl Classes="centered">
+                <TabItem Header="First">Hello there</TabItem>
+                <TabItem Header="Second">Hello there 2</TabItem>
+            </TabControl>
+            
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="TabControl.centered /template/ WrapPanel">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+</Styles>

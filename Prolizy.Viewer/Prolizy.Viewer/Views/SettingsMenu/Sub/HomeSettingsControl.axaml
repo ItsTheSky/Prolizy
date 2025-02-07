@@ -1,0 +1,42 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:controls="clr-namespace:Prolizy.Viewer.Controls"
+             xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+             x:Class="Prolizy.Viewer.Views.SettingsMenu.Sub.HomeSettingsControl">
+    
+    <UserControl.Styles>
+        <Style Selector="Button.card-action">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+    </UserControl.Styles>
+    
+    <avalonia:SpacedGrid RowDefinitions="Auto,*,Auto" RowSpacing="5" Margin="5">
+        
+        <TextBlock TextWrapping="Wrap" Grid.Row="0">Vous pouvez ici modifier les différentes cartes affichées sur l'écran d'acceuil. Changer leurs ordres via les flèches à gauche.</TextBlock>
+        
+        <StackPanel Grid.Row="1" VerticalAlignment="Stretch">
+            <controls:Card Margin="2" Padding="6">
+                
+                <avalonia:SpacedGrid ColumnDefinitions="Auto,Auto,*,Auto,Auto"
+                                     ColumnSpacing="5">
+                    <Button Grid.Column="0" Classes="card-action transparent" Content="{markupExtensions:SymbolIcon Symbol=ArrowUp}"  />
+                    <Button Grid.Column="1" Classes="card-action transparent" Content="{markupExtensions:SymbolIcon Symbol=ArrowDown}" />
+                    
+                    <TextBlock Grid.Column="2" FontSize="16" Text="Carte 1" VerticalAlignment="Center" />
+                    
+                    <Button Grid.Column="3" Classes="card-action transparent" Content="{markupExtensions:SymbolIcon Symbol=Edit}"  />
+                    
+                    <Button Grid.Column="4" Classes="card-action transparent-danger" Content="{markupExtensions:SymbolIcon Symbol=Delete}"/>
+                </avalonia:SpacedGrid>
+                
+            </controls:Card>
+        </StackPanel>
+        
+    </avalonia:SpacedGrid>
+</UserControl>

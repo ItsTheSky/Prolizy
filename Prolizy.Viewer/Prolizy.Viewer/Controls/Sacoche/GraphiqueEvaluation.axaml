@@ -1,0 +1,37 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Prolizy.Viewer.ViewModels.Sacoche"
+             xmlns:controls="using:Prolizy.Viewer.Controls"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:controls1="using:FluentAvalonia.UI.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:GraphiqueEvaluationViewModel"
+             x:Class="Prolizy.Viewer.Controls.Sacoche.GraphiqueEvaluation">
+    <Grid RowDefinitions="Auto,*,*" VerticalAlignment="Stretch">
+        <controls1:InfoBar Grid.Row="0" 
+                           Severity="Warning" 
+                           IsOpen="True" 
+                           IsClosable="False"
+                           IsVisible="{Binding EmptyEvalsCount}"
+                           Message="{Binding EmptyEvalsCount, 
+                                     StringFormat='{}{0} évaluation(s) non remplies ont été(s) masquée(s)'}"/>
+            
+        <lvc:CartesianChart Grid.Row="1" VerticalAlignment="Stretch"
+                            Title="{Binding EvalsTitle}"
+                            YAxes="{Binding EvalsYAxis}" 
+                            XAxes="{Binding EvalsXAxis}"
+                            DrawMarginFrame="{Binding DrawMargin}" 
+                            Padding="5"
+                            Series="{Binding EvalsSeries}" />
+            
+        <lvc:CartesianChart Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                            Title="{Binding SkillsTitle}"
+                            YAxes="{Binding SkillsYAxis}" 
+                            XAxes="{Binding SkillsXAxis}"
+                            DrawMarginFrame="{Binding DrawMargin}" 
+                            Padding="5"
+                            Series="{Binding SkillsSeries}" />
+    </Grid>
+</UserControl>

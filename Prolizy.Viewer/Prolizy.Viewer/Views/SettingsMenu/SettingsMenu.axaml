@@ -1,0 +1,81 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             xmlns:sub="clr-namespace:Prolizy.Viewer.Views.SettingsMenu.Sub"
+             xmlns:viewModels="clr-namespace:Prolizy.Viewer.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:NewSettingsViewModel"
+             x:Class="Prolizy.Viewer.Views.SettingsMenu.SettingsMenu">
+   
+    <StackPanel Spacing="4">
+        <!-- Section Services -->
+        <TextBlock FontWeight="SemiBold" FontSize="16" Text="Services" Margin="0,0,0,2" />
+        
+        <controls:SettingsExpander Header="Accueil"
+                                   ActionIconSource="{markupExtensions:SymbolIconSource Symbol=ChevronRight}"
+                                   Command="{Binding NavigateCommand}" CommandParameter="{x:Type sub:HomeCategory}"
+                                   IsClickEnabled="True">
+            <controls:SettingsExpander.IconSource>
+                <fluent:SymbolIconSource Symbol="Home" IconVariant="Regular"
+                                         Foreground="{x:Static utilities:ColorMatcher.OrangeBrush}"/>
+            </controls:SettingsExpander.IconSource>
+        </controls:SettingsExpander>
+        
+        <controls:SettingsExpander Header="Emploi du temps"
+                                   ActionIconSource="{markupExtensions:SymbolIconSource Symbol=ChevronRight}"
+                                   Command="{Binding NavigateCommand}" CommandParameter="{x:Type sub:TimeTableCategory}"
+                                   IsClickEnabled="True">
+            <controls:SettingsExpander.IconSource>
+                <fluent:SymbolIconSource Symbol="Calendar" IconVariant="Regular"
+                                         Foreground="{x:Static utilities:ColorMatcher.GreenBrush}"/>
+            </controls:SettingsExpander.IconSource>
+        </controls:SettingsExpander>
+        
+        <controls:SettingsExpander Header="SACoche"
+                                   ActionIconSource="{markupExtensions:SymbolIconSource Symbol=ChevronRight}"
+                                   Command="{Binding NavigateCommand}" CommandParameter="{x:Type sub:SacocheCategory}"
+                                   IsClickEnabled="True">
+            <controls:SettingsExpander.IconSource>
+                <fluent:SymbolIconSource Symbol="Trophy" IconVariant="Regular"
+                                         Foreground="{x:Static utilities:ColorMatcher.BlueBrush}"/>
+            </controls:SettingsExpander.IconSource>
+        </controls:SettingsExpander>
+        
+        <controls:SettingsExpander Header="Bulletin"
+                                   ActionIconSource="{markupExtensions:SymbolIconSource Symbol=ChevronRight}"
+                                   Command="{Binding NavigateCommand}" CommandParameter="{x:Type sub:BulletinCategory}"
+                                   IsClickEnabled="True">
+            <controls:SettingsExpander.IconSource>
+                <fluent:SymbolIconSource Symbol="Document" IconVariant="Regular"
+                                         Foreground="{x:Static utilities:ColorMatcher.OrangeBrush}"/>
+            </controls:SettingsExpander.IconSource>
+        </controls:SettingsExpander>
+        
+        <TextBlock FontWeight="SemiBold" FontSize="16" Text="Application" Margin="5,0,0,2" />
+        
+        <controls:SettingsExpander Header="Paramètres"
+                                   ActionIconSource="{markupExtensions:SymbolIconSource Symbol=ChevronRight}"
+                                   Command="{Binding NavigateCommand}" CommandParameter="{x:Type sub:AppCategory}"
+                                   IsClickEnabled="True">
+            <controls:SettingsExpander.IconSource>
+                <fluent:SymbolIconSource Symbol="Wrench" IconVariant="Regular"
+                                         Foreground="{x:Static utilities:ColorMatcher.CyanBrush}"/>
+            </controls:SettingsExpander.IconSource>
+        </controls:SettingsExpander>
+        
+        <controls:SettingsExpander Header="À propos"
+                                   ActionIconSource="{markupExtensions:SymbolIconSource Symbol=ArrowUpRight}"
+                                   Command="{Binding OpenCreditsCommand}"
+                                   IsClickEnabled="True">
+            <controls:SettingsExpander.IconSource>
+                <fluent:SymbolIconSource Symbol="Info" IconVariant="Regular"
+                                         Foreground="{x:Static utilities:ColorMatcher.SkyBrush}"/>
+            </controls:SettingsExpander.IconSource>
+        </controls:SettingsExpander>
+    </StackPanel>
+</UserControl>

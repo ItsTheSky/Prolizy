@@ -1,0 +1,35 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:viewModels="clr-namespace:Prolizy.Viewer.ViewModels"
+             xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:NewSettingsViewModel"
+             x:Class="Prolizy.Viewer.Views.SettingsMenu.NewSettingsPane">
+    <avalonia:SpacedGrid RowDefinitions="Auto,*,Auto" RowSpacing="10"
+                         Margin="10">
+        
+        <TextBlock Text="{Binding CurrentCategory.Title, FallbackValue=Paramètres}"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Center"
+                   TextAlignment="Center"
+                   Grid.Row="0"/>
+        
+        <ScrollViewer Grid.Row="1">
+            <controls:Frame Name="SettingsFrame"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"/>
+        </ScrollViewer>
+        
+        <Button Grid.Row="2" HorizontalAlignment="Left"
+                IsEnabled="{Binding CanGoBack}"
+                Content="{markupExtensions:SymbolIcon Symbol=ArrowLeft}" 
+                Command="{Binding GoBackCommand}" />
+        
+    </avalonia:SpacedGrid>
+</UserControl>

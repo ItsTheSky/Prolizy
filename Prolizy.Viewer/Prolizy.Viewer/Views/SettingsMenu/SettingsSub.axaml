@@ -1,0 +1,53 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:viewModels="clr-namespace:Prolizy.Viewer.ViewModels"
+             xmlns:controls1="clr-namespace:Prolizy.Viewer.Controls"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:NewSettingsViewModel"
+             x:Class="Prolizy.Viewer.Views.SettingsMenu.SettingsSub">
+    <StackPanel Spacing="10">
+        <controls1:Card Classes="info" IsVisible="{Binding CurrentCategory.IsModule}">
+            <avalonia:SpacedGrid Margin="5"
+                                 ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5">
+                <fluent:SymbolIcon Width="28" Height="28" Symbol="CheckmarkCircle" FontSize="28" Grid.Column="0" />
+                <TextBlock FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Activation" Grid.Column="1" />
+                <CheckBox Grid.Column="2" IsChecked="{Binding CurrentCategory.IsModuleEnabled}" />
+            </avalonia:SpacedGrid>
+        </controls1:Card>
+        
+        <ContentPresenter Content="{Binding CurrentCategory.CustomControl}" />
+        
+        <ItemsControl ItemsSource="{Binding CurrentCategory.Entries}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <controls1:Card IsVisible="{Binding IsVisible}">
+                        <StackPanel Spacing="4" HorizontalAlignment="Stretch">
+                            <TextBlock TextAlignment="Center" FontSize="16" HorizontalAlignment="Stretch" FontWeight="Bold" Text="{Binding Title}" />
+                            <TextBlock FontStyle="Italic" Text="{Binding Description}" />
+                            
+                            <ContentPresenter Content="{Binding Control}"
+                                              HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                              HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                    </controls1:Card>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="10" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        
+        <!-- <controls:InfoBar IsClosable="False" IsOpen="True"
+                          IsVisible="{Binding !IsEdtEnabled}"
+                          Message="Activez ce module pour accéder à ses paramètres."
+                          Severity="Informational" /> -->
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,63 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Prolizy.Viewer.ViewModels.Sacoche"
+             xmlns:sacoche="using:Prolizy.Viewer.Controls.Sacoche"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:ListEvaluationViewModel"
+             x:Class="Prolizy.Viewer.Controls.Sacoche.ListEvaluation">
+    
+    <ItemsControl ItemsSource="{Binding Evaluations}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Spacing="5" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Expander Header="{Binding Header}">
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="Expanded">
+                            <EventTriggerBehavior.Actions>
+                                <InvokeCommandAction Command="{Binding LoadSkillsCommand}"/>
+                            </EventTriggerBehavior.Actions>
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
+                    
+                    <Grid>
+                        <ProgressBar IsVisible="{Binding AreSkillsLoading}" 
+                                   IsIndeterminate="True" 
+                                   HorizontalAlignment="Stretch" 
+                                   Height="3" />
+                        
+                        <DataGrid ItemsSource="{Binding Skills}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn IsReadOnly="True" 
+                                                  Header="Réf." 
+                                                  Binding="{Binding Skill.Reference}" />
+                                <DataGridTextColumn IsReadOnly="True" 
+                                                  Header="Nom" 
+                                                  Binding="{Binding Skill.Name}" />
+                                <DataGridTemplateColumn IsReadOnly="True" 
+                                                      Header="Note">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" 
+                                                      Spacing="3">
+                                                <sacoche:SkillLevelIndicator 
+                                                    Level="{Binding Skill.Note, 
+                                                           Converter={StaticResource IntConverter}}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Expander>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

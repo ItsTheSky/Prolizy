@@ -1,0 +1,35 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:avalonia1="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:sacoche="clr-namespace:Prolizy.Viewer.ViewModels.Sacoche"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="sacoche:WizardLoginViewModel"
+             x:Class="Prolizy.Viewer.Controls.Wizard.Steps.SacocheLoginStep">
+    <StackPanel Orientation="Vertical" Spacing="6">
+        <StackPanel Orientation="Vertical" Spacing="4">
+            <TextBlock Text="Identifiant" />
+            <TextBox Text="{Binding Username}" Watermark="Entrez votre identifiant" HorizontalAlignment="Stretch" />
+            
+            <TextBlock Text="Mot de passe" />
+            <avalonia:SpacedGrid ColumnDefinitions="*,Auto" ColumnSpacing="5">
+                <TextBox Grid.Column="0" Text="{Binding Password}" Watermark="Entrez votre mot de passe"
+                         PasswordChar="*" RevealPassword="{Binding ShowPassword}" HorizontalAlignment="Stretch" />
+                <ToggleButton Grid.Column="1" IsChecked="{Binding ShowPassword}">
+                    <avalonia1:SymbolIcon Symbol="Eye" />
+                </ToggleButton>
+            </avalonia:SpacedGrid>
+        </StackPanel>
+        
+        <Button Classes="accent" Content="Se Connecter" HorizontalAlignment="Stretch" 
+                Command="{Binding FetchApiKeyCommand}" />
+        
+        <controls:InfoBar Severity="{Binding InfoBarSeverity}" HorizontalAlignment="Stretch"
+                          IsOpen="True" IsClosable="False"
+                          Message="{Binding InfoBarMessage}" />
+        
+    </StackPanel>
+</UserControl>

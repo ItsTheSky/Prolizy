@@ -1,0 +1,25 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:steps="clr-namespace:Prolizy.Viewer.Controls.Wizard.Steps"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="steps:EdtGroupStepViewModel"
+             x:Class="Prolizy.Viewer.Controls.Wizard.Steps.EdtGroupStep">
+    <StackPanel Orientation="Vertical" Spacing="10">
+        
+        <TextBlock Text="Quel est votre groupe au sein de l'IUT?" />
+        
+        <AutoCompleteBox Name="AutoCompleteBox"
+                         Watermark="Ex: INF1-B"
+                         HorizontalAlignment="Stretch"
+                         ItemsSource="{Binding Groups}" />
+        
+        <!-- <controls:InfoBar Message="Vous pouvez changer d'autres paramètres dans la page 'Paramètres'!"
+                          Severity="Success"
+                          IsOpen="True" IsClosable="False"
+                          HorizontalAlignment="Stretch" /> -->
+        
+    </StackPanel>
+</UserControl>

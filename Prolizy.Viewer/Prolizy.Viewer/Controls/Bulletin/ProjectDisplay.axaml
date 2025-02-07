@@ -1,0 +1,44 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:bulletin="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
+             xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="bulletin:InternalSaeDisplay"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.ProjectDisplay">
+    <controls:SettingsExpander IsExpanded="{Binding IsExpanded}"
+                               ItemsSource="{Binding Evals}">
+        <controls:SettingsExpander.Header>
+            <TextBlock Text="{Binding Sae.Title}" FontWeight="SemiBold" FontSize="18" />
+        </controls:SettingsExpander.Header>
+        <controls:SettingsExpander.Footer>
+            <Grid>
+                <TextBlock Text="Aucune Évaluations" IsVisible="{Binding !Evals.Count}" />
+                
+                <bulletin:AverageDisplay IsVisible="{Binding Evals.Count}"
+                                         IsAboveAverage="{Binding IsAboveAverage}"
+                                         Average="{Binding Average}"/>
+            </Grid>
+        </controls:SettingsExpander.Footer>
+        <controls:SettingsExpander.ItemTemplate>
+            <DataTemplate x:DataType="bulletin:InternalResourceEval">
+                <avalonia:SpacedGrid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="10">
+                    <TextBlock Grid.Column="0" Text="{Binding Evaluation.Description}" 
+                               VerticalAlignment="Center" />
+                    
+                    <TextBlock Grid.Column="1" Text="{Binding Evaluation.Grade.Value}" VerticalAlignment="Center" />
+                    <TextBlock FontWeight="Light" FontStyle="Italic" Grid.Column="2" VerticalAlignment="Center" 
+                               Text="{Binding Evaluation.Coefficient, StringFormat='Coef. {0}'}" />
+                    <Button VerticalAlignment="Center" Grid.Column="3" 
+                            Command="{Binding ShowEvalCommand}"
+                            Content="{markupExtensions:SymbolIcon Symbol=Eye}" Padding="3" />
+                </avalonia:SpacedGrid>
+            </DataTemplate>
+        </controls:SettingsExpander.ItemTemplate>
+    </controls:SettingsExpander>
+</UserControl>

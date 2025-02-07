@@ -1,0 +1,55 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:Prolizy.Viewer.Controls"
+        xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            
+            <StackPanel Orientation="Vertical" Spacing="5" HorizontalAlignment="Center">
+                <controls:Card Classes="badge badge-success">Success</controls:Card>
+                <controls:Card Classes="badge badge-danger">Danger</controls:Card>
+                <controls:Card Classes="badge badge-warning">Warning</controls:Card>
+                <controls:Card Classes="badge badge-accent">Accent</controls:Card>
+                <controls:Card Classes="badge badge-soft">Accent</controls:Card>
+            </StackPanel>
+            
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|Card.badge">
+        <Setter Property="Padding" Value="5,2"/>
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="5" />
+    </Style>
+    
+    <!-- Badge Styles -->
+    <Style Selector="controls|Card.badge-success">
+        <Setter Property="Background" Value="{x:Static utilities:ColorMatcher.GreenBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource utilities:ColorMatcher.GreenBrush}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <Style Selector="controls|Card.badge-warning">
+        <Setter Property="Background" Value="{x:Static utilities:ColorMatcher.YellowBrush}" />
+        <Setter Property="BorderBrush" Value="{x:Static utilities:ColorMatcher.YellowBrush}" />
+    </Style>
+    
+    <Style Selector="controls|Card.badge-danger">
+        <Setter Property="Background" Value="{x:Static utilities:ColorMatcher.RedBrush}" />
+        <Setter Property="BorderBrush" Value="{x:Static utilities:ColorMatcher.RedBrush}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <Style Selector="controls|Card.badge-accent">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <Style Selector="controls|Card.badge-soft">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight3}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorLight3}" />
+        <Setter Property="Foreground" Value="{DynamicResource SystemAccentColorDark3}" />
+    </Style>
+    
+</Styles>

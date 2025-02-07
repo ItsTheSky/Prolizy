@@ -1,0 +1,392 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Prolizy.Viewer.Controls"
+             xmlns:controls1="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:bulletin="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
+             xmlns:panes="clr-namespace:Prolizy.Viewer.Views.Panes"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:viewModels="clr-namespace:Prolizy.Viewer.ViewModels"
+             xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:avalonia1="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:BulletinPaneViewModel"
+             x:Class="Prolizy.Viewer.Views.Panes.BulletinPane">
+    <Grid>
+        <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="10"
+                             Margin="10">
+
+            <TextBlock Text="Bulletin"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       Grid.Row="0" />
+
+            <avalonia:SpacedGrid Grid.Row="1"
+                                 ColumnDefinitions="*,*" ColumnSpacing="5">
+
+                <TextBlock Grid.Column="0" Text="{Binding BulletinRoot.Transcript.Student.FullName}"
+                           FontWeight="SemiBold" FontSize="16"
+                           HorizontalAlignment="Stretch" TextAlignment="Center"
+                           IsVisible="{x:Static utilities:Settings.IsNotAnonymous}" />
+                <Button Grid.Column="1" Content="Rafraîchir" HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding RefreshBulletinCommand}" />
+
+            </avalonia:SpacedGrid>
+
+            <ScrollViewer Grid.Row="2" HorizontalAlignment="Left">
+                <ItemsControl ItemsSource="{Binding AvailableSemesters}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Left" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Classes.accent="{Binding IsSelected}" Width="150" Height="65"
+                                    Command="{Binding ViewModel.ChangeSemesterCommand, RelativeSource={RelativeSource AncestorType=panes:BulletinPane}}"
+                                    CommandParameter="{Binding}">
+                                <StackPanel Orientation="Vertical" Spacing="5">
+                                    <TextBlock FontSize="16"
+                                               Text="{Binding Semester.SemesterNumber, StringFormat='Semestre {0}'}"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock FontSize="14"
+                                               Text="{Binding Semester.AcademicYear, StringFormat='Année {0}'}"
+                                               FontWeight="SemiLight" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <TabControl Grid.Row="3" Classes="centered">
+                <TabItem>
+                    <TabItem.Header>
+                        <controls1:IconSourceElement>
+                            <controls1:IconSourceElement.IconSource>
+                                <fluent:SymbolIconSource Symbol="HexagonThree"
+                                                         FontWeight="SemiBold"
+                                                         FontSize="16" />
+                            </controls1:IconSourceElement.IconSource>
+                        </controls1:IconSourceElement>
+                    </TabItem.Header>
+                    <ScrollViewer>
+                        <controls:Card VerticalAlignment="Top">
+                            <StackPanel Spacing="5">
+                                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Synthèse" />
+                                <TextBlock TextWrapping="Wrap" FontStyle="Italic"
+                                           Text="La moyenne des ressources dans une UE dépend des poids donnés aux évaluations." />
+
+                                <TextBlock FontSize="16" FontWeight="SemiBold" Text="Dernières notes" />
+                                <ItemsControl ItemsSource="{Binding LatestEvals}" Grid.IsSharedSizeScope="True">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <avalonia:SpacedGrid ColumnSpacing="5">
+                                                <avalonia:SpacedGrid.ColumnDefinitions>
+                                                    <ColumnDefinition SharedSizeGroup="A" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition SharedSizeGroup="B" />
+                                                    <ColumnDefinition SharedSizeGroup="C" />
+                                                    <ColumnDefinition SharedSizeGroup="D" />
+                                                </avalonia:SpacedGrid.ColumnDefinitions>
+
+                                                <controls1:InfoBadge Grid.Column="0" VerticalAlignment="Center" />
+
+                                                <TextBlock Grid.Column="1" Text="{Binding Evaluation.Description}"
+                                                           FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                <TextBlock Grid.Column="2" Text="{Binding DisplayedDate}"
+                                                           FontWeight="SemiLight" TextWrapping="Wrap" />
+
+                                                <fluent:SymbolIcon IsVisible="{Binding IsAboveAverage}"
+                                                                   Symbol="ChevronUp" Grid.Column="3"
+                                                                   IconVariant="Filled"
+                                                                   Foreground="{x:Static utilities:ColorMatcher.GreenBrush}" />
+
+                                                <fluent:SymbolIcon IsVisible="{Binding !IsAboveAverage}"
+                                                                   Symbol="ChevronDown" Grid.Column="3"
+                                                                   IconVariant="Filled"
+                                                                   Foreground="{x:Static utilities:ColorMatcher.RedBrush}" />
+
+                                                <TextBlock Grid.Column="4" Text="{Binding Evaluation.Grade.Value}"
+                                                           FontWeight="SemiBold" />
+                                            </avalonia:SpacedGrid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" Spacing="3" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+
+                                <Separator />
+
+                                <TextBlock FontSize="16" FontWeight="SemiBold" Text="Unités d'Enseignement" />
+                                <ItemsControl ItemsSource="{Binding Units}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <bulletin:TeachingUnitDisplay DataContext="{Binding}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" Spacing="10" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </StackPanel>
+                        </controls:Card>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <controls1:IconSourceElement>
+                            <controls1:IconSourceElement.IconSource>
+                                <fluent:SymbolIconSource Symbol="Notebook"
+                                                         FontWeight="SemiBold"
+                                                         FontSize="16" />
+                            </controls1:IconSourceElement.IconSource>
+                        </controls1:IconSourceElement>
+                    </TabItem.Header>
+                    <ScrollViewer>
+                        <controls:Card VerticalAlignment="Top">
+                            <StackPanel Spacing="5">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      RowDefinitions="Auto,Auto">
+                                    <TextBlock Grid.Row="0" Grid.Column="0" FontSize="20" FontWeight="SemiBold"
+                                               Text="Resources" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" FontStyle="Italic"
+                                               Text="Liste des évaluations par ressource." />
+
+                                    <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Padding="5"
+                                            Content="{markupExtensions:SymbolIcon Symbol=ArrowBidirectionalUpDown}"
+                                            Command="{Binding ToggleExpandResourceCommand}" />
+                                </Grid>
+
+                                <ItemsControl ItemsSource="{Binding Resources}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <bulletin:ResourceDisplay DataContext="{Binding}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" Spacing="10" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </StackPanel>
+                        </controls:Card>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <controls1:IconSourceElement>
+                            <controls1:IconSourceElement.IconSource>
+                                <fluent:SymbolIconSource Symbol="ProjectionScreen"
+                                                         FontWeight="SemiBold"
+                                                         FontSize="16" />
+                            </controls1:IconSourceElement.IconSource>
+                        </controls1:IconSourceElement>
+                    </TabItem.Header>
+                    <ScrollViewer>
+                        <controls:Card VerticalAlignment="Top">
+                            <StackPanel Spacing="5">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      RowDefinitions="Auto,Auto">
+                                    <TextBlock Grid.Row="0" Grid.Column="0" FontSize="20" FontWeight="SemiBold"
+                                               Text="SAÉs" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" FontStyle="Italic"
+                                               Text="Liste des SAÉs (projets) ainsi que leurs évaluations." />
+
+                                    <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Padding="5"
+                                            Content="{markupExtensions:SymbolIcon Symbol=ArrowBidirectionalUpDown}"
+                                            Command="{Binding ToggleExpandSaeCommand}" />
+                                </Grid>
+
+                                <ItemsControl ItemsSource="{Binding Saes}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <bulletin:ProjectDisplay DataContext="{Binding}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" Spacing="10" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </StackPanel>
+                        </controls:Card>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <controls1:IconSourceElement>
+                            <controls1:IconSourceElement.IconSource>
+                                <fluent:SymbolIconSource Symbol="NotebookEye"
+                                                         FontWeight="SemiBold"
+                                                         FontSize="16" />
+                            </controls1:IconSourceElement.IconSource>
+                        </controls1:IconSourceElement>
+                    </TabItem.Header>
+                    <ScrollViewer>
+                        <controls:Card VerticalAlignment="Top">
+                            <StackPanel Spacing="5">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <StackPanel Grid.Column="0" Spacing="4">
+                                        <TextBlock Text="Absences et Retards"
+                                                   FontSize="20"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock Text="Liste de vos absences/retards et des justifications."
+                                                   FontStyle="Italic"
+                                                   Opacity="0.7" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Filtres -->
+                                <StackPanel Margin="0,4">
+                                    <ItemsControl ItemsSource="{Binding AbsenceSortingTypes}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" Spacing="4" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Classes.accent="{Binding IsSelected}"
+                                                       Command="{Binding ViewModel.ChangeAbsenceSortingTypeCommand, RelativeSource={RelativeSource AncestorType=panes:BulletinPane}}"
+                                                        CommandParameter="{Binding}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="2">
+                                                        <fluent:SymbolIcon Symbol="{Binding Icon}"
+                                                                           FontSize="16" />
+                                                        <TextBlock Text="{Binding DisplayedName}" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+
+                                <!-- Liste des jours d'absences -->
+                                <ItemsControl ItemsSource="{Binding Absences}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <controls:Card Margin="0,4" Padding="16,12">
+                                                <StackPanel Spacing="8">
+                                                    <!-- Date du jour -->
+                                                    <TextBlock Text="{Binding DateDisplay}"
+                                                               FontWeight="SemiBold"
+                                                               FontSize="16" />
+
+                                                    <!-- Liste des absences du jour -->
+                                                    <ItemsControl ItemsSource="{Binding DayAbsences}"
+                                                                  Margin="0,4,0,0">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid ColumnDefinitions="Auto,*,Auto"
+                                                                      Margin="0,4">
+                                                                    <!-- Indicateur -->
+                                                                    <fluent:SymbolIcon Grid.Column="0"
+                                                                        Margin="0,0,12,0" FontSize="26"
+                                                                        Symbol="{Binding Icon}"
+                                                                        Foreground="{Binding TextColor}" />
+
+                                                                    <!-- Informations -->
+                                                                    <StackPanel Grid.Column="1"
+                                                                        Spacing="4">
+                                                                        <TextBlock Text="{Binding TimeDisplay}"
+                                                                            Opacity="0.7" />
+                                                                        <TextBlock Text="{Binding TextDisplay}"
+                                                                            Opacity="0.7" />
+                                                                    </StackPanel>
+
+                                                                    <!-- Status -->
+                                                                    <controls:Card Grid.Column="2"
+                                                                        Classes="badge"
+                                                                        Classes.badge-success="{Binding IsJustified}"
+                                                                        Classes.badge-danger="{Binding IsNotJustified}"
+                                                                        Classes.badge-warning="{Binding IsLate}"
+                                                                        VerticalAlignment="Top"
+                                                                        Margin="8,0,0,0">
+                                                                        <TextBlock Text="{Binding StatusText}" />
+                                                                    </controls:Card>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel Spacing="8" />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </controls:Card>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Spacing="8" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+
+                            </StackPanel>
+                        </controls:Card>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <controls1:IconSourceElement>
+                            <controls1:IconSourceElement.IconSource>
+                                <fluent:SymbolIconSource Symbol="DataArea"
+                                                         FontWeight="SemiBold"
+                                                         FontSize="16" />
+                            </controls1:IconSourceElement.IconSource>
+                        </controls1:IconSourceElement>
+                    </TabItem.Header>
+                    <TabItem.Content>
+                        <bulletin:GraphDisplay DataContext="{Binding}" />
+                    </TabItem.Content>
+                </TabItem>
+            </TabControl>
+        </avalonia:SpacedGrid>
+
+        <Border Background="{DynamicResource CalendarViewBackground}"
+                IsVisible="{Binding IsLoading}"
+                CornerRadius="10" ClipToBounds="True">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Spacing="5">
+                <TextBlock Text="Chargement ..."
+                           FontSize="18" FontWeight="SemiBold"
+                           HorizontalAlignment="Center" />
+                <ProgressBar IsIndeterminate="True"
+                             Width="200" Height="20"
+                             HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Background="{DynamicResource CalendarViewBackground}"
+                IsVisible="{Binding !IsBulletinAvailable}">
+
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
+                        Spacing="10" VerticalAlignment="Center">
+
+                <TextBlock Text="Le bulletin n'est pas configuré!"
+                           FontWeight="SemiBold" />
+                <Button Content="Configurer" Classes="accent" HorizontalAlignment="Center"
+                        Command="{x:Static viewModels:BulletinPaneViewModel.ConfigureBulletin}" />
+
+            </StackPanel>
+
+        </Border>
+    </Grid>
+</UserControl>

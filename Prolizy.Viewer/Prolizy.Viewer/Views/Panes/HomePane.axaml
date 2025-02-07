@@ -1,0 +1,59 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:controls="clr-namespace:Prolizy.Viewer.Controls"
+             xmlns:viewModels="clr-namespace:Prolizy.Viewer.ViewModels"
+             xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             xmlns:homeCards="clr-namespace:Prolizy.Viewer.Views.HomeCards"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+             x:DataType="viewModels:HomePaneViewModel"
+             x:Class="Prolizy.Viewer.Views.Panes.HomePane">
+
+    <UserControl.Styles>
+        <Style Selector="controls|Card.module-display">
+            <Setter Property="Height" Value="140" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid>
+        <avalonia:SpacedGrid RowDefinitions="Auto,Auto,*" RowSpacing="10"
+                             Margin="10" VerticalAlignment="Stretch">
+
+            <TextBlock Text="Accueil"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       Grid.Row="0" />
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
+                <ItemsControl ItemsSource="{Binding Cards}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" Spacing="5" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentPresenter Content="{Binding Control}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+        </avalonia:SpacedGrid>
+
+        <controls:Card Classes="module-display" IsVisible="False" Name="GhostItem">
+            <TextBlock Text="Déplacement ..." FontSize="18" FontWeight="SemiBold"
+                       TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+        </controls:Card>
+    </Grid>
+</UserControl>

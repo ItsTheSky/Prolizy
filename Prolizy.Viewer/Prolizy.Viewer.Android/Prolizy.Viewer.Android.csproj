@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0-android</TargetFramework>
+        <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
+        <Nullable>enable</Nullable>
+        <ApplicationId>net.itsthesky.Prolizy.Viewer</ApplicationId>
+        <ApplicationVersion>4</ApplicationVersion>
+        <ApplicationDisplayVersion>1.2.0</ApplicationDisplayVersion>
+        <AndroidUseAapt2>True</AndroidUseAapt2>
+        <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+        
+        <!-- disable trimming for now -->
+        <PublishTrimmed>false</PublishTrimmed>
+        <RunAOTCompilation>false</RunAOTCompilation>
+
+        <!-- <AndroidPackageFormat>apk</AndroidPackageFormat> -->
+        <AndroidPackageFormat>apk</AndroidPackageFormat>
+        
+        <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+        
+        <AndroidKeyStore>true</AndroidKeyStore>
+        <AndroidSigningKeyStore>B:\Sky\Projets\CSharp\Prolizy\Prolizy\Prolizy.Viewer\Prolizy.Viewer.Android\Keys\prolizy.keystore</AndroidSigningKeyStore>
+        <JavaSdkDirectory>B:\Sky\JDKs\17</JavaSdkDirectory>
+        <AndroidSigningKeyAlias>prolizy</AndroidSigningKeyAlias>
+        <AndroidSigningKeyPass>M!necraft06</AndroidSigningKeyPass>
+        <AndroidSigningStorePass>M!necraft06</AndroidSigningStorePass>
+        <AndroidSdkDirectory>C:\Users\Sky\AppData\Local\Android\Sdk</AndroidSdkDirectory>
+
+        <AndroidResgenClass>Resource</AndroidResgenClass>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DebugType>embedded</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Android" Version="11.1.4" />
+        <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5" />
+        <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.13" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Prolizy.Viewer\Prolizy.Viewer.csproj"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <AndroidResource Include="Resources\xml\appwidgetprovider.xml" />
+    </ItemGroup>
+</Project>

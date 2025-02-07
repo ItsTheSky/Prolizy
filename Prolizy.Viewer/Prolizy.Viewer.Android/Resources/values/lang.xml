@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_description">Affiche le cours actuel (ou le prochain) de l\'emploi du temps.</string>
+</resources>

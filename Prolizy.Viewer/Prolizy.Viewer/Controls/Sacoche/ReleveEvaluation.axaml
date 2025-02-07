@@ -1,0 +1,118 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Prolizy.Viewer.ViewModels.Sacoche"
+             xmlns:controls="using:Prolizy.Viewer.Controls"
+             xmlns:sacoche="using:Prolizy.Viewer.Controls.Sacoche"
+             xmlns:fluent="using:FluentIcons.Avalonia.Fluent"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:ReleveEvaluationViewModel"
+             x:Class="Prolizy.Viewer.Controls.Sacoche.ReleveEvaluation">
+    
+    <ScrollViewer HorizontalAlignment="Stretch">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- Header -->
+            <StackPanel Grid.Row="0" 
+                      Orientation="Vertical"
+                      Spacing="5" 
+                      HorizontalAlignment="Stretch"
+                      Margin="0,0,0,8">
+                <TextBlock Text="Compétences" 
+                         HorizontalAlignment="Center"
+                         FontSize="24" 
+                         FontWeight="Bold" />
+
+                <ComboBox ItemsSource="{Binding SortingTypes}"
+                         SelectedItem="{Binding SelectedSortingType}"
+                         HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel HorizontalAlignment="Stretch"
+                                      Orientation="Horizontal" 
+                                      Spacing="2">
+                                <fluent:SymbolIcon Symbol="{Binding Icon}" />
+                                <TextBlock Text="{Binding CanonicalName}" 
+                                         VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Skills List -->
+            <ItemsControl Grid.Row="1"
+                         ItemsSource="{Binding SkillRows}"
+                         Margin="0,0,0,10">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:Card Margin="0,0,0,8">
+                            <Grid ColumnDefinitions="*,Auto" 
+                                 RowDefinitions="*,*">
+                                <TextBlock Grid.Row="0" 
+                                         Grid.Column="0" 
+                                         Text="{Binding SkillName}"
+                                         TextWrapping="Wrap" 
+                                         Margin="2"
+                                         FontWeight="Medium" />
+
+                                <ItemsControl Grid.Row="1" 
+                                           Grid.Column="0" 
+                                           ItemsSource="{Binding Notes}"
+                                           Margin="0,4,0,0">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <sacoche:SkillLevelIndicator
+                                                Level="{Binding Value}"
+                                                Margin="4,0" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- Score -->
+                                <controls:Card Grid.Column="1" 
+                                            Grid.Row="0" 
+                                            Grid.RowSpan="2"
+                                            Classes="accent"
+                                            Padding="12,6"
+                                            MinWidth="60"
+                                            VerticalContentAlignment="Center"
+                                            Background="{Binding ScoreColor}"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding DisplayedScore}"
+                                             FontWeight="Bold"
+                                             FontSize="16"
+                                             HorizontalAlignment="Center" />
+                                </controls:Card>
+                            </Grid>
+                        </controls:Card>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Footer with Average Score -->
+            <controls:Card Grid.Row="2"
+                         Classes="accent"
+                         Background="{DynamicResource CoreGradientBrush}"
+                         Margin="0,8,0,0">
+                <StackPanel Orientation="Vertical" 
+                          Spacing="5"
+                          HorizontalAlignment="Stretch">
+                    <TextBlock Text="Moyenne pondérée des scores:"
+                             FontSize="16" 
+                             HorizontalAlignment="Center"
+                             FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding FormattedScore}"
+                             FontSize="18" 
+                             HorizontalAlignment="Center"
+                             FontWeight="Bold" />
+                </StackPanel>
+            </controls:Card>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

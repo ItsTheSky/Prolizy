@@ -1,0 +1,61 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:bulletin="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
+             xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="bulletin:InternalTeachingUnit"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.TeachingUnitDisplay">
+    <controls:SettingsExpander Header="{Binding DisplayTitle}"
+                               ItemsSource="{Binding Entries}" 
+                               Grid.IsSharedSizeScope="True">
+        <controls:SettingsExpander.IconSource>
+            <fluent:SymbolIconSource Symbol="AppFolder" IconVariant="Filled"
+                                     Foreground="{Binding AccentBrush}"/>
+        </controls:SettingsExpander.IconSource>
+        <controls:SettingsExpander.Footer>
+            <StackPanel Spacing="2">
+                <TextBlock FontWeight="SemiBold" TextAlignment="Right" Foreground="{Binding TextBrush}"
+                           Text="{Binding TeachingUnit.Average.Value, StringFormat='Moyenne : {0}'}" />
+                <TextBlock TextAlignment="Right"><TextBlock.Text>
+                    <MultiBinding StringFormat="Rang : {0} / {1}">
+                        <Binding Path="TeachingUnit.Average.Rank" />
+                        <Binding Path="TeachingUnit.Average.TotalRank" />
+                    </MultiBinding>
+                </TextBlock.Text></TextBlock>
+                <TextBlock TextAlignment="Right" FontWeight="SemiLight"><TextBlock.Text>
+                    <MultiBinding StringFormat="Bonus: {0} - Malus: {1}">
+                        <Binding Path="TeachingUnit.Bonus" />
+                        <Binding Path="TeachingUnit.Malus" />
+                    </MultiBinding>
+                </TextBlock.Text></TextBlock>
+            </StackPanel>
+        </controls:SettingsExpander.Footer>
+        <controls:SettingsExpander.ItemTemplate>
+            <DataTemplate x:DataType="bulletin:InternalTeachingUnitEntry">
+                <avalonia:SpacedGrid ColumnSpacing="10">
+                    <avalonia:SpacedGrid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="A" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="B" />
+                    </avalonia:SpacedGrid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="[SAÉ]" FontWeight="SemiLight"
+                                   IsVisible="{Binding Data.IsSae}" />
+                        
+                        <TextBlock Text="{Binding Data.Title}" TextWrapping="Wrap"
+                                   FontWeight="Medium" />
+                    </StackPanel>
+                    
+                    <TextBlock Grid.Column="1" Text="{Binding Data.Average}" />
+                    <TextBlock FontWeight="Light" FontStyle="Italic" Grid.Column="2" 
+                               Text="{Binding Data.Coefficient, StringFormat='Coef. {0}'}" />
+                </avalonia:SpacedGrid>
+            </DataTemplate>
+        </controls:SettingsExpander.ItemTemplate>
+    </controls:SettingsExpander>
+</UserControl>
