@@ -36,17 +36,18 @@ public partial class InternalSaeDisplay : ObservableObject
         
         float total = 0;
         float totalOther = 0;
-        var count = 0;
+        float count = 0;
         
         foreach (var eval in sae.Evaluations)
         {
             if (!float.TryParse(eval.Grade.Value.Replace(".", ","), out var result))
                 continue;
+            var coef = float.Parse(eval.Coefficient.Replace(".", ","));
             var other = float.Parse(eval.Grade.Average.Replace(".", ","));
 
-            total += result;
-            totalOther += other;
-            count++;
+            total += result * coef;
+            totalOther += other * coef;
+            count += coef;
         }
 
         Average = $"{total / count:0.00}";
