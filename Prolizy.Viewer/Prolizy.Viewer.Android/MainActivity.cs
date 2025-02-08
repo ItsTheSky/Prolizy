@@ -50,12 +50,20 @@ public class MainActivity : AvaloniaMainActivity<App>
 
     protected override void OnCreate(Bundle? savedInstanceState)
     {
-        base.OnCreate(savedInstanceState);
-        AndroidAccessManager.AndroidAccess!.InitNotifications();
-
-        if (Intent?.Action == AppWidget.ACTION_OPEN_EDT)
+        try
         {
-            OpenEDTPage();
+            base.OnCreate(savedInstanceState);
+            AndroidAccessManager.AndroidAccess!.InitNotifications();
+
+            if (Intent?.Action == AppWidget.ACTION_OPEN_EDT)
+            {
+                OpenEDTPage();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Crash lors de l'initialisation : {ex}");
+            throw;
         }
     }
 

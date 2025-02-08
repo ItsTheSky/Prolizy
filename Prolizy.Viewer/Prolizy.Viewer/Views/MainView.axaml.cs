@@ -37,6 +37,7 @@ public partial class MainView : UserControl
 
         ColorSchemeManager.ApplyTheme(Settings.Instance.ThemeScheme);
         
+        Console.WriteLine("DATA FOLDER: " + Paths.Build() + " (exists: " + Directory.Exists(Paths.Build()) + ")");
         try
         { 
             Instance = this;

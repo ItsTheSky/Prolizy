@@ -41,7 +41,7 @@
                             <Button Grid.Row="1" Grid.Column="0" Classes="transparent"
                                     HorizontalAlignment="Stretch"
                                     Command="{Binding GoToPreviousDayCommand}">
-                                <TextBlock Text="{Binding DisplayNextDay}"
+                                <TextBlock Text="{Binding DisplayPreviousDay}"
                                            HorizontalAlignment="Center" FontSize="12" Margin="-2"
                                            VerticalAlignment="Center" />
                             </Button>
@@ -57,7 +57,7 @@
                             <Button Grid.Row="1" Grid.Column="2" Classes="transparent"
                                     HorizontalAlignment="Stretch"
                                     Command="{Binding GoToNextDayCommand}">
-                                <TextBlock Text="{Binding DisplayPreviousDay}"
+                                <TextBlock Text="{Binding DisplayNextDay}"
                                            HorizontalAlignment="Center" FontSize="12" Margin="-2"
                                            VerticalAlignment="Center" />
                             </Button>

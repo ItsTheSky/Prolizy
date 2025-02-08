@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls.Notifications;
 using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,6 +14,7 @@ using Prolizy.Viewer.Controls.Edt;
 using Prolizy.Viewer.Controls.Wizard.Steps;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.Utilities.Android;
+using Prolizy.Viewer.Views;
 using Prolizy.Viewer.Views.Panes;
 using Calendar = Avalonia.Controls.Calendar;
 
@@ -112,40 +114,48 @@ public partial class TimeTableViewModel : ObservableObject
 
     public async Task GoToDay()
     {
-        await UpdateAndroidWidget();
-
-        if (_scheduleCache.ContainsKey(SelectedDate))
+        try
         {
-            _timeTablePane.UpdateItems(_scheduleCache[SelectedDate]);
-            await HomePane.Instance.ViewModel.UpdateCards("edt");
-            Console.WriteLine("Today's schedule has been loaded from cache.");
-            return;
-        }
+            await UpdateAndroidWidget();
 
-        Console.WriteLine("Loading schedule...");
-
-        // Obtenir le lundi de la semaine courante
-        var monday = SelectedDate.AddDays(-(int)SelectedDate.DayOfWeek + 1);
-        if (SelectedDate.DayOfWeek == DayOfWeek.Sunday) // Si on est dimanche, prendre le lundi de la semaine précédente
-            monday = monday.AddDays(-7);
-
-        // Charger du lundi au dimanche (+1 jour après la date sélectionnée)
-        var start = monday;
-        var end = SelectedDate.AddDays(1);
-
-        for (var date = start; date <= end; date = date.AddDays(1))
-        {
-            if (!_scheduleCache.ContainsKey(date))
+            if (_scheduleCache.ContainsKey(SelectedDate))
             {
-                var items = await LoadCoursesForDate(date);
-                _scheduleCache[date] = items;
-                Console.WriteLine($"Added {items.Count} courses to cache for {date}");
+                _timeTablePane.UpdateItems(_scheduleCache[SelectedDate]);
+                await HomePane.Instance.ViewModel.UpdateCards("edt");
+                Console.WriteLine("Today's schedule has been loaded from cache.");
+                return;
             }
+
+            Console.WriteLine("Loading schedule...");
+
+            // Obtenir le lundi de la semaine courante
+            var monday = SelectedDate.AddDays(-(int)SelectedDate.DayOfWeek + 1);
+            if (SelectedDate.DayOfWeek == DayOfWeek.Sunday) // Si on est dimanche, prendre le lundi de la semaine précédente
+                monday = monday.AddDays(-7);
+
+            // Charger du lundi au dimanche (+1 jour après la date sélectionnée)
+            var start = monday;
+            var end = SelectedDate.AddDays(1);
+
+            for (var date = start; date <= end; date = date.AddDays(1))
+            {
+                if (!_scheduleCache.ContainsKey(date))
+                {
+                    var items = await LoadCoursesForDate(date);
+                    _scheduleCache[date] = items;
+                    Console.WriteLine($"Added {items.Count} courses to cache for {date}");
+                }
+            }
+
+            _timeTablePane.UpdateItems(_scheduleCache[SelectedDate]);
+            
+            await HomePane.UpdateCards("edt");
         }
-
-        _timeTablePane.UpdateItems(_scheduleCache[SelectedDate]);
-
-        await HomePane.Instance.ViewModel.UpdateCards("edt");
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            MainView.ShowNotification("Erreur", "Impossible de charger l'emploi du temps.", NotificationType.Error);
+        }
     }
 
     public void RefreshAll()

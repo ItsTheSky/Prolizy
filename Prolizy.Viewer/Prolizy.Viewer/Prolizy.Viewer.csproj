@@ -7,7 +7,7 @@
         <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
         <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
         <PublishTrimmed>false</PublishTrimmed>
-        <AssemblyVersion>1.2.0</AssemblyVersion>
+        <AssemblyVersion>1.4.0</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>

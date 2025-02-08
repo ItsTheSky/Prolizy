@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -21,4 +22,12 @@ public partial class HomePane : UserControl
     }
 
     public HomePaneViewModel ViewModel => ((HomePaneViewModel) DataContext)!;
+
+    public static async Task UpdateCards(string? module = null)
+    {
+        if (Instance == null! || Instance.ViewModel == null!)
+            return;
+        
+        await Instance.ViewModel.UpdateCards(module);
+    }
 }

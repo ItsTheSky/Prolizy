@@ -5,17 +5,17 @@
         <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
         <Nullable>enable</Nullable>
         <ApplicationId>net.itsthesky.Prolizy.Viewer</ApplicationId>
-        <ApplicationVersion>4</ApplicationVersion>
-        <ApplicationDisplayVersion>1.2.0</ApplicationDisplayVersion>
+        <ApplicationVersion>7</ApplicationVersion>
+        <ApplicationDisplayVersion>1.4.0</ApplicationDisplayVersion>
         <AndroidUseAapt2>True</AndroidUseAapt2>
         <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-        
+
         <!-- disable trimming for now -->
         <PublishTrimmed>false</PublishTrimmed>
         <RunAOTCompilation>false</RunAOTCompilation>
 
         <!-- <AndroidPackageFormat>apk</AndroidPackageFormat> -->
-        <AndroidPackageFormat>apk</AndroidPackageFormat>
+        <AndroidPackageFormat>aab</AndroidPackageFormat>
         
         <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
         
