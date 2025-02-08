@@ -47,5 +47,9 @@
     
     <ItemGroup>
         <AndroidResource Include="Resources\xml\appwidgetprovider.xml" />
+        <AndroidResource Update="Resources\drawable\timer_badge_background.xml">
+          <SubType>Designer</SubType>
+          <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+        </AndroidResource>
     </ItemGroup>
 </Project>

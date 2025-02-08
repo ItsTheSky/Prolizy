@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using FluentAvalonia.UI.Controls;
 using Prolizy.API;
+using Prolizy.Viewer.Utilities;
 
 namespace Prolizy.Viewer.Controls.Edt;
 
@@ -14,20 +15,22 @@ public class ScheduleItem
 {
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
-    
+
     public string Professor { get; set; }
     public string Subject { get; set; }
     public string Room { get; set; }
     public string Group { get; set; }
-    
+
     public ScheduleItemOverlay? Overlay { get; set; }
-    
+
     public Color BackgroundColor { get; set; }
     public Color ForegroundColor { get; set; }
     public Color BorderColor { get; set; }
-    
+
     public Course Course { get; set; }
-    
+
+    private readonly List<ContentDialog> _dialogs = new();
+
     public async Task ItemClicked()
     {
         var content = new StackPanel
@@ -57,7 +60,26 @@ public class ScheduleItem
             Content = content,
             CloseButtonText = "Fermer"
         };
-        
+        dialog.Closed += (_, _) => _dialogs.Clear();
+        dialog.Opened += async (_, _) =>
+        {
+            _dialogs.Add(dialog);
+            if (_dialogs.Count >= 5)
+            {
+                foreach (var d in _dialogs)
+                    d.Hide();
+                
+                _dialogs.Clear();
+                await Task.Delay(100);
+                await Dialogs.ShowMessage("Oh oh ...",
+                    """
+                    Vous venez de trouvez un easter-egg !
+
+                    Il faut croire que vous aimez vraiment beaucoup ce cours :')
+                    """);
+            }
+        };
+
         await dialog.ShowAsync();
     }
 }

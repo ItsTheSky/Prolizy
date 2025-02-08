@@ -62,9 +62,9 @@ public class MainActivity : AvaloniaMainActivity<App>
     {
         try
         {
-            MainView.Instance.MoveToPane(typeof(TimeTablePane));
             _ = Dispatcher.UIThread.InvokeAsync(async () =>
             {
+                MainView.Instance.MoveToPane(typeof(TimeTablePane));
                 var (item, isCurrent) = await TimeTableViewModel.GetCurrentOrNextCourse();
                 if (item != null)
                 {

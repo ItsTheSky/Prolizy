@@ -10,6 +10,7 @@ using Android.OS;
 using Android.Webkit;
 using Android.Widget;
 using Avalonia.Android;
+using Prolizy.Viewer.Android.Activities;
 using Prolizy.Viewer.Controls.Edt;
 using Prolizy.Viewer.Utilities.Android;
 using Prolizy.Viewer.ViewModels;
@@ -59,6 +60,8 @@ public class AppWidget : AppWidgetProvider
                 isCurrent ? "Cours Actuel" : "Prochain Cours");
             updateViews.SetTextViewText(Resource.Id.Widget_CourseTime, 
                 $"{item.StartTime:HH:mm} - {item.EndTime:HH:mm}");
+            updateViews.SetTextViewText(Resource.Id.Widget_CourseDate, 
+                GetFriendlyDateText(item.StartTime));
             updateViews.SetTextViewText(Resource.Id.Widget_CourseTitle, 
                 item.Subject ?? "Sans titre");
             updateViews.SetTextViewText(Resource.Id.Widget_CourseRoom, 
@@ -74,6 +77,31 @@ public class AppWidget : AppWidgetProvider
             DebugPane.AddDebugText($"Error updating widget views: {ex.Message}\n{ex.StackTrace}");
         }
     }
+    
+    private static string GetFriendlyDateText(DateTime date)
+    {
+        var today = DateTime.Today;
+        var tomorrow = today.AddDays(1);
+        var dayAfterTomorrow = today.AddDays(2);
+    
+        if (date.Date == today)
+            return "Aujourd'hui";
+        if (date.Date == tomorrow)
+            return "Demain";
+        if (date.Date == dayAfterTomorrow)
+            return "Après-demain";
+        
+        // Si c'est dans la même semaine ou la semaine prochaine
+        var daysUntilNextOccurrence = ((int)date.DayOfWeek - (int)DateTime.Today.DayOfWeek + 7) % 7;
+        var nextOccurrence = DateTime.Today.AddDays(daysUntilNextOccurrence);
+    
+        if (date.Date == nextOccurrence)
+            return $"{date.ToString("dddd", new System.Globalization.CultureInfo("fr-FR"))} Prochain";
+        
+        // Pour tous les autres cas, afficher la date complète
+        return date.ToString("dddd d MMMM", new System.Globalization.CultureInfo("fr-FR"));
+    }
+
 
     private static async Task UpdateWidgetWithCurrentCourse(Context context, AppWidgetManager appWidgetManager, int[] widgetIds)
     {
@@ -198,6 +226,17 @@ public class AppWidget : AppWidgetProvider
             intent.SetDataAndType(uri, mimeType ?? "application/*");
             intent.AddFlags(ActivityFlags.GrantReadUriPermission | ActivityFlags.NewTask);
             Application.Context.StartActivity(intent);
+        }
+
+        public void RequestAddWidget()
+        {
+            var widgetManager = AppWidgetManager.GetInstance(Application.Context);
+            var myProvider = new ComponentName(Application.Context, Java.Lang.Class.FromType(typeof(AppWidget)));
+
+            if (widgetManager.IsRequestPinAppWidgetSupported)
+            {
+                widgetManager.RequestPinAppWidget(myProvider, null, null);
+            }
         }
     }
 }

@@ -9,6 +9,8 @@ public interface IAndroidAccess
     
     public void OpenFolder(string path);
     
+    public void RequestAddWidget();
+    
 }
 
 public static class AndroidAccessManager

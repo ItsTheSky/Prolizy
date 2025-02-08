@@ -9,34 +9,58 @@
 
     <!-- En-tête avec le statut et l'heure -->
     <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingBottom="8dp">
-
-        <!-- Statut (Cours Actuel/Prochain Cours) -->
+            android:layout_height="match_parent">
         <TextView
                 android:id="@+id/Widget_PanelTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:textSize="14sp"
-                android:textColor="#FFFFFF"/>
-
-        <!-- Horaires dans un badge -->
-        <TextView
-                android:id="@+id/Widget_CourseTime"
-                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF" android:text="Chargement ..." android:gravity="center_horizontal|top"
+                android:layout_gravity="center_horizontal|top" android:layout_marginBottom="10px"/>
+        <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/time_badge_background"
-                android:textSize="14sp"
-                android:textColor="#FFFFFF"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:layout_marginStart="8dp"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp">
+
+            <!-- Statut (Cours Actuel/Prochain Cours) -->
+
+            <!-- Horaires dans un badge -->
+            <TextView
+                    android:id="@+id/Widget_CourseDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:background="@drawable/date_badge_background"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="4dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_marginEnd="8dp" android:gravity="left|center_vertical" android:layout_weight="1"/>
+            <TextView
+                    android:id="@+id/Widget_CourseTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:background="@drawable/time_badge_background"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    android:drawableStart="@drawable/ic_timer"
+                    android:drawablePadding="4dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_marginEnd="8dp" android:gravity="left|center_vertical" android:layout_weight="1"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Nom du cours -->

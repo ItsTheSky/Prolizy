@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Layout;
@@ -6,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
 using Prolizy.Viewer.Controls.Wizard.Steps;
 using Prolizy.Viewer.Utilities;
+using Prolizy.Viewer.Utilities.Android;
 using Prolizy.Viewer.Views.Panes;
 
 namespace Prolizy.Viewer.Views.SettingsMenu.Sub;
@@ -49,6 +51,16 @@ public partial class TimeTableCategory : SettingCategory
                         }
                     }  
                 }))
+            },
+            new SettingEntry(this, "add_widget")
+            {
+                Title = "Ajouter un Widget",
+                Description = "LAisser l'application proposer l'ajout d'un widget sur l'écran d'accueil, permettant de voir votre prochain cours.",
+                Control = ControlsHelper.CreateSettingButton("Ajouter", new RelayCommand(() =>
+                {
+                    AndroidAccessManager.AndroidAccess?.RequestAddWidget();
+                })),
+                IsVisible =  OperatingSystem.IsAndroid()
             },
             new SettingEntry(this, "better_description")
             {

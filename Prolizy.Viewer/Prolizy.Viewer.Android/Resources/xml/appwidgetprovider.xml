@@ -2,6 +2,7 @@
                     android:minWidth="250dp"
                     android:minHeight="110dp"
                     android:updatePeriodMillis="60000"
+                    android:description="@string/appwidget_description"
                     android:initialLayout="@layout/course_widget"
                     android:resizeMode="horizontal|vertical"
                     android:widgetCategory="home_screen">
