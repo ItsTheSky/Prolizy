@@ -1,8 +1,10 @@
 # Prolizy
 
+<div align="center">
 Prolizy est une application mobile & de bureau moderne conçue pour simplifier l'accès aux outils numériques de l'IUT de Vélizy. Elle offre une interface unifiée et intuitive pour l'emploi du temps, les notes, et plus encore.
 
-![Prolizy Main Interface Screenshot](Screenshots/banner.png)
+<img src="Screenshots/banner.png" alt="Prolizy Main Interface Screenshot" width="800"/>
+</div>
 
 ## 🌟 Fonctionnalités
 
@@ -13,8 +15,13 @@ Prolizy est une application mobile & de bureau moderne conçue pour simplifier l
 - Overlay pour les absences et retards
 - Widget Android pour voir le prochain cours
 
-![EDT Screenshot](Screenshots/edt1.png)
-![EDT Screenshot](Screenshots/edt2.png)
+<details>
+<summary>Images</summary>
+<div align="center">
+<img src="Screenshots/edt1.png" alt="EDT Screenshot" width="400"/>
+<img src="Screenshots/edt2.png" alt="EDT Screenshot" width="400"/>
+</div>
+</details>
 
 ### 📊 Bulletin de notes
 - Consultation des notes par semestre
@@ -23,9 +30,14 @@ Prolizy est une application mobile & de bureau moderne conçue pour simplifier l
 - Vue d'ensemble des moyennes
 - Historique des évaluations
 
-![Bulletin Screenshot](Screenshots/bulletin1.png)
-![Bulletin Screenshot](Screenshots/bulletin2.png)
-![Bulletin Screenshot](Screenshots/bulletin3.png)
+<details>
+<summary>Images</summary>
+<div align="center">
+<img src="Screenshots/bulletin1.png" alt="Bulletin Screenshot" width="400"/>
+<img src="Screenshots/bulletin2.png" alt="Bulletin Screenshot" width="400"/>
+<img src="Screenshots/bulletin3.png" alt="Bulletin Screenshot" width="400"/>
+</div>
+</details>
 
 ### 🎯 SACoche (Compétences)
 - Suivi des compétences acquises
@@ -33,8 +45,13 @@ Prolizy est une application mobile & de bureau moderne conçue pour simplifier l
 - Graphiques de progression
 - Vue détaillée des compétences
 
-![SACoche Screenshot](Screenshots/sacoche1.png)
-![SACoche Screenshot](Screenshots/sacoche2.png)
+<details>
+<summary>Images</summary>
+<div align="center">
+<img src="Screenshots/sacoche1.png" alt="SACoche Screenshot" width="400"/>
+<img src="Screenshots/sacoche2.png" alt="SACoche Screenshot" width="400"/>
+</div>
+</details>
 
 ### 🏠 Page d'accueil personnalisable (bientôt)
 - Cards configurables
@@ -60,7 +77,6 @@ Prolizy est une application mobile & de bureau moderne conçue pour simplifier l
 - Mode anonyme disponible
 
 ## 📱 Support Multi-plateformes
-
 - ✅ Windows
 - ✅ Android
 - 🚧 Linux (en développement)
@@ -68,12 +84,9 @@ Prolizy est une application mobile & de bureau moderne conçue pour simplifier l
 - 🚫 iOS (non prévu)
 
 ## 🚀 Installation (Windows)
-
 1. Téléchargez la dernière version depuis la page [Releases](https://github.com/ItsTheSky/Prolizy/releases)
 2. Exécutez le fichier d'installation
 3. Suivez l'assistant de configuration initial
-
-
 
 ## 💻 Développement
 
@@ -89,17 +102,13 @@ dotnet restore
 ```
 
 ### Build
-
 A faire dans le dossier `Prolizy.Viewer.Desktop` pour la version Windows!
-
 ```bash
 dotnet build
 ```
 
 ## 🤝 Contribution
-
 Les contributions sont les bienvenues ! Voici comment vous pouvez aider :
-
 1. Fork le projet
 2. Créez votre branche de fonctionnalité (`git checkout -b feature/AmazingFeature`)
 3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
@@ -107,16 +116,12 @@ Les contributions sont les bienvenues ! Voici comment vous pouvez aider :
 5. Ouvrez une Pull Request
 
 ## 📝 License
-
 Ce projet est sous licence MIT - voir le fichier [LICENSE.md](LICENSE.md) pour plus de détails.
 
 ## 👤 Auteur
-
 **Nicolas RACOT** - 1ère année de BUT Informatique à l'IUT de Vélizy
-
 - Discord: itsthesky
 - GitHub: [@itsthesky](https://github.com/itsthesky)
 
 ## ⭐️ Support
-
 Si vous trouvez Prolizy utile, pensez à mettre une étoile sur le projet !
