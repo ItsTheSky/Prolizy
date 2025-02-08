@@ -5,10 +5,14 @@ using Android;
 using Android.App;
 using Android.Appwidget;
 using Android.Content;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
+using Android.Provider;
 using Android.Webkit;
 using Android.Widget;
+using AndroidX.Core.App;
+using AndroidX.Core.Content;
 using Avalonia.Android;
 using Prolizy.Viewer.Android.Activities;
 using Prolizy.Viewer.Controls.Edt;
@@ -29,7 +33,7 @@ public class AppWidget : AppWidgetProvider
     private const int CLICK_ACTION = 1;
     public const string ACTION_OPEN_EDT = "com.prolizy.viewer.OPEN_EDT";
     
-    private static void UpdateWidgetViews(Context context, AppWidgetManager appWidgetManager, int[] widgetIds, ScheduleItem item, bool isCurrent)
+    public static void UpdateWidgetViews(Context context, AppWidgetManager appWidgetManager, int[] widgetIds, ScheduleItem item, bool isCurrent)
     {
         try 
         {
@@ -180,63 +184,6 @@ public class AppWidget : AppWidgetProvider
         if (ids.Length > 0)
         {
             Task.Run(() => UpdateWidgetWithCurrentCourse(context, appWidgetManager, ids));
-        }
-    }
-
-    public class AndroidAccess : IAndroidAccess
-    {
-        public void UpdateWidget(ScheduleItem currentItem, bool isCurrent)
-        {
-            try
-            {
-                var context = Application.Context;
-                var appWidgetManager = AppWidgetManager.GetInstance(context);
-                var componentName = new ComponentName(context, Java.Lang.Class.FromType(typeof(AppWidget)));
-                var ids = appWidgetManager.GetAppWidgetIds(componentName);
-                
-                DebugPane.AddDebugText($"Found {ids.Length} widgets to update");
-                
-                if (ids.Length > 0)
-                {
-                    UpdateWidgetViews(context, appWidgetManager, ids, currentItem, isCurrent);
-                }
-                else 
-                {
-                    DebugPane.AddDebugText("No widgets found to update");
-                }
-            }
-            catch (Exception ex)
-            {
-                DebugPane.AddDebugText($"Error in AndroidAccess.UpdateWidget: {ex.Message}\n{ex.StackTrace}");
-            }
-        }
-
-        public void OpenFolder(string path)
-        {
-            var intent = new Intent(Intent.ActionView);
-            var mimeType = MimeTypeMap.Singleton?.GetMimeTypeFromExtension(
-                MimeTypeMap.GetFileExtensionFromUrl(path));
-    
-            var file = new Java.IO.File(path);
-            var uri = AndroidX.Core.Content.FileProvider.GetUriForFile(
-                Application.Context,
-                $"{Application.Context.PackageName}.fileprovider",
-                file);
-        
-            intent.SetDataAndType(uri, mimeType ?? "application/*");
-            intent.AddFlags(ActivityFlags.GrantReadUriPermission | ActivityFlags.NewTask);
-            Application.Context.StartActivity(intent);
-        }
-
-        public void RequestAddWidget()
-        {
-            var widgetManager = AppWidgetManager.GetInstance(Application.Context);
-            var myProvider = new ComponentName(Application.Context, Java.Lang.Class.FromType(typeof(AppWidget)));
-
-            if (widgetManager.IsRequestPinAppWidgetSupported)
-            {
-                widgetManager.RequestPinAppWidget(myProvider, null, null);
-            }
         }
     }
 }

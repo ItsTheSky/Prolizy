@@ -32,7 +32,7 @@ public class MainActivity : AvaloniaMainActivity<App>
 {
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
-        AndroidAccessManager.AndroidAccess = new AppWidget.AndroidAccess();
+        AndroidAccessManager.AndroidAccess = new AndroidAccess();
 
         return base.CustomizeAppBuilder(builder)
             .WithInterFont();
@@ -51,6 +51,7 @@ public class MainActivity : AvaloniaMainActivity<App>
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
+        AndroidAccessManager.AndroidAccess!.InitNotifications();
 
         if (Intent?.Action == AppWidget.ACTION_OPEN_EDT)
         {

@@ -77,6 +77,34 @@ public partial class AppCategory : SettingCategory
                 await TimeTablePane.Instance.ViewModel.UpdateAndroidWidget();
             })),
             IsVisible = Settings.Instance.Debug && OperatingSystem.IsAndroid()
+        },
+        new (this, "test_notification")
+        {
+            Title = "Tester les notifications",
+            Description = "Petit test de notification (android) pour vérifier que les notifications fonctionnent.",
+            Control = ControlsHelper.CreateSettingButton("Tester", new AsyncRelayCommand(async () =>
+            {
+                if (AndroidAccessManager.AndroidAccess != null)
+                {
+                    if (!AndroidAccessManager.AndroidAccess.IsNotificationPermissionGranted())
+                    {
+                        await Dialogs.AskChoice("Permission de notification",
+                            "L'application n'a pas la permission de notification. Voulez-vous l'activer ?",
+                            "Oui", "Non", granted =>
+                            {
+                                if (granted)
+                                    AndroidAccessManager.AndroidAccess?.AskForNotificationPermission();
+                            });
+                        if (!AndroidAccessManager.AndroidAccess.IsNotificationPermissionGranted())
+                            return;
+                    }
+                    
+                    AndroidAccessManager.AndroidAccess?.ShowNotification(new AndroidNotification(
+                        "Test de notification",
+                        "Ceci est un test de notification.", NotificationChannel.UpdateBulletin));
+                }
+            })),
+            IsVisible = Settings.Instance.Debug && OperatingSystem.IsAndroid()
         }
     ];
 

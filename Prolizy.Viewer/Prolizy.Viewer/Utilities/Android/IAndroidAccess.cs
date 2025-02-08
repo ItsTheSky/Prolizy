@@ -11,9 +11,24 @@ public interface IAndroidAccess
     
     public void RequestAddWidget();
     
+    public void ShowNotification(AndroidNotification notification);
+    
+    public void AskForNotificationPermission();
+    
+    public bool IsNotificationPermissionGranted();
+    
+    public void InitNotifications();
 }
 
 public static class AndroidAccessManager
 {
     public static IAndroidAccess? AndroidAccess { get; set; }
+}
+
+public record AndroidNotification(string Title, string Message, NotificationChannel Channel);
+
+public enum NotificationChannel
+{
+    UpdateEdt,
+    UpdateBulletin
 }

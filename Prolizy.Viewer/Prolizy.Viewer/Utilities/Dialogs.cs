@@ -23,5 +23,28 @@ public static class Dialogs
         
         await dialog.ShowAsync();
     }
+    
+    public static async Task AskChoice(string title, object content, string choice1, string choice2,
+        Action<bool> onChoice,
+        bool hasCancel = true,
+        [CallerMemberName] string caller = "")
+    {
+        var dialog = new ContentDialog()
+        {
+            Title = title,
+            Content = content,
+            PrimaryButtonText = choice1,
+            SecondaryButtonText = choice2
+        };
+        
+        if (hasCancel)
+            dialog.CloseButtonText = "Annuler";
+        
+        Console.WriteLine($"[{caller}] {title}: {content}");
+        
+        var result = await dialog.ShowAsync();
+        
+        onChoice(result == ContentDialogResult.Primary);
+    }
      
 }
