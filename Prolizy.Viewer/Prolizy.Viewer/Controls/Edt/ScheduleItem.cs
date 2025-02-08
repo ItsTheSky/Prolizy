@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using Prolizy.API;
 using Prolizy.Viewer.Utilities;
@@ -33,6 +35,14 @@ public class ScheduleItem
 
     public async Task ItemClicked()
     {
+        var notesText = new TextBlock()
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Top,
+            IsVisible = false,
+            TextAlignment = TextAlignment.Left
+        };
+        
         var content = new StackPanel
         {
             Orientation = Orientation.Vertical,
@@ -49,7 +59,9 @@ public class ScheduleItem
                     { "Salle", Room },
                     { "Professeur", Professor },
                     { "Horaires", $@"{StartTime:HH\:mm} - {EndTime:HH\:mm}" }
-                }, rowSpacing: 5)
+                }, rowSpacing: 5),
+                new Separator(),
+                notesText
             },
             Margin = new Thickness(5, 0)
         };
@@ -78,6 +90,29 @@ public class ScheduleItem
                     Il faut croire que vous aimez vraiment beaucoup ce cours :')
                     """);
             }
+        };
+        dialog.Opened += async (_, _) =>
+        {
+            Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                try
+                {
+                    var advancedDesc = await Course.GetDescription();
+                    if (advancedDesc == null!)
+                        return;
+
+                    if (advancedDesc.Notes.Count > 0 && !advancedDesc.Notes.Any(n => n.Equals("Inconnu")))
+                    {
+                        var formattedNotes = string.Join("\n", advancedDesc.Notes);
+                        notesText.Text = $"{formattedNotes}";
+                        notesText.IsVisible = true;
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            });
         };
 
         await dialog.ShowAsync();

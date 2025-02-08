@@ -33,9 +33,10 @@ public static class EDTClient
             else
                 lastElementType = key;
             
-            var value = element.GetProperty("content").ValueKind == JsonValueKind.Array 
+            var value = (element.GetProperty("content").ValueKind == JsonValueKind.Array 
                 ? string.Join(", ", element.GetProperty("content").EnumerateArray().Select(e => e.GetString())) 
-                : element.GetProperty("content").GetString();
+                : element.GetProperty("content").GetString())
+                ?.Replace("<br />", "\n");
             if (value == null)
                 continue;
             

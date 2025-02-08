@@ -148,49 +148,6 @@ public partial class TimeTableViewModel : ObservableObject
         await HomePane.Instance.ViewModel.UpdateCards("edt");
     }
 
-    private ScheduleItemOverlay? FindItemOverlay(Course course)
-    {
-        if (!Settings.Instance.Overlay)
-            return null;
-
-        // Check if the bulletin is available
-        var bulletinVm = BulletinPane.Instance.ViewModel;
-        if (Settings.Instance.LinkEdt && bulletinVm.IsBulletinAvailable)
-        {
-            var absencesDay = bulletinVm.Absences;
-            var absences = absencesDay
-                .FirstOrDefault(a => a.DayAbsences[0].Date == DateOnly.FromDateTime(course.Start.Date))?.DayAbsences;
-            if (absences == null)
-                return null;
-
-            // Find absences for this specific course
-            var absence = absences.FirstOrDefault(a =>
-                a.Date == DateOnly.FromDateTime(course.Start.Date)
-                && new TimeOnly(a.Absence.StartTime.Ticks) == TimeOnly.FromDateTime(course.Start)
-                && new TimeOnly(a.Absence.EndTime.Ticks) == TimeOnly.FromDateTime(course.End));
-            if (absence != null)
-            {
-                if (absence.Absence.Status == "retard")
-                    return new ScheduleItemOverlay(ColorMatcher.OrangeBrush, Brushes.Yellow, "Retard");
-                else
-                    return new ScheduleItemOverlay(ColorMatcher.RedBrush, Brushes.OrangeRed, "Absent");
-            }
-        }
-
-        // Any other case: the course it before the current time (so it's in the past)
-        if (DateOnly.FromDateTime(course.End) <= DateOnly.FromDateTime(DateTime.Now))
-        {
-            // Also be sure it's after the end time
-            var current = TimeOnly.FromDateTime(DateTime.Now);
-            var courseTime = TimeOnly.FromDateTime(course.End);
-
-            if (DateOnly.FromDateTime(course.End) != DateOnly.FromDateTime(DateTime.Now) || current > courseTime)
-                return new ScheduleItemOverlay(ColorMatcher.GrayBrush, Brushes.Azure, "Passé");
-        }
-
-        return null;
-    }
-
     public void RefreshAll()
     {
         Dispatcher.UIThread.InvokeAsync(async () =>
