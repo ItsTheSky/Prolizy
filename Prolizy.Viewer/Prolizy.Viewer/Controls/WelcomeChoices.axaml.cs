@@ -16,7 +16,7 @@ public partial class WelcomeChoices : UserControl
 
     public static readonly List<Module> Modules =
     [
-        new ("home", "Accueil", "Réunit les informations des différents modules", Symbol.Home, typeof(HomePane)),
+        new ("home", "Accueil", "Réunit les informations des différents modules", Symbol.Home, typeof(HomePane), false),
         new ("edt", "Emloi du temps", "EDT CELCAT de l'IUT de Vélizy", Symbol.Calendar, typeof(TimeTablePane)),
         new ("sacoche", "Compétences", "Compétences SACoche de l'académie de Versailles", Symbol.Trophy, typeof(SacochePane)),
         new ("bulletin", "Bulletin", "Bulletins de l'IUT de Vélizy", Symbol.Document, typeof(BulletinPane)),

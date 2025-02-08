@@ -16,7 +16,7 @@
         <!-- Section Services -->
         <TextBlock FontWeight="SemiBold" FontSize="16" Text="Services" Margin="0,0,0,2" />
         
-        <controls:SettingsExpander Header="Accueil"
+        <!--<controls:SettingsExpander Header="Accueil"
                                    ActionIconSource="{markupExtensions:SymbolIconSource Symbol=ChevronRight}"
                                    Command="{Binding NavigateCommand}" CommandParameter="{x:Type sub:HomeCategory}"
                                    IsClickEnabled="True">
@@ -24,7 +24,7 @@
                 <fluent:SymbolIconSource Symbol="Home" IconVariant="Regular"
                                          Foreground="{x:Static utilities:ColorMatcher.OrangeBrush}"/>
             </controls:SettingsExpander.IconSource>
-        </controls:SettingsExpander>
+        </controls:SettingsExpander>-->
         
         <controls:SettingsExpander Header="Emploi du temps"
                                    ActionIconSource="{markupExtensions:SymbolIconSource Symbol=ChevronRight}"
