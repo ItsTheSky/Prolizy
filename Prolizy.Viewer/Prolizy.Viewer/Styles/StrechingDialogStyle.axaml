@@ -1,0 +1,15 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|ContentDialog  /template/ Border#BackgroundElement">
+        <Setter Property="MaxWidth" Value="{x:Static system:Double.PositiveInfinity}" />
+        <Setter Property="MinWidth" Value="{x:Static system:Double.PositiveInfinity}" />
+    </Style>
+</Styles>

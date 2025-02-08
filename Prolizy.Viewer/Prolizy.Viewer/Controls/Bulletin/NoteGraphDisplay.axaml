@@ -1,0 +1,20 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:bulletin="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="bulletin:NoteGraphDisplayViewModel"
+             MinHeight="250" VerticalAlignment="Stretch" Margin="-25,0,-25,0"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.NoteGraphDisplay">
+    <Grid>
+        <avalonia:CartesianChart Series="{Binding Series}" 
+                                 YAxes="{Binding YAxes}" />
+        
+        <ProgressBar IsVisible="{Binding IsLoading}" 
+                     Height="10" 
+                     HorizontalAlignment="Stretch" 
+                     IsIndeterminate="True" />
+    </Grid> 
+</UserControl>
