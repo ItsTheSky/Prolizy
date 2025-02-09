@@ -53,6 +53,13 @@
                     Width="330">
                     <TextBlock Text="Disabled Card (by property)" />
                 </controls:Card>
+                <controls:Card
+                    Margin="8"
+                    MaxHeight="450"
+                    Classes="solid"
+                    Width="330">
+                    <TextBlock Text="Solid Card" />
+                </controls:Card>
             </StackPanel>
         </Border>
     </Design.PreviewWith>
@@ -142,6 +149,15 @@
                 <Setter Property="Padding" Value="0" />
                 <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
                     <Setter Property="Foreground" Value="Transparent" />
+                </Style>
+            </Style>
+            
+            <!-- Solid -->
+            <Style Selector="controls|Card.solid">
+                <Setter Property="Background" Value="{DynamicResource ThemePrimaryColor}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource ThemeBlueGreyColor}" />
+                <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                    <Setter Property="Foreground" Value="{DynamicResource ThemePrimaryColor}" />
                 </Style>
             </Style>
             
