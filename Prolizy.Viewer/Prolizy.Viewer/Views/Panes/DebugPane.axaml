@@ -4,11 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+             xmlns:controls1="clr-namespace:Prolizy.Viewer.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Prolizy.Viewer.Views.Panes.DebugPane">
-    <avalonia:SpacedGrid RowDefinitions="Auto,Auto,*" RowSpacing="10" Margin="10">
+    <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto,Auto,*" RowSpacing="10"
+                         ColumnDefinitions="*,*,*,*" ColumnSpacing="4"
+                         Margin="10">
         
-        <TextBlock Text="Débug"
+        <TextBlock Text="Débug" Grid.Column="0" Grid.ColumnSpan="4"
                    FontSize="24"
                    FontWeight="Bold"
                    HorizontalAlignment="Stretch"
@@ -16,12 +20,34 @@
                    TextAlignment="Center"
                    Grid.Row="0"/>
         
-        <controls:InfoBar Grid.Row="1" Severity="Error" IsOpen="True" IsClosable="False"
+        <controls:InfoBar Grid.Column="0" Grid.ColumnSpan="4" 
+                          Grid.Row="1" Severity="Error" IsOpen="True" IsClosable="False"
                           Message="Si vous ne savez pas ce que vous faites, ne touchez à rien !" />
         
-        <ScrollViewer Grid.Row="2" HorizontalAlignment="Stretch">
-            <TextBlock TextWrapping="Wrap" Name="TextBlock" HorizontalAlignment="Stretch" />
-        </ScrollViewer>
+        <Button Grid.Row="2"
+                Grid.Column="0" Grid.ColumnSpan="2"
+                Content="Charger le rapport d'erreur" HorizontalAlignment="Stretch"
+                Click="LoadErrorFile_OnClick"/>
+        
+        <Button Grid.Row="2" Grid.Column="2"
+                Content="Clear" HorizontalAlignment="Stretch"
+                Click="Clear_OnClick"/>
+        
+        <Button Grid.Row="2" Grid.Column="3"
+                Content="Crash" HorizontalAlignment="Stretch"
+                Click="Crash_OnClick"/>
+        
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4"
+                Classes="accent"
+                Content="Copier les logs/le rapport" HorizontalAlignment="Stretch"
+                Click="Copy_OnClick"/>
+        
+        <controls1:Card Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="4" Classes="solid">
+            <avaloniaEdit:TextEditor Name="TextBlock" IsReadOnly="True"
+                                     FontFamily="Consolas" FontSize="12"
+                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                     WordWrap="False" ShowLineNumbers="True" />
+        </controls1:Card>
         
     </avalonia:SpacedGrid>
 </UserControl>

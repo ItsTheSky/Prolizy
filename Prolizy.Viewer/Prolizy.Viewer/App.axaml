@@ -17,6 +17,8 @@
 
     <Application.Styles>
         <styling:FluentAvaloniaTheme CustomAccentColor="BlueViolet" />
+        
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
 
         <StyleInclude Source="avares://Prolizy.Viewer/Styles/ButtonStyles.axaml" />
         <StyleInclude Source="avares://Prolizy.Viewer/Styles/Badges.axaml" />
