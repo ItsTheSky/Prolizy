@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Input.Platform;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
@@ -29,6 +30,7 @@ public partial class MainView : UserControl
     private readonly Dictionary<Type, NavigationViewItem> NavigationItemsDict = new();
     
     public IStorageProvider StorageProvider { get; private set; }
+    public IClipboard Clipboard { get; private set; }
     
     public INotificationManager NotificationManager { get; private set; }
     public MainView()
@@ -100,6 +102,7 @@ public partial class MainView : UserControl
     public void InitializeTopLevel(TopLevel topLevel)
     {
         StorageProvider = topLevel.StorageProvider;
+        Clipboard = topLevel.Clipboard ?? throw new InvalidOperationException("Clipboard is null, cannot continue");
         NotificationManager = new WindowNotificationManager(topLevel)
         {
             Position = NotificationPosition.TopCenter

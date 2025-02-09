@@ -1,11 +1,13 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Threading;
 using FluentAvalonia.Styling;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -24,6 +26,7 @@ public partial class App : Application
     
     public override void Initialize()
     {
+        SetupExceptionHandling();
         AvaloniaXamlLoader.Load(this);
         
         foreach (var style in Styles)
@@ -64,19 +67,66 @@ public partial class App : Application
 
     }
     
-    public class DebugTextWriter : TextWriter
+    private void SetupExceptionHandling()
     {
-        private Action<string> _debugAction;
-
-        public DebugTextWriter(Action<string> debugAction)
+        // UI Thread exceptions
+        Dispatcher.UIThread.UnhandledException += (sender, e) =>
         {
-            _debugAction = debugAction;
-        }
+            LogException("UI Thread", e.Exception);
+        };
 
+        // Background exceptions
+        TaskScheduler.UnobservedTaskException += (sender, e) =>
+        {
+            LogException("Background", e.Exception);
+            e.SetObserved();
+        };
+
+        // Global exceptions
+        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+        {
+            LogException("AppDomain", e.ExceptionObject as Exception);
+        };
+    }
+
+    private void LogException(string source, Exception exception)
+    {
+        try
+        {
+            var crashReport = new StringBuilder();
+            crashReport.AppendLine($"Crash Report - {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            crashReport.AppendLine($"Source: {source}");
+            crashReport.AppendLine($"Exception: {exception}");
+            crashReport.AppendLine($"Stack Trace: {exception.StackTrace}");
+
+            // Écrire dans le fichier error.txt
+            File.WriteAllText(Paths.Build("error.txt"), crashReport.ToString());
+            
+            // Aussi écrire dans la console/debug pane
+            Console.WriteLine(crashReport.ToString());
+        }
+        catch (Exception logException)
+        {
+            // Au cas où l'écriture du log échoue
+            Console.WriteLine($"Failed to write crash report: {logException}");
+        }
+    }
+    
+    public class MultiTextWriter(TextWriter consoleWriter, Action<string> debugAction) : TextWriter
+    {
+        public TextWriter ConsoleWriter { get; } = consoleWriter;
+        
         public override void WriteLine(string value)
         {
-            _debugAction(value);
-            base.WriteLine(value);
+            // Écrire à la fois dans la console et appeler l'action
+            consoleWriter.WriteLine(value);
+            debugAction(value);
+        }
+
+        public override void Write(string value)
+        {
+            consoleWriter.Write(value);
+            debugAction(value);
         }
 
         public override Encoding Encoding => Encoding.UTF8;
@@ -85,7 +135,7 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        Console.SetOut(new DebugTextWriter(DebugPane.AddDebugText));
+        Console.SetOut(new MultiTextWriter(Console.Out, DebugPane.AddDebugText));
         
         try
         {
@@ -105,8 +155,7 @@ public partial class App : Application
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            File.WriteAllText(Paths.Build("error.txt"), e.ToString());
+            LogException("Framework Initialization", e);
             throw;
         }
     }
