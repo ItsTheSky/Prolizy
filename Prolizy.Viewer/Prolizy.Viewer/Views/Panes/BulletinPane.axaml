@@ -40,11 +40,14 @@
 
             </avalonia:SpacedGrid>
 
-            <ScrollViewer Grid.Row="2" HorizontalAlignment="Left">
-                <ItemsControl ItemsSource="{Binding AvailableSemesters}">
+            <ScrollViewer Grid.Row="2" HorizontalAlignment="Left"
+                          VerticalScrollBarVisibility="Hidden"
+                          HorizontalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding AvailableSemesters}" HorizontalAlignment="Left">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Left" />
+                            <StackPanel Orientation="Horizontal" Spacing="5" 
+                                        HorizontalAlignment="Left" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -252,11 +255,13 @@
                                 </Grid>
 
                                 <!-- Filtres -->
-                                <StackPanel Margin="0,4">
+                                <ScrollViewer VerticalScrollBarVisibility="Hidden"
+                                              HorizontalScrollBarVisibility="Auto">
                                     <ItemsControl ItemsSource="{Binding AbsenceSortingTypes}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Horizontal" Spacing="4" />
+                                                <StackPanel Orientation="Horizontal" Spacing="4"
+                                                            HorizontalAlignment="Left" />
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
@@ -273,7 +278,7 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                </StackPanel>
+                                </ScrollViewer>
 
                                 <!-- Liste des jours d'absences -->
                                 <ItemsControl ItemsSource="{Binding Absences}">
