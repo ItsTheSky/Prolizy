@@ -121,7 +121,7 @@ public partial class TimeTableViewModel : ObservableObject
             if (_scheduleCache.ContainsKey(SelectedDate))
             {
                 _timeTablePane.UpdateItems(_scheduleCache[SelectedDate]);
-                await HomePane.Instance.ViewModel.UpdateCards("edt");
+                await HomePane.UpdateCards("edt");
                 Console.WriteLine("Today's schedule has been loaded from cache.");
                 return;
             }
