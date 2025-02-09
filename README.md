@@ -1,9 +1,7 @@
-# Prolizy
-
 <div align="center">
-Prolizy est une application mobile & de bureau moderne conçue pour simplifier l'accès aux outils numériques de l'IUT de Vélizy. Elle offre une interface unifiée et intuitive pour l'emploi du temps, les notes, et plus encore.
+<img src="Screenshots/banner.png" alt="Prolizy Main Interface Screenshot" width="400"/>
 
-<img src="Screenshots/banner.png" alt="Prolizy Main Interface Screenshot" width="800"/>
+Prolizy est une application mobile & de bureau moderne conçue pour simplifier l'accès aux outils numériques de l'IUT de Vélizy. Elle offre une interface unifiée et intuitive pour l'emploi du temps, les notes, et plus encore.
 </div>
 
 ## 🌟 Fonctionnalités
