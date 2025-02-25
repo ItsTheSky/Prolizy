@@ -160,6 +160,7 @@ public partial class BulletinPaneViewModel : ObservableObject
             return;
         }
 
+        IsBulletinAvailable = true;
         IsLoading = true;
         try
         {
