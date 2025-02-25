@@ -43,6 +43,7 @@ public partial class NoteGraphDisplayViewModel : ObservableObject
     ];
 
     [ObservableProperty] private bool _isLoading = true;
+    [ObservableProperty] private bool _hasAnyNotes = true;
     [ObservableProperty] private int _ownerNote = -1;
 
     public NoteGraphDisplayViewModel()

@@ -4,13 +4,23 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:bulletin="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="bulletin:NoteGraphDisplayViewModel"
-             MinHeight="250" VerticalAlignment="Stretch" Margin="-25,0,-25,0"
+             VerticalAlignment="Stretch" Margin="-25,0,-25,0"
              x:Class="Prolizy.Viewer.Controls.Bulletin.NoteGraphDisplay">
     <Grid>
-        <avalonia:CartesianChart Series="{Binding Series}" 
+        <avalonia:CartesianChart MinHeight="250" Series="{Binding Series}" 
+                                 Name="CartesianChart"
+                                 IsVisible="{Binding HasAnyNotes}"
                                  YAxes="{Binding YAxes}" />
+        
+        <controls:InfoBar Message="Aucune notes trouvées" 
+                          IsOpen="True" IsClosable="False"
+                          IsVisible="{Binding !HasAnyNotes}" 
+                          VerticalAlignment="Center" 
+                          Severity="Error"
+                          HorizontalAlignment="Stretch" />
         
         <ProgressBar IsVisible="{Binding IsLoading}" 
                      Height="10" 
