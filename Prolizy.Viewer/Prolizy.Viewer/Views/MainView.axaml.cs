@@ -65,16 +65,26 @@ public partial class MainView : UserControl
             
             Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                Console.WriteLine("Preloading ...");
-                await Preloader.Check();
-                Console.WriteLine("Preloader done, moving to pane.. (now " + Settings.Instance.EnabledModules.Count +
-                                  " modules enabled)");
-                MoveToPane(Settings.Instance.EnabledModules.Count == 0
-                    ? null
-                    : (MainNavigationView.MenuItems[0] as NavigationViewItem)!.Tag as Type);
-                
-                Console.WriteLine("Everything's loaded! Reloading home cards...");
-                await HomePane.Instance.ViewModel.ReloadCards();
+                try
+                {
+                    Console.WriteLine("Preloading ...");
+                    await Preloader.Check();
+                    Console.WriteLine("Preloader done, moving to pane.. (now " +
+                                      Settings.Instance.EnabledModules.Count +
+                                      " modules enabled)");
+                    MoveToPane(Settings.Instance.EnabledModules.Count == 0
+                        ? null
+                        : (MainNavigationView.MenuItems[0] as NavigationViewItem)!.Tag as Type);
+
+                    Console.WriteLine("Everything's loaded! Reloading home cards...");
+                    if (HomePane.Instance != null!) 
+                        await HomePane.Instance.ViewModel.ReloadCards();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    DebugPane.AddDebugText(e.ToString());
+                }
             });
 
             Settings.Instance.PropertyChanged += (sender, args) =>
