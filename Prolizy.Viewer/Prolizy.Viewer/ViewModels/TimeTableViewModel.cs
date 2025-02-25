@@ -360,7 +360,8 @@ public partial class TimeTableViewModel : ObservableObject
                     BackgroundColor = ColorMatcher.FindClosestColor(course.BackgroundColor),
                     ForegroundColor = Colors.White,
                     BorderColor = Colors.Gray,
-                    Course = course
+                    Course = course,
+                    Type = course.CourseType
                 });
             }
         }

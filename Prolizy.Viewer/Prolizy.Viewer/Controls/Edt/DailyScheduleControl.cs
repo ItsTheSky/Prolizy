@@ -8,6 +8,9 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using FluentIcons.Avalonia.Fluent;
+using FluentIcons.Common;
+using Prolizy.API;
 
 namespace Prolizy.Viewer.Controls.Edt;
 
@@ -44,15 +47,20 @@ public class DailyScheduleControl : UserControl, IScheduleControl
     public void UpdateVisual()
     {
         _scheduleCanvas.Children.Clear();
+        if (_noData != null)
+        {
+            _mainGrid.Children.Remove(_noData);
+            _noData = null;
+        }
 
-        if (Items == null!) 
+        if (Items == null!)
             return;
 
         var canvasHeight = _scheduleCanvas.Bounds.Height;
         var hourHeight = canvasHeight / DisplayedHours;
 
         // Draw hour lines if enabled
-        if (ShowHourLines)
+        if (ShowHourLines && !Items.Any(x => x.Type.IsHoliday()) && Items.Any())
         {
             for (var i = 0; i <= DisplayedHours; i++)
             {
@@ -87,26 +95,55 @@ public class DailyScheduleControl : UserControl, IScheduleControl
 
             if (itemHeight <= 0) continue; // Ignore les éléments hors des limites
 
-            var content = new StackPanel
+            StackPanel content;
+            if (!item.Type.IsHoliday())
             {
-                Orientation = Orientation.Vertical,
-                Children =
+                content = new StackPanel
                 {
-                    new TextBlock
+                    Orientation = Orientation.Vertical,
+                    Children =
                     {
-                        Text = item.Subject, Foreground = new SolidColorBrush(item.ForegroundColor),
-                        FontWeight = FontWeight.SemiBold, TextAlignment = TextAlignment.Center, FontSize = 18
+                        new TextBlock
+                        {
+                            Text = item.Subject, Foreground = new SolidColorBrush(item.ForegroundColor),
+                            FontWeight = FontWeight.SemiBold, TextAlignment = TextAlignment.Center, FontSize = 18
+                        },
+                        Utilities.Controls.CreateDataGrid(new Dictionary<string, string>()
+                        {
+                            { "Matière", item.Subject },
+                            { "Salle", item.Room },
+                            { "Professeur", item.Professor },
+                            { "Horaires", $@"{item.StartTime:HH\:mm} - {item.EndTime:HH\:mm}" }
+                        }, item.ForegroundColor, rowSpacing: 5)
                     },
-                    Utilities.Controls.CreateDataGrid(new Dictionary<string, string>()
+                    Margin = new Thickness(5, 0)
+                };
+            }
+            else
+            {
+                content = new StackPanel
+                {
+                    Orientation = Orientation.Vertical,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Spacing = 10,
+                    Children =
                     {
-                        { "Matière", item.Subject },
-                        { "Salle", item.Room },
-                        { "Professeur", item.Professor },
-                        { "Horaires", $@"{item.StartTime:HH\:mm} - {item.EndTime:HH\:mm}" }
-                    }, item.ForegroundColor, rowSpacing: 5)
-                },
-                Margin = new Thickness(5, 0)
-            };
+                        new SymbolIcon
+                        {
+                            Symbol = Symbol.Sleep,
+                            Foreground = new SolidColorBrush(item.ForegroundColor),
+                            FontSize = 32
+                        },
+                        new TextBlock
+                        {
+                            Text = "Jour férié/Vacance", Foreground = new SolidColorBrush(item.ForegroundColor),
+                            FontWeight = FontWeight.SemiBold, TextAlignment = TextAlignment.Center, FontSize = 18
+                        }
+                    },
+                    Margin = new Thickness(5, 0)
+                };
+            }
             var actualContent = new Grid();
             
             actualContent.Children.Add(content);
@@ -144,20 +181,42 @@ public class DailyScheduleControl : UserControl, IScheduleControl
                 Padding = new Thickness(5),
                 CornerRadius = new CornerRadius(5),
                 ClipToBounds = true,
-                Cursor = new Cursor(StandardCursorType.Hand),
                 
                 BorderBrush = item.Overlay?.Overlay ?? new SolidColorBrush(item.BorderColor),
                 BorderThickness = new Thickness(item.Overlay == null ? 2 : 5)
             };
-            button.Tapped += (sender, args) =>
+            if (!item.Type.IsHoliday())
             {
-                Dispatcher.UIThread.InvokeAsync(async () => await item.ItemClicked());
-            };
+                button.Cursor = new Cursor(StandardCursorType.Hand);
+                button.Tapped += (sender, args) =>
+                {
+                    Dispatcher.UIThread.InvokeAsync(async () => await item.ItemClicked());
+                };
+            }
 
             Canvas.SetTop(button, startY);
             _scheduleCanvas.Children.Add(button);
         }
+
+        if (!Items.Any())
+        {
+            _noData = new TextBlock
+            {
+                Text = "Aucun cours",
+                Foreground = Brushes.Gray,
+                FontWeight = FontWeight.SemiBold,
+                TextAlignment = TextAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                FontSize = 18
+            };
+            
+            _mainGrid.Children.Add(_noData);
+            Grid.SetColumn(_noData, 1);
+            Grid.SetRowSpan(_noData, DisplayedHours);
+        }
     }
+    
+    private static TextBlock? _noData = null;
 
     private void InitializeComponent()
     {

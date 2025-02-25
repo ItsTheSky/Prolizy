@@ -22,6 +22,8 @@ public class ScheduleItem
     public string Subject { get; set; }
     public string Room { get; set; }
     public string Group { get; set; }
+    
+    public string Type { get; set; }
 
     public ScheduleItemOverlay? Overlay { get; set; }
 
