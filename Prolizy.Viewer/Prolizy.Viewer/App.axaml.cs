@@ -139,6 +139,8 @@ public partial class App : Application
         
         try
         {
+            _ = ConnectivityService.Instance;
+            
             switch (ApplicationLifetime)
             {
                 case IClassicDesktopStyleApplicationLifetime desktop:

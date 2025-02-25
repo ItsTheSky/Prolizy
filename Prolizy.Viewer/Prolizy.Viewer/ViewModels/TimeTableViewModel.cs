@@ -24,6 +24,7 @@ public partial class TimeTableViewModel : ObservableObject
 {
     [ObservableProperty] private bool _isDisplayList = false;
     [ObservableProperty] private bool _isLoading = false;
+    [ObservableProperty] private bool _isNetworkUnavailable = false;
 
     private DateOnly _selectedDate = DateOnly.FromDateTime(DateTime.Today);
 
@@ -59,27 +60,80 @@ public partial class TimeTableViewModel : ObservableObject
     {
         _timeTablePane = timeTablePane;
         IsEdtAvailable = !string.IsNullOrEmpty(Settings.Instance.StudentGroup);
+        
+        // Subscribe to connectivity changes
+        ConnectivityService.Instance.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == nameof(ConnectivityService.Instance.IsNetworkAvailable))
+            {
+                UpdateNetworkStatus();
+            }
+        };
+        
+        // Initialize network status
+        UpdateNetworkStatus();
+    }
+    
+    private void UpdateNetworkStatus()
+    {
+        // Only set IsNetworkUnavailable to true if we're connected to internet
+        // and the EDT is properly configured
+        IsNetworkUnavailable = !ConnectivityService.Instance.IsNetworkAvailable && IsEdtAvailable;
     }
 
     [RelayCommand]
     public async Task GoToNextDay()
     {
-        SelectedDate = SelectedDate.AddDays(1);
-        await GoToDay();
+        if (await CheckNetworkAvailability())
+        {
+            SelectedDate = SelectedDate.AddDays(1);
+            await GoToDay();
+        }
     }
 
     [RelayCommand]
     public async Task GoToPreviousDay()
     {
-        SelectedDate = SelectedDate.AddDays(-1);
-        await GoToDay();
+        if (await CheckNetworkAvailability())
+        {
+            SelectedDate = SelectedDate.AddDays(-1);
+            await GoToDay();
+        }
     }
 
     [RelayCommand]
     public async Task GoToToday()
     {
-        SelectedDate = DateOnly.FromDateTime(DateTime.Today);
-        await GoToDay();
+        if (await CheckNetworkAvailability())
+        {
+            SelectedDate = DateOnly.FromDateTime(DateTime.Today);
+            await GoToDay();
+        }
+    }
+    
+    [RelayCommand]
+    public async Task RetryConnection()
+    {
+        // Show loading while we check connectivity
+        IsLoading = true;
+        IsNetworkUnavailable = false;
+        
+        try
+        {
+            bool isAvailable = await ConnectivityService.Instance.CheckConnectivity();
+            if (isAvailable)
+            {
+                await GoToDay();
+            }
+            else
+            {
+                IsNetworkUnavailable = true;
+            }
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     [RelayCommand]
@@ -91,6 +145,9 @@ public partial class TimeTableViewModel : ObservableObject
     [RelayCommand]
     public async Task ChangeDate()
     {
+        if (!await CheckNetworkAvailability())
+            return;
+            
         var datePicker = new Calendar
         {
             SelectedDate = SelectedDate.ToDateTime(new TimeOnly(0, 0)),
@@ -112,12 +169,27 @@ public partial class TimeTableViewModel : ObservableObject
             await GoToDay();
         }
     }
+    
+    private async Task<bool> CheckNetworkAvailability()
+    {
+        if (!ConnectivityService.Instance.IsNetworkAvailable)
+        {
+            IsNetworkUnavailable = true;
+            return false;
+        }
+        
+        return true;
+    }
 
     public async Task GoToDay()
     {
+        if (!await CheckNetworkAvailability())
+            return;
+            
         try
         {
             IsLoading = true;
+            IsNetworkUnavailable = false;
             await UpdateAndroidWidget();
 
             if (_scheduleCache.ContainsKey(SelectedDate))
@@ -165,7 +237,16 @@ public partial class TimeTableViewModel : ObservableObject
         catch (Exception e)
         {
             Console.WriteLine(e);
-            MainView.ShowNotification("Erreur", "Impossible de charger l'emploi du temps.", NotificationType.Error);
+            
+            // Check if it's a network connectivity issue
+            if (await ConnectivityService.Instance.IsNetworkIssue())
+            {
+                IsNetworkUnavailable = true;
+            }
+            else
+            {
+                MainView.ShowNotification("Erreur", "Impossible de charger l'emploi du temps.", NotificationType.Error);
+            }
         }
         finally
         {
@@ -180,6 +261,10 @@ public partial class TimeTableViewModel : ObservableObject
             IsLoading = true;
             try
             {
+                // Check network availability first
+                if (!await CheckNetworkAvailability())
+                    return;
+                
                 _scheduleCache.Clear();
                 await GoToDay();
             }
@@ -241,6 +326,12 @@ public partial class TimeTableViewModel : ObservableObject
 
         try
         {
+            // Check network availability first
+            if (!ConnectivityService.Instance.IsNetworkAvailable)
+            {
+                return (null, false);
+            }
+            
             // Try to get the ViewModel if available
             TimeTableViewModel? viewModel = TimeTablePane.Instance?.ViewModel;
 
@@ -312,6 +403,11 @@ public partial class TimeTableViewModel : ObservableObject
             Console.WriteLine("No courses found within the next 20 days");
             return (null, false);
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error finding course: {ex.Message}");
+            return (null, false);
+        }
         finally
         {
             // Reset loading state if we can access the view model
@@ -353,8 +449,8 @@ public partial class TimeTableViewModel : ObservableObject
                 // Check bulletin if overlay is enabled
                 if (Settings.Instance.Overlay)
                 {
-                    var bulletinVm = BulletinPane.Instance.ViewModel;
-                    if (Settings.Instance.LinkEdt && bulletinVm.IsBulletinAvailable)
+                    var bulletinVm = BulletinPane.Instance?.ViewModel;
+                    if (Settings.Instance.LinkEdt && bulletinVm != null && bulletinVm.IsBulletinAvailable)
                     {
                         var absencesDay = bulletinVm.Absences;
                         var absences = absencesDay
@@ -416,6 +512,13 @@ public partial class TimeTableViewModel : ObservableObject
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading courses for date range: {ex.Message}");
+            
+            // Check if it's a network issue
+            if (await ConnectivityService.Instance.IsNetworkIssue())
+            {
+                throw new Exception("Network connectivity issue: Unable to load courses", ex);
+            }
+            
             return result;
         }
 

@@ -15,7 +15,7 @@
         <RunAOTCompilation>false</RunAOTCompilation>
 
         <!-- <AndroidPackageFormat>apk</AndroidPackageFormat> -->
-        <AndroidPackageFormat>aab</AndroidPackageFormat>
+        <AndroidPackageFormat>apk</AndroidPackageFormat>
         
         <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
         

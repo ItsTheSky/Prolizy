@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Prolizy.Viewer.ViewModels"
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Prolizy.Viewer.Views.MainView"
              Background="{DynamicResource CoreGradientBrush}"
@@ -13,15 +15,33 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel />
     </Design.DataContext>
-    <controls:NavigationView Name="MainNavigationView"
-                             PaneDisplayMode="Auto" PaneTitle="Prolizy"
-                             OpenPaneLength="200">
-        <controls:NavigationView.Styles>
-            <Style Selector="controls|NavigationViewItem TextBlock">
-                <Setter Property="TextWrapping" Value="NoWrap" />
-            </Style>
-        </controls:NavigationView.Styles>
+    <Grid>
+        <controls:NavigationView Name="MainNavigationView"
+                                 PaneDisplayMode="Auto" PaneTitle="Prolizy"
+                                 OpenPaneLength="200">
+            <controls:NavigationView.Styles>
+                <Style Selector="controls|NavigationViewItem TextBlock">
+                    <Setter Property="TextWrapping" Value="NoWrap" />
+                </Style>
+            </controls:NavigationView.Styles>
+            
+            <controls:Frame Name="Frame" />
+        </controls:NavigationView>
         
-        <controls:Frame Name="Frame" />
-    </controls:NavigationView>
+        <!-- Connectivity Status Indicator -->
+        <Border Name="ConnectivityIndicator" 
+                IsVisible="{Binding !IsNetworkAvailable}"
+                Background="{DynamicResource SystemErrorTextColor}"
+                Opacity="0.8"
+                CornerRadius="5"
+                Padding="10,5"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                Margin="0,5,0,0">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <markupExtensions:SymbolIcon Symbol="GlobeProhibited" />
+                <TextBlock Text="Pas de connexion Internet" FontWeight="SemiBold" />
+            </StackPanel>
+        </Border>
+    </Grid>
 </UserControl>

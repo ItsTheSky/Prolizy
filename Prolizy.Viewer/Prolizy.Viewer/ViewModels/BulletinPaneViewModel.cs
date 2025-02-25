@@ -23,6 +23,7 @@ using Prolizy.API.Model;
 using Prolizy.Viewer.Controls.Bulletin;
 using Prolizy.Viewer.Controls.Wizard.Steps;
 using Prolizy.Viewer.Utilities;
+using Prolizy.Viewer.Views;
 using SkiaSharp;
 using SpacedGridControl.Avalonia;
 using Symbol = FluentIcons.Common.Symbol;
@@ -43,6 +44,7 @@ public partial class BulletinPaneViewModel : ObservableObject
     [ObservableProperty] private BulletinRoot _bulletinRoot;
     [ObservableProperty] private bool _isBulletinAvailable = false;
     [ObservableProperty] private bool _isLoading = false;
+    [ObservableProperty] private bool _isNetworkUnavailable = false;
 
     [ObservableProperty] private Control _uEGraphDisplay;
 
@@ -101,6 +103,50 @@ public partial class BulletinPaneViewModel : ObservableObject
                 UpdateAbsences(SelectedAbsenceSortingType);
             }
         };
+        
+        ConnectivityService.Instance.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == nameof(ConnectivityService.Instance.IsNetworkAvailable))
+            {
+                UpdateNetworkStatus();
+            }
+        };
+        
+        // Initialize network status
+        UpdateNetworkStatus();
+    }
+    
+    private void UpdateNetworkStatus()
+    {
+        // Only set IsNetworkUnavailable to true if we're configured but can't connect due to network issues
+        IsNetworkUnavailable = !ConnectivityService.Instance.IsNetworkAvailable && 
+                               !string.IsNullOrEmpty(Settings.Instance.BulletinUsername) &&
+                               !string.IsNullOrEmpty(Settings.Instance.BulletinPassword);
+    }
+
+    [RelayCommand]
+    public async Task RetryConnection()
+    {
+        // Show loading while we check connectivity
+        IsLoading = true;
+        IsNetworkUnavailable = false;
+        
+        try
+        {
+            bool isAvailable = await ConnectivityService.Instance.CheckConnectivity();
+            if (isAvailable)
+            {
+                await RefreshBulletin();
+            }
+            else
+            {
+                IsNetworkUnavailable = true;
+            }
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     public async Task OpenNotesList(Evaluation evaluation)
@@ -115,36 +161,54 @@ public partial class BulletinPaneViewModel : ObservableObject
         };
         dialog.Opened += (source, args) => _ = Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            var notes = await evaluation.FetchNotes(_client);
+            try 
+            {
+                var notes = await evaluation.FetchNotes(_client);
 
-            if (notes != null)
-            {
-                vm.HasAnyNotes = true;
-                var noteCounts = new int[21];
-                foreach (var roundedNote in notes.Select(note => (int) Math.Floor(note)))
+                if (notes != null)
                 {
-                    if (roundedNote is < 0 or > 20)
-                        continue;
+                    vm.HasAnyNotes = true;
+                    var noteCounts = new int[21];
+                    foreach (var roundedNote in notes.Select(note => (int) Math.Floor(note)))
+                    {
+                        if (roundedNote is < 0 or > 20)
+                            continue;
                 
-                    noteCounts[roundedNote]++;
-                }
+                        noteCounts[roundedNote]++;
+                    }
             
-                vm.IsLoading = false;
-                vm.NoteValues = noteCounts.ToList();
-                try
-                {
-                    vm.OwnerNote = (int)Math.Floor(double.Parse(evaluation.Grade.Value.Replace(".", ",")));
+                    vm.IsLoading = false;
+                    vm.NoteValues = noteCounts.ToList();
+                    try
+                    {
+                        vm.OwnerNote = (int)Math.Floor(double.Parse(evaluation.Grade.Value.Replace(".", ",")));
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Failed to parse owner note");
+                    }   
                 }
-                catch (Exception)
+                else
                 {
-                    Console.WriteLine("Failed to parse owner note");
-                }   
+                    vm.IsLoading = false;
+                    vm.NoteValues = [];
+                    vm.HasAnyNotes = false;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                vm.IsLoading = false;
-                vm.NoteValues = [];
-                vm.HasAnyNotes = false;
+                Console.WriteLine($"Error fetching notes: {ex.Message}");
+                
+                // Check if it's a network issue
+                if (await ConnectivityService.Instance.IsNetworkIssue())
+                {
+                    vm.IsLoading = false;
+                    vm.HasAnyNotes = false;
+                    MainView.ShowNotification("Erreur de connexion", 
+                        "Impossible de récupérer les notes en raison d'un problème de connexion internet", 
+                        Avalonia.Controls.Notifications.NotificationType.Error);
+                    dialog.Hide();
+                }
             }
         });
         await dialog.ShowAsync();
@@ -153,6 +217,13 @@ public partial class BulletinPaneViewModel : ObservableObject
     [RelayCommand]
     public async Task RefreshBulletin()
     {
+        // Check connectivity first
+        if (!ConnectivityService.Instance.IsNetworkAvailable)
+        {
+            IsNetworkUnavailable = true;
+            return;
+        }
+        
         await InitializeClientIfNeeded();
         if (_client == null!)
         {
@@ -162,6 +233,8 @@ public partial class BulletinPaneViewModel : ObservableObject
 
         IsBulletinAvailable = true;
         IsLoading = true;
+        IsNetworkUnavailable = false;
+        
         try
         {
             // First connection to get all semesters
@@ -187,6 +260,24 @@ public partial class BulletinPaneViewModel : ObservableObject
             }
 
             IsBulletinAvailable = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error refreshing bulletin: {ex.Message}");
+            
+            // Check if it's a network connectivity issue
+            if (await ConnectivityService.Instance.IsNetworkIssue())
+            {
+                IsNetworkUnavailable = true;
+            }
+            else
+            {
+                // If it's not a network issue, it might be another problem
+                IsBulletinAvailable = false;
+                MainView.ShowNotification("Erreur", 
+                    "Impossible de charger le bulletin.", 
+                    Avalonia.Controls.Notifications.NotificationType.Error);
+            }
         }
         finally
         {

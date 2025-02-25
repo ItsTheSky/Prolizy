@@ -7,6 +7,7 @@
              xmlns:edt="clr-namespace:Prolizy.Viewer.Controls.Edt"
              xmlns:viewModels="clr-namespace:Prolizy.Viewer.ViewModels"
              xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="viewModels:TimeTableViewModel"
              x:Class="Prolizy.Viewer.Views.Panes.TimeTablePane">
@@ -106,9 +107,29 @@
             </StackPanel>
         </Border>
         
+        <!-- Network Not Available Message -->
         <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                 Background="{DynamicResource CalendarViewBackground}"
-                IsVisible="{Binding !IsEdtAvailable}">
+                IsVisible="{Binding IsNetworkUnavailable}"
+                CornerRadius="10" ClipToBounds="True">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
+                        Spacing="10" VerticalAlignment="Center">
+                <markupExtensions:SymbolIcon Symbol="GlobeProhibited" FontSize="36" />
+                <TextBlock Text="Pas de connexion internet"
+                           FontWeight="SemiBold" FontSize="18"
+                           TextAlignment="Center" />
+                <TextBlock Text="Veuillez vous connecter à internet pour accéder à l'emploi du temps"
+                           TextAlignment="Center"
+                           MaxWidth="300" />
+                <Button Content="Réessayer" Classes="accent" HorizontalAlignment="Center"
+                        Command="{Binding RetryConnectionCommand}" />
+            </StackPanel>
+        </Border>
+        
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Background="{DynamicResource CalendarViewBackground}"
+                IsVisible="{Binding !IsEdtAvailable}"
+                CornerRadius="10" ClipToBounds="True">
 
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
                         Spacing="10" VerticalAlignment="Center">

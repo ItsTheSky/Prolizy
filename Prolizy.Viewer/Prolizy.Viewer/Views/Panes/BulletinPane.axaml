@@ -378,15 +378,34 @@
             </StackPanel>
         </Border>
 
+        <!-- Network Not Available Message -->
         <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Background="{DynamicResource CalendarViewBackground}"
+                IsVisible="{Binding IsNetworkUnavailable}"
+                CornerRadius="10" ClipToBounds="True">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
+                        Spacing="10" VerticalAlignment="Center">
+                <markupExtensions:SymbolIcon Symbol="GlobeProhibited" FontSize="36" />
+                <TextBlock Text="Pas de connexion internet"
+                           FontWeight="SemiBold" FontSize="18"
+                           TextAlignment="Center" />
+                <TextBlock Text="Veuillez vous connecter à internet pour accéder à votre bulletin"
+                           TextAlignment="Center"
+                           MaxWidth="300" />
+                <Button Content="Réessayer" Classes="accent" HorizontalAlignment="Center"
+                        Command="{Binding RetryConnectionCommand}" />
+            </StackPanel>
+        </Border>
+        
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Background="{DynamicResource CalendarViewBackground}"
                 IsVisible="{Binding !IsBulletinAvailable}">
 
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
-                        Spacing="10" VerticalAlignment="Center">
+                      Spacing="10" VerticalAlignment="Center">
 
                 <TextBlock Text="Le bulletin n'est pas configuré!"
-                           FontWeight="SemiBold" />
+                         FontWeight="SemiBold" />
                 <Button Content="Configurer" Classes="accent" HorizontalAlignment="Center"
                         Command="{x:Static viewModels:BulletinPaneViewModel.ConfigureBulletin}" />
 
