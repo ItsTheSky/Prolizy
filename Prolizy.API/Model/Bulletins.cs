@@ -122,7 +122,7 @@ public sealed class Evaluation
     [JsonPropertyName("note")] public Grade Grade { get; init; }
     [JsonPropertyName("poids")] public Dictionary<string, int> Weights { get; init; }
     
-    public async Task<List<double>> FetchNotes(BulletinClient client) => await client.FetchListNotes(this);
+    public async Task<List<double>?> FetchNotes(BulletinClient client) => await client.FetchListNotes(this);
 }
 
 public sealed class TeachingUnit 

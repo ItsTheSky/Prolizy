@@ -116,25 +116,35 @@ public partial class BulletinPaneViewModel : ObservableObject
         dialog.Opened += (source, args) => _ = Dispatcher.UIThread.InvokeAsync(async () =>
         {
             var notes = await evaluation.FetchNotes(_client);
-            
-            var noteCounts = new int[21];
-            foreach (var roundedNote in notes.Select(note => (int) Math.Floor(note)))
+
+            if (notes != null)
             {
-                if (roundedNote is < 0 or > 20)
-                    continue;
+                vm.HasAnyNotes = true;
+                var noteCounts = new int[21];
+                foreach (var roundedNote in notes.Select(note => (int) Math.Floor(note)))
+                {
+                    if (roundedNote is < 0 or > 20)
+                        continue;
                 
-                noteCounts[roundedNote]++;
-            }
+                    noteCounts[roundedNote]++;
+                }
             
-            vm.IsLoading = false;
-            vm.NoteValues = noteCounts.ToList();
-            try
-            {
-                vm.OwnerNote = (int)Math.Floor(double.Parse(evaluation.Grade.Value.Replace(".", ",")));
+                vm.IsLoading = false;
+                vm.NoteValues = noteCounts.ToList();
+                try
+                {
+                    vm.OwnerNote = (int)Math.Floor(double.Parse(evaluation.Grade.Value.Replace(".", ",")));
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Failed to parse owner note");
+                }   
             }
-            catch (Exception)
+            else
             {
-                Console.WriteLine("Failed to parse owner note");
+                vm.IsLoading = false;
+                vm.NoteValues = [];
+                vm.HasAnyNotes = false;
             }
         });
         await dialog.ShowAsync();

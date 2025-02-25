@@ -73,7 +73,7 @@ public class BulletinClient
     }
 
     /// <inheritdoc cref="FetchListNotes(int)"/>
-    public async Task<List<double>> FetchListNotes(Evaluation evaluation)
+    public async Task<List<double>?> FetchListNotes(Evaluation evaluation)
     {
         return await FetchListNotes(evaluation.Id);
     }
@@ -84,13 +84,19 @@ public class BulletinClient
     /// </summary>
     /// <param name="evaluationId">The evaluation ID.</param>
     /// <returns>The notes list.</returns>
-    public async Task<List<double>> FetchListNotes(int evaluationId)
+    public async Task<List<double>?> FetchListNotes(int evaluationId)
     {
         var url = $"https://bulletins.iut-velizy.uvsq.fr/services/data.php?q=listeNotes&eval={evaluationId}";
         var response = await _client.PostAsync(url, null);
         var json = await response.Content.ReadAsStringAsync();
-        var notes = JsonSerializer.Deserialize<List<double>>(json);
-        return notes!;
+        try
+        {
+            return JsonSerializer.Deserialize<List<double>>(json)!;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
 }
