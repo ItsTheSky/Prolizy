@@ -23,6 +23,7 @@ namespace Prolizy.Viewer.ViewModels;
 public partial class TimeTableViewModel : ObservableObject
 {
     [ObservableProperty] private bool _isDisplayList = false;
+    [ObservableProperty] private bool _isLoading = false;
 
     private DateOnly _selectedDate = DateOnly.FromDateTime(DateTime.Today);
 
@@ -116,6 +117,7 @@ public partial class TimeTableViewModel : ObservableObject
     {
         try
         {
+            IsLoading = true;
             await UpdateAndroidWidget();
 
             if (_scheduleCache.ContainsKey(SelectedDate))
@@ -123,32 +125,41 @@ public partial class TimeTableViewModel : ObservableObject
                 _timeTablePane.UpdateItems(_scheduleCache[SelectedDate]);
                 await HomePane.UpdateCards("edt");
                 Console.WriteLine("Today's schedule has been loaded from cache.");
+                IsLoading = false;
                 return;
             }
 
-            Console.WriteLine("Loading schedule...");
-
             // Obtenir le lundi de la semaine courante
             var monday = SelectedDate.AddDays(-(int)SelectedDate.DayOfWeek + 1);
-            if (SelectedDate.DayOfWeek == DayOfWeek.Sunday) // Si on est dimanche, prendre le lundi de la semaine précédente
-                monday = monday.AddDays(-7);
+            // si on est samedi ou dimanche, on récupère le lundi de la semaine prochaine
+            if (SelectedDate.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+                monday = SelectedDate.AddDays(1 - (int)SelectedDate.DayOfWeek + 1);
 
-            // Charger du lundi au dimanche (+1 jour après la date sélectionnée)
             var start = monday;
-            var end = SelectedDate.AddDays(1);
+            var end = monday.AddDays(6);
 
-            for (var date = start; date <= end; date = date.AddDays(1))
+            Console.WriteLine("Loading schedule... from {0} to {1}", start, end);
+
+            // Load the entire week at once instead of day by day
+            var weekSchedule = await LoadCoursesForDateRange(start, end);
+
+            // Add all days to cache
+            foreach (var (date, courses) in weekSchedule)
             {
-                if (!_scheduleCache.ContainsKey(date))
-                {
-                    var items = await LoadCoursesForDate(date);
-                    _scheduleCache[date] = items;
-                    Console.WriteLine($"Added {items.Count} courses to cache for {date}");
-                }
+                _scheduleCache[date] = courses;
+                Console.WriteLine($"Added {courses.Count} courses to cache for {date}");
             }
 
-            _timeTablePane.UpdateItems(_scheduleCache[SelectedDate]);
-            
+            // Update UI with the selected date's courses
+            if (_scheduleCache.TryGetValue(SelectedDate, out var items))
+            {
+                _timeTablePane.UpdateItems(items);
+            }
+            else
+            {
+                _timeTablePane.UpdateItems(new List<ScheduleItem>());
+            }
+
             await HomePane.UpdateCards("edt");
         }
         catch (Exception e)
@@ -156,14 +167,26 @@ public partial class TimeTableViewModel : ObservableObject
             Console.WriteLine(e);
             MainView.ShowNotification("Erreur", "Impossible de charger l'emploi du temps.", NotificationType.Error);
         }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     public void RefreshAll()
     {
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            _scheduleCache.Clear();
-            await GoToDay();
+            IsLoading = true;
+            try
+            {
+                _scheduleCache.Clear();
+                await GoToDay();
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         });
     }
 
@@ -216,97 +239,114 @@ public partial class TimeTableViewModel : ObservableObject
         var currentDate = DateOnly.FromDateTime(now);
         var currentTime = TimeOnly.FromDateTime(now);
 
-        // Try to get the ViewModel if available
-        TimeTableViewModel? viewModel = TimeTablePane.Instance?.ViewModel;
-
-        // We'll try for MaxDays days
-        for (int dayOffset = 0; dayOffset < MaxDays; dayOffset++)
+        try
         {
-            var targetDate = currentDate.AddDays(dayOffset);
-            List<ScheduleItem> daySchedule;
+            // Try to get the ViewModel if available
+            TimeTableViewModel? viewModel = TimeTablePane.Instance?.ViewModel;
 
-            // Try to get schedule from cache if ViewModel exists
-            if (viewModel?._scheduleCache.TryGetValue(targetDate, out daySchedule) == true)
+            // We'll try for MaxDays days
+            for (int dayOffset = 0; dayOffset < MaxDays; dayOffset++)
             {
-                // Cache hit
-                Console.WriteLine($"Using cached schedule for {targetDate}");
-            }
-            else
-            {
-                // No cache or cache miss - load from API
-                Console.WriteLine($"Loading schedule for {targetDate} from API");
-                daySchedule = await LoadCoursesForDate(targetDate);
-            }
+                var targetDate = currentDate.AddDays(dayOffset);
+                List<ScheduleItem> daySchedule;
 
-            if (daySchedule.Count == 0)
-            {
-                Console.WriteLine($"No courses found for {targetDate}");
-                continue;
-            }
-
-            // Sort schedule by start time
-            daySchedule = daySchedule.OrderBy(x => x.StartTime).ToList();
-
-            if (targetDate == currentDate)
-            {
-                // Check for current course first
-                var currentCourse = daySchedule.FirstOrDefault(item =>
-                    TimeOnly.FromDateTime(item.StartTime) <= currentTime &&
-                    TimeOnly.FromDateTime(item.EndTime) > currentTime);
-
-                if (currentCourse != null)
+                // Try to get schedule from cache if ViewModel exists
+                if (viewModel?._scheduleCache.TryGetValue(targetDate, out daySchedule) == true)
                 {
-                    Console.WriteLine($"Found current course: {currentCourse.Subject} at {currentCourse.StartTime}");
-                    return (currentCourse, true);
+                    // Cache hit
+                    Console.WriteLine($"Using cached schedule for {targetDate}");
+                }
+                else
+                {
+                    // No cache or cache miss - load from API
+                    Console.WriteLine($"Loading schedule for {targetDate} from API");
+                    daySchedule = await LoadCoursesForDate(targetDate);
                 }
 
-                // If no current course, find next course today
-                var nextCourse = daySchedule.FirstOrDefault(item =>
-                    TimeOnly.FromDateTime(item.StartTime) > currentTime);
-
-                if (nextCourse != null)
+                if (daySchedule.Count == 0)
                 {
-                    Console.WriteLine($"Found next course today: {nextCourse.Subject} at {nextCourse.StartTime}");
-                    return (nextCourse, false);
+                    Console.WriteLine($"No courses found for {targetDate}");
+                    continue;
+                }
+
+                // Sort schedule by start time
+                daySchedule = daySchedule.OrderBy(x => x.StartTime).ToList();
+
+                if (targetDate == currentDate)
+                {
+                    // Check for current course first
+                    var currentCourse = daySchedule.FirstOrDefault(item =>
+                        TimeOnly.FromDateTime(item.StartTime) <= currentTime &&
+                        TimeOnly.FromDateTime(item.EndTime) > currentTime);
+
+                    if (currentCourse != null)
+                    {
+                        Console.WriteLine(
+                            $"Found current course: {currentCourse.Subject} at {currentCourse.StartTime}");
+                        return (currentCourse, true);
+                    }
+
+                    // If no current course, find next course today
+                    var nextCourse = daySchedule.FirstOrDefault(item =>
+                        TimeOnly.FromDateTime(item.StartTime) > currentTime);
+
+                    if (nextCourse != null)
+                    {
+                        Console.WriteLine($"Found next course today: {nextCourse.Subject} at {nextCourse.StartTime}");
+                        return (nextCourse, false);
+                    }
+                }
+                else
+                {
+                    // For future dates, just take the first course
+                    if (daySchedule.Count > 0)
+                    {
+                        var nextCourse = daySchedule[0];
+                        Console.WriteLine(
+                            $"Found next course on {targetDate}: {nextCourse.Subject} at {nextCourse.StartTime}");
+                        return (nextCourse, false);
+                    }
                 }
             }
-            else
+
+            Console.WriteLine("No courses found within the next 20 days");
+            return (null, false);
+        }
+        finally
+        {
+            // Reset loading state if we can access the view model
+            if (TimeTablePane.Instance?.ViewModel != null)
             {
-                // For future dates, just take the first course
-                if (daySchedule.Count > 0)
-                {
-                    var nextCourse = daySchedule[0];
-                    Console.WriteLine(
-                        $"Found next course on {targetDate}: {nextCourse.Subject} at {nextCourse.StartTime}");
-                    return (nextCourse, false);
-                }
+                TimeTablePane.Instance.ViewModel.IsLoading = false;
             }
         }
-
-        Console.WriteLine("No courses found within the next 20 days");
-        return (null, false);
     }
 
-    private static async Task<List<ScheduleItem>> LoadCoursesForDate(DateOnly date)
+    // New method to load courses for a date range (e.g., a week)
+    private static async Task<Dictionary<DateOnly, List<ScheduleItem>>> LoadCoursesForDateRange(DateOnly startDate,
+        DateOnly endDate)
     {
-        var items = new List<ScheduleItem>();
+        var result = new Dictionary<DateOnly, List<ScheduleItem>>();
         var group = Settings.Instance.StudentGroup;
         if (string.IsNullOrEmpty(group))
-            return items;
+            return result;
 
         try
         {
+            // Single API request for the entire date range
             var schedule = await EDTClient.GetCourses(new CalendarRequest
             {
-                StartDate = date,
-                EndDate = date,
+                StartDate = startDate,
+                EndDate = endDate, // Now we're requesting the whole week
                 FederationId = group,
                 ViewType = CalendarRequest.CalendarViewType.AgendaWeek,
                 ColourScheme = Settings.Instance.ColorScheme.ToString()
             });
 
+            // Process each course and organize by date
             foreach (var course in schedule)
             {
+                var courseDate = DateOnly.FromDateTime(course.Start.Date);
                 var description = await course.GetDescription(!Settings.Instance.BetterDescription);
                 var overlay = null as ScheduleItemOverlay;
 
@@ -348,7 +388,7 @@ public partial class TimeTableViewModel : ObservableObject
                     }
                 }
 
-                items.Add(new ScheduleItem
+                var scheduleItem = new ScheduleItem
                 {
                     StartTime = course.Start,
                     EndTime = course.End,
@@ -362,14 +402,30 @@ public partial class TimeTableViewModel : ObservableObject
                     BorderColor = Colors.Gray,
                     Course = course,
                     Type = course.CourseType
-                });
+                };
+
+                // Add to the appropriate day in our result dictionary
+                if (!result.ContainsKey(courseDate))
+                {
+                    result[courseDate] = new List<ScheduleItem>();
+                }
+
+                result[courseDate].Add(scheduleItem);
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return items;
+            Console.WriteLine($"Error loading courses for date range: {ex.Message}");
+            return result;
         }
 
-        return items;
+        return result;
+    }
+
+    // Keep the original method as a wrapper for compatibility with existing code
+    private static async Task<List<ScheduleItem>> LoadCoursesForDate(DateOnly date)
+    {
+        var result = await LoadCoursesForDateRange(date, date);
+        return result.TryGetValue(date, out var items) ? items : new List<ScheduleItem>();
     }
 }
