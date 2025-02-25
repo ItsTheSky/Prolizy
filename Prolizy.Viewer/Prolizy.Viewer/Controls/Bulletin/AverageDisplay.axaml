@@ -8,7 +8,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="bulletin:AverageDisplayViewModel"
              x:Class="Prolizy.Viewer.Controls.Bulletin.AverageDisplay">
-    <StackPanel Orientation="Horizontal" Spacing="4">
+    <StackPanel Orientation="Horizontal" Spacing="4"
+                VerticalAlignment="Center">
         <fluent:SymbolIcon IsVisible="{Binding IsAboveAverage}"
                            Symbol="ChevronUp"
                            IconVariant="Filled" FontSize="{Binding IconFontSize}"
