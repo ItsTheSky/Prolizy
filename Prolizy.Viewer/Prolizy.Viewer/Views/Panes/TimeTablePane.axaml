@@ -91,6 +91,21 @@
                 </ScrollViewer>
             </RefreshContainer>
         </avalonia:SpacedGrid>
+        
+        <Border Background="{DynamicResource CalendarViewBackground}"
+                IsVisible="{Binding IsLoading}"
+                CornerRadius="10" ClipToBounds="True">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Spacing="5">
+                <TextBlock Text="Chargement ..."
+                           FontSize="18" FontWeight="SemiBold"
+                           HorizontalAlignment="Center" />
+                <ProgressBar IsIndeterminate="True"
+                             Width="200" Height="20"
+                             HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
+        
         <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                 Background="{DynamicResource CalendarViewBackground}"
                 IsVisible="{Binding !IsEdtAvailable}">
