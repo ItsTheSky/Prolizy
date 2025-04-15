@@ -37,7 +37,7 @@ public partial class BulletinPane : UserControl
                 ViewModel.IsNetworkUnavailable)
             {
                 // When network becomes available and we previously showed the network unavailable message
-                await Dispatcher.UIThread.InvokeAsync(async () => await ViewModel.RetryConnection());
+                await ViewModel.RetryConnection();
             }
         };
     }

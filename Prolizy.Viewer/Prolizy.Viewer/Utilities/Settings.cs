@@ -25,6 +25,7 @@ public class Settings : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     // Core Settings
+    private string _defaultModule = "home";
     private string? _studentGroup;
     private string? _sacocheApiKey;
     private bool _debug;
@@ -39,7 +40,8 @@ public class Settings : INotifyPropertyChanged
     private bool _caching;
     private bool _betterDescription;
     private int _colorScheme = 3;
-    private bool _overlay = false;
+    private bool _overlay;
+    private WidgetOpenAction _widgetOpenAction = WidgetOpenAction.OpenEdtWithDescription;
     
     // Bulletin Settings
     private string _bulletinUsername;
@@ -105,6 +107,18 @@ public class Settings : INotifyPropertyChanged
     {
         get => _colorScheme;
         set => SetProperty(ref _colorScheme, value);
+    }
+    
+    public string DefaultModule
+    {
+        get => _defaultModule;
+        set => SetProperty(ref _defaultModule, value);
+    }
+    
+    public WidgetOpenAction WidgetOpenAction
+    {
+        get => _widgetOpenAction;
+        set => SetProperty(ref _widgetOpenAction, value);
     }
 
     public bool IsFirstLaunch

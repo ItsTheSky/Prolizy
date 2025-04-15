@@ -5,8 +5,8 @@
         <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
         <Nullable>enable</Nullable>
         <ApplicationId>net.itsthesky.Prolizy.Viewer</ApplicationId>
-        <ApplicationVersion>8</ApplicationVersion>
-        <ApplicationDisplayVersion>1.4.1</ApplicationDisplayVersion>
+        <ApplicationVersion>9</ApplicationVersion>
+        <ApplicationDisplayVersion>1.5.0</ApplicationDisplayVersion>
         <AndroidUseAapt2>True</AndroidUseAapt2>
         <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 

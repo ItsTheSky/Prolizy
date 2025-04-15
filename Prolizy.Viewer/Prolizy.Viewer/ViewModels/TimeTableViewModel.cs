@@ -353,6 +353,8 @@ public partial class TimeTableViewModel : ObservableObject
                     Console.WriteLine($"Loading schedule for {targetDate} from API");
                     daySchedule = await LoadCoursesForDate(targetDate);
                 }
+                daySchedule = daySchedule.ToList(); // Copy list
+                daySchedule.RemoveAll(item => item.Course.CourseType.IsHoliday());
 
                 if (daySchedule.Count == 0)
                 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Layout;
@@ -88,6 +89,24 @@ public partial class TimeTableCategory : SettingCategory
                             5 => "Ambre",
                             6 => "Écarlate",
                             _ => "Inconnu"
+                        };
+                    })
+            },
+            new SettingEntry(this, "widget_open_action")
+            {
+                Title = "Action d'ouverture du widget",
+                Description = "Change l'action d'ouverture du widget de l'emploi du temps.",
+                Control = ControlsHelper.CreateSettingComboBox(nameof(Settings.WidgetOpenAction),
+                    Enum.GetValues<WidgetOpenAction>().ToList(), i =>
+                    {
+                        return i switch
+                        {
+                            WidgetOpenAction.OpenEdt => "Ouvrir l'emploi du temps",
+                            WidgetOpenAction.OpenEdtWithDescription => "Ouvrir l'emploi du temps & description",
+                            WidgetOpenAction.OpenBulletin => "Ouvrir le bulletin",
+                            WidgetOpenAction.OpenSacoche => "Ouvrir Sacoche",
+                            WidgetOpenAction.OpenSettings => "Ouvrir les paramètres",
+                            _ => throw new ArgumentOutOfRangeException(nameof(i), i, null)
                         };
                     })
             },

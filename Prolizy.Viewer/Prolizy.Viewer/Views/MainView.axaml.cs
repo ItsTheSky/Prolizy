@@ -72,9 +72,7 @@ public partial class MainView : UserControl
                     Console.WriteLine("Preloader done, moving to pane.. (now " +
                                       Settings.Instance.EnabledModules.Count +
                                       " modules enabled)");
-                    MoveToPane(Settings.Instance.EnabledModules.Count == 0
-                        ? null
-                        : (MainNavigationView.MenuItems[0] as NavigationViewItem)!.Tag as Type);
+                    LoadDefaultModule();
 
                     Console.WriteLine("Everything's loaded! Reloading home cards...");
                     if (HomePane.Instance != null!) 
@@ -93,8 +91,15 @@ public partial class MainView : UserControl
                 {
                     Console.WriteLine("Settings changed, reloading modules... (now " +
                                       Settings.Instance.EnabledModules.Count + " modules enabled: " +
-                                        string.Join(", ", Settings.Instance.EnabledModules) + ")");
+                                      string.Join(", ", Settings.Instance.EnabledModules) + ")");
                     ReloadNavbar();
+            
+                    // Vérifier si le module par défaut est toujours activé
+                    if (!Settings.Instance.EnabledModules.Contains(Settings.Instance.DefaultModule))
+                    {
+                        Settings.Instance.DefaultModule = Settings.Instance.EnabledModules.Count > 0 ? Settings.Instance.EnabledModules[0] : "settings";
+                        Settings.Instance.Save();
+                    }
                 }
             };
         }
@@ -174,5 +179,41 @@ public partial class MainView : UserControl
     public static void ShowNotification(string title, string message, NotificationType type)
     {
         Instance.NotificationManager.Show(new Notification(title, message, type));
+    }
+    
+    public void LoadDefaultModule()
+    {
+        if (Settings.Instance.EnabledModules.Count > 0)
+        {
+            string defaultModuleId = Settings.Instance.DefaultModule;
+        
+            // Vérifie si le module par défaut est activé
+            if (Settings.Instance.EnabledModules.Contains(defaultModuleId))
+            {
+                // Trouve le module correspondant au defaultModuleId
+                var defaultModule = WelcomeChoices.Modules.FirstOrDefault(m => m.Id == defaultModuleId);
+                if (defaultModule != null)
+                {
+                    MoveToPane(defaultModule.ControlType);
+                    return;
+                }
+            }
+        
+            // Fallback: affiche le premier module si le module par défaut n'est pas disponible
+            if (MainNavigationView.MenuItems.Count > 0)
+            {
+                MoveToPane((MainNavigationView.MenuItems[0] as NavigationViewItem)!.Tag as Type);
+            }
+            else
+            {
+                // Aucun module dans la barre de navigation: afficher la page de paramètres
+                MoveToPane(null);
+            }
+        }
+        else
+        {
+            // Aucun module activé: afficher la page de paramètres
+            MoveToPane(null);
+        }
     }
 }

@@ -7,6 +7,7 @@
              xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
              xmlns:homeCards="clr-namespace:Prolizy.Viewer.Views.HomeCards"
              xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             xmlns:edt="clr-namespace:Prolizy.Viewer.Controls.Edt"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              Height="200"
              x:DataType="homeCards:EdtCardViewModel"

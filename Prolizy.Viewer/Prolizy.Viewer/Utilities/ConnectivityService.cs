@@ -44,7 +44,8 @@ public partial class ConnectivityService : ObservableObject
         
         // Set up a timer to check connectivity periodically
         _connectivityCheckTimer = new Timer(30000); // Check every 30 seconds
-        _connectivityCheckTimer.Elapsed += async (sender, args) => await CheckConnectivity();
+        _connectivityCheckTimer.Elapsed += async (sender, args) => 
+            await Dispatcher.UIThread.InvokeAsync(async () => await CheckConnectivity());
         _connectivityCheckTimer.Start();
         
         // Run an initial connectivity check

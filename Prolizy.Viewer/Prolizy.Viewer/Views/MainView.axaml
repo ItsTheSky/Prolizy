@@ -15,33 +15,15 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel />
     </Design.DataContext>
-    <Grid>
-        <controls:NavigationView Name="MainNavigationView"
-                                 PaneDisplayMode="Auto" PaneTitle="Prolizy"
-                                 OpenPaneLength="200">
-            <controls:NavigationView.Styles>
-                <Style Selector="controls|NavigationViewItem TextBlock">
-                    <Setter Property="TextWrapping" Value="NoWrap" />
-                </Style>
-            </controls:NavigationView.Styles>
+    <controls:NavigationView Name="MainNavigationView"
+                             PaneDisplayMode="Auto" PaneTitle="Prolizy"
+                             OpenPaneLength="200">
+        <controls:NavigationView.Styles>
+            <Style Selector="controls|NavigationViewItem TextBlock">
+                <Setter Property="TextWrapping" Value="NoWrap" />
+            </Style>
+        </controls:NavigationView.Styles>
             
-            <controls:Frame Name="Frame" />
-        </controls:NavigationView>
-        
-        <!-- Connectivity Status Indicator -->
-        <Border Name="ConnectivityIndicator" 
-                IsVisible="{Binding !IsNetworkAvailable}"
-                Background="{DynamicResource SystemErrorTextColor}"
-                Opacity="0.8"
-                CornerRadius="5"
-                Padding="10,5"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Center"
-                Margin="0,5,0,0">
-            <StackPanel Orientation="Horizontal" Spacing="5">
-                <markupExtensions:SymbolIcon Symbol="GlobeProhibited" />
-                <TextBlock Text="Pas de connexion Internet" FontWeight="SemiBold" />
-            </StackPanel>
-        </Border>
-    </Grid>
+        <controls:Frame Name="Frame" />
+    </controls:NavigationView>
 </UserControl>

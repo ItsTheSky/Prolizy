@@ -7,6 +7,7 @@ using Avalonia;
 using Avalonia.Android;
 using Avalonia.Threading;
 using Prolizy.Viewer.Android.Widgets;
+using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.Utilities.Android;
 using Prolizy.Viewer.ViewModels;
 using Prolizy.Viewer.Views;
@@ -73,11 +74,25 @@ public class MainActivity : AvaloniaMainActivity<App>
         {
             _ = Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                MainView.Instance.MoveToPane(typeof(TimeTablePane));
-                var (item, isCurrent) = await TimeTableViewModel.GetCurrentOrNextCourse();
-                if (item != null)
+                switch (Settings.Instance.WidgetOpenAction)
                 {
-                    await item.ItemClicked();
+                    case WidgetOpenAction.OpenEdt:
+                    case WidgetOpenAction.OpenEdtWithDescription:
+                        MainView.Instance.MoveToPane(typeof(TimeTablePane));
+                        var (item, isCurrent) = await TimeTableViewModel.GetCurrentOrNextCourse();
+                        if (item != null && Settings.Instance.WidgetOpenAction == WidgetOpenAction.OpenEdtWithDescription)
+                            await item.ItemClicked();
+                        break;
+                        
+                    case WidgetOpenAction.OpenBulletin:
+                        MainView.Instance.MoveToPane(typeof(BulletinPane));
+                        break;
+                    case WidgetOpenAction.OpenSacoche:
+                        MainView.Instance.MoveToPane(typeof(SacochePane));
+                        break;
+                    case WidgetOpenAction.OpenSettings:
+                        MainView.Instance.MoveToPane(typeof(SettingsPane));
+                        break;
                 }
             });
         }

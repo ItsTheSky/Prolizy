@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.Input;
+using Prolizy.Viewer.Controls;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.Utilities.Android;
 using Prolizy.Viewer.Views.Panes;
@@ -30,6 +32,18 @@ public partial class AppCategory : SettingCategory
                     "base" => "Violet (Sans Dégradé)",
                     _ => "Inconnu"
                 }, onChanged: () => ColorSchemeManager.ApplyTheme(Settings.Instance.ThemeScheme)),
+        },
+        new (this, "default_module")
+        {
+            Title = "Module par défaut",
+            Description = "Choisissez le module qui sera affiché par défaut au démarrage de l'application.",
+            Control = ControlsHelper.CreateSettingComboBox(nameof(Settings.DefaultModule), 
+                WelcomeChoices.Modules.Where(m => m.ShowInWelcome).Select(m => m.Id).ToList(),
+                moduleId => {
+                    var module = WelcomeChoices.Modules.FirstOrDefault(m => m.Id == moduleId);
+                    return module?.Name ?? "Inconnu";
+                },
+                onChanged: ValidateDefaultModule)
         },
         new (this, "debug_mode")
         {
@@ -108,4 +122,27 @@ public partial class AppCategory : SettingCategory
         }
     ];
 
+    private void ValidateDefaultModule()
+    {
+        string currentDefaultModule = Settings.Instance.DefaultModule;
+    
+        // Vérifie si le module par défaut est toujours activé
+        if (!Settings.Instance.EnabledModules.Contains(currentDefaultModule))
+        {
+            // Si le module n'est pas activé, choisis le premier module activé comme défaut
+            if (Settings.Instance.EnabledModules.Count > 0)
+            {
+                Settings.Instance.DefaultModule = Settings.Instance.EnabledModules[0];
+                MainView.ShowNotification("Module par défaut modifié", 
+                    "Le module par défaut a été changé car celui sélectionné n'est pas activé.", 
+                    NotificationType.Warning);
+            }
+            else
+            {
+                // Si aucun module n'est activé, on utilise "home" par défaut
+                Settings.Instance.DefaultModule = "home";
+            }
+            Settings.Instance.Save();
+        }
+    }
 }
