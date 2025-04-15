@@ -6,7 +6,7 @@
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
              xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="700"
              x:Class="Prolizy.Viewer.Views.MainView"
              Background="{DynamicResource CoreGradientBrush}"
              x:DataType="vm:MainViewModel">
@@ -15,15 +15,30 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel />
     </Design.DataContext>
-    <controls:NavigationView Name="MainNavigationView"
-                             PaneDisplayMode="Auto" PaneTitle="Prolizy"
-                             OpenPaneLength="200">
-        <controls:NavigationView.Styles>
-            <Style Selector="controls|NavigationViewItem TextBlock">
-                <Setter Property="TextWrapping" Value="NoWrap" />
-            </Style>
-        </controls:NavigationView.Styles>
+    <Grid>
+        <controls:NavigationView Name="MainNavigationView" IsVisible="{Binding !IsPreLoading}"
+                                 PaneDisplayMode="Auto" PaneTitle="Prolizy"
+                                 OpenPaneLength="200">
+            <controls:NavigationView.Styles>
+                <Style Selector="controls|NavigationViewItem TextBlock">
+                    <Setter Property="TextWrapping" Value="NoWrap" />
+                </Style>
+            </controls:NavigationView.Styles>
             
-        <controls:Frame Name="Frame" />
-    </controls:NavigationView>
+            <controls:Frame Name="Frame" />
+        </controls:NavigationView>
+        
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
+                    IsVisible="{Binding IsPreLoading}"
+                    Spacing="10" VerticalAlignment="Center">
+            <markupExtensions:SymbolIcon Symbol="Sparkle" FontSize="36"
+                                         Foreground="{StaticResource SparkleGradientBrush}"/>
+            <TextBlock Text="Chargement en cours ..."
+                       FontWeight="SemiBold" FontSize="18"
+                       TextAlignment="Center" />
+            <TextBlock Text="Prolizy est en cours de chargement ..."
+                       TextAlignment="Center"
+                       MaxWidth="300" />
+        </StackPanel>
+    </Grid>
 </UserControl>

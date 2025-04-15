@@ -85,6 +85,15 @@
             </GradientStops>
         </ConicGradientBrush>
         
+        <LinearGradientBrush x:Key="SparkleGradientBrush">
+            <GradientStops>
+                <GradientStop Color="#ea580c" Offset="0"/>
+                <GradientStop Color="#f59e0b" Offset="0.5"/>
+                <GradientStop Color="#fbbf24" Offset="1"/>
+            </GradientStops>
+        </LinearGradientBrush>
+        
         <SolidColorBrush x:Key="BasicBackgroundBrush">#383A3A3A</SolidColorBrush>
+        
     </Application.Resources>
 </Application>

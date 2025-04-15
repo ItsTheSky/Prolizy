@@ -16,6 +16,7 @@ using FluentAvalonia.UI.Navigation;
 using HarfBuzzSharp;
 using Prolizy.Viewer.Controls;
 using Prolizy.Viewer.Utilities;
+using Prolizy.Viewer.ViewModels;
 using Prolizy.Viewer.Views.Panes;
 using Prolizy.Viewer.Views.SettingsMenu;
 using Symbol = FluentIcons.Common.Symbol;
@@ -43,45 +44,53 @@ public partial class MainView : UserControl
         try
         { 
             Instance = this;
-
-            #region Main Navigation Setup
-
-            MainNavigationView.SelectionChanged += (sender, args) =>
-            {
-                if (args.SelectedItem is not NavigationViewItem item)
-                    return;
-
-                MoveToPane(item.Tag as Type);
-            };
-            Console.WriteLine("Reloading navbar...");
-            ReloadNavbar();
             
-            // Preload all panes
-            Console.WriteLine("Preloading panes...");
-            foreach (var item in MainNavigationView.MenuItems.Cast<NavigationViewItem>())
-                MoveToPane(item.Tag as Type, false);
-
-            #endregion
-            
-            Dispatcher.UIThread.InvokeAsync(async () =>
+            _ = Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 try
                 {
-                    Console.WriteLine("Preloading ...");
+                    Console.WriteLine("Preloading core ...");
                     await Preloader.Check();
+                    Console.WriteLine("Preloader core done, preloading panes...");
+
+                    #region Main Navigation Setup
+
+                    MainNavigationView.SelectionChanged += (sender, args) =>
+                    {
+                        if (args.SelectedItem is not NavigationViewItem item)
+                            return;
+
+                        MoveToPane(item.Tag as Type);
+                    };
+                    Console.WriteLine("Reloading navbar...");
+                    ReloadNavbar();
+
+                    // Preload all panes
+                    Console.WriteLine("Preloading panes...");
+                    foreach (var item in MainNavigationView.MenuItems.Cast<NavigationViewItem>())
+                        MoveToPane(item.Tag as Type, false);
+
+                    #endregion
+
                     Console.WriteLine("Preloader done, moving to pane.. (now " +
                                       Settings.Instance.EnabledModules.Count +
                                       " modules enabled)");
                     LoadDefaultModule();
 
                     Console.WriteLine("Everything's loaded! Reloading home cards...");
-                    if (HomePane.Instance != null!) 
+                    if (HomePane.Instance != null!)
                         await HomePane.Instance.ViewModel.ReloadCards();
+                    
+                    ViewModel.IsPreLoading = false;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                     DebugPane.AddDebugText(e.ToString());
+                }
+                finally
+                {
+                    ViewModel.IsPreLoading = false;
                 }
             });
 
@@ -105,6 +114,7 @@ public partial class MainView : UserControl
         }
         catch (Exception e)
         {
+            ViewModel.IsPreLoading = false;
             Console.WriteLine(e);
             DebugPane.AddDebugText(e.ToString());
             Frame.NavigateToType(typeof(DebugPane), null, new FrameNavigationOptions
@@ -216,4 +226,6 @@ public partial class MainView : UserControl
             MoveToPane(null);
         }
     }
+    
+    public MainViewModel ViewModel => (MainViewModel) DataContext!;
 }
