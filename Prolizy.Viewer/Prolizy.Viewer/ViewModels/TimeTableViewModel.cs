@@ -84,31 +84,23 @@ public partial class TimeTableViewModel : ObservableObject
     [RelayCommand]
     public async Task GoToNextDay()
     {
-        if (await CheckNetworkAvailability())
-        {
-            SelectedDate = SelectedDate.AddDays(1);
-            await GoToDay();
-        }
+        SelectedDate = SelectedDate.AddDays(1);
+        await GoToDay();
     }
 
     [RelayCommand]
     public async Task GoToPreviousDay()
     {
-        if (await CheckNetworkAvailability())
-        {
-            SelectedDate = SelectedDate.AddDays(-1);
-            await GoToDay();
-        }
+        SelectedDate = SelectedDate.AddDays(-1);
+        await GoToDay();
     }
 
     [RelayCommand]
     public async Task GoToToday()
     {
-        if (await CheckNetworkAvailability())
-        {
-            SelectedDate = DateOnly.FromDateTime(DateTime.Today);
-            await GoToDay();
-        }
+        
+        SelectedDate = DateOnly.FromDateTime(DateTime.Today);
+        await GoToDay();
     }
     
     [RelayCommand]
@@ -190,7 +182,6 @@ public partial class TimeTableViewModel : ObservableObject
         {
             IsLoading = true;
             IsNetworkUnavailable = false;
-            await UpdateAndroidWidget();
 
             if (_scheduleCache.ContainsKey(SelectedDate))
             {
@@ -200,6 +191,20 @@ public partial class TimeTableViewModel : ObservableObject
                 IsLoading = false;
                 return;
             }
+            
+            var currentDayCourses = await LoadCoursesForDate(SelectedDate);
+            if (currentDayCourses.Count == 0)
+            {
+                Console.WriteLine("No courses found for the selected date.");
+                _timeTablePane.UpdateItems(new List<ScheduleItem>());
+                return;
+            }
+            
+            // cache and update the current day's courses. We'll load the rest async
+            _scheduleCache[SelectedDate] = currentDayCourses;
+            _timeTablePane.UpdateItems(currentDayCourses);
+            IsLoading = false;
+            Console.WriteLine($"Loaded {currentDayCourses.Count} courses for {SelectedDate}");
 
             // Obtenir le lundi de la semaine courante
             var monday = SelectedDate.AddDays(-(int)SelectedDate.DayOfWeek + 1);
@@ -252,6 +257,8 @@ public partial class TimeTableViewModel : ObservableObject
         {
             IsLoading = false;
         }
+        
+        await UpdateAndroidWidget();
     }
 
     public void RefreshAll()
@@ -410,14 +417,6 @@ public partial class TimeTableViewModel : ObservableObject
             Console.WriteLine($"Error finding course: {ex.Message}");
             return (null, false);
         }
-        finally
-        {
-            // Reset loading state if we can access the view model
-            if (TimeTablePane.Instance?.ViewModel != null)
-            {
-                TimeTablePane.Instance.ViewModel.IsLoading = false;
-            }
-        }
     }
 
     // New method to load courses for a date range (e.g., a week)
@@ -452,7 +451,7 @@ public partial class TimeTableViewModel : ObservableObject
                 if (Settings.Instance.Overlay)
                 {
                     var bulletinVm = BulletinPane.Instance?.ViewModel;
-                    if (Settings.Instance.LinkEdt && bulletinVm != null && bulletinVm.IsBulletinAvailable)
+                    if (Settings.Instance.LinkEdt && bulletinVm is { IsBulletinAvailable: true })
                     {
                         var absencesDay = bulletinVm.Absences;
                         var absences = absencesDay

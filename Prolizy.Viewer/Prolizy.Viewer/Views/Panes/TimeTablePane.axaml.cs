@@ -37,7 +37,7 @@ public partial class TimeTablePane : UserControl
             }
         };
         
-        Dispatcher.UIThread.InvokeAsync(async () =>
+        _ = Dispatcher.UIThread.InvokeAsync(async () =>
         {
             await ViewModel.GoToToday();
             await ViewModel.UpdateAndroidWidget();
@@ -51,7 +51,7 @@ public partial class TimeTablePane : UserControl
         
         timer.Tick += (sender, args) => Dispatcher.UIThread.InvokeAsync(async () => await ViewModel.UpdateAndroidWidget());
         timer.Start();
-        Dispatcher.UIThread.InvokeAsync(async () => await ViewModel.UpdateAndroidWidget());
+        _ = Dispatcher.UIThread.InvokeAsync(async () => await ViewModel.UpdateAndroidWidget());
     }
     
     public TimeTableViewModel ViewModel => (DataContext as TimeTableViewModel)!;
