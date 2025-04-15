@@ -103,8 +103,10 @@
                                                 <controls1:InfoBadge Grid.Column="0" VerticalAlignment="Center" />
 
                                                 <TextBlock Grid.Column="1" Text="{Binding Evaluation.Description}"
+                                                           VerticalAlignment="Center"
                                                            FontWeight="SemiBold" TextWrapping="Wrap" />
                                                 <TextBlock Grid.Column="2" Text="{Binding DisplayedDate}"
+                                                           VerticalAlignment="Center"
                                                            FontWeight="SemiLight" TextWrapping="Wrap" />
 
                                                 <fluent:SymbolIcon IsVisible="{Binding IsAboveAverage}"
@@ -118,6 +120,7 @@
                                                                    Foreground="{x:Static utilities:ColorMatcher.RedBrush}" />
 
                                                 <TextBlock Grid.Column="4" Text="{Binding Evaluation.Grade.Value}"
+                                                           VerticalAlignment="Center"
                                                            FontWeight="SemiBold" />
                                             </avalonia:SpacedGrid>
                                         </DataTemplate>

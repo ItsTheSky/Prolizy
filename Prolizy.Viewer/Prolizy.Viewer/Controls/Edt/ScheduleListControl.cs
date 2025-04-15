@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using AvaloniaEdit.Utils;
 
 namespace Prolizy.Viewer.Controls.Edt;
 

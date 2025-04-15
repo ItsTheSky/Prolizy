@@ -8,6 +8,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using AvaloniaEdit.Utils;
 using FluentIcons.Avalonia.Fluent;
 using FluentIcons.Common;
 using Prolizy.API;
