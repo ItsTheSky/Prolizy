@@ -12,7 +12,7 @@
              x:Class="Prolizy.Viewer.Controls.Bulletin.Charts.BulletinChartsDisplay">
 
     <ScrollViewer>
-        <StackPanel Spacing="20" Margin="10">
+        <StackPanel Spacing="20">
             <Button Classes="accent" HorizontalAlignment="Stretch"
                     IsVisible="{x:Static utilities:Settings.IsDebug}"
                     Command="{Binding UpdateAllCommand}">
@@ -147,7 +147,7 @@
                     <lvc:CartesianChart Series="{Binding AbsenceChart.Series}"
                                         XAxes="{Binding AbsenceChart.XAxes}"
                                         YAxes="{Binding AbsenceChart.YAxes}"
-                                        Height="200"
+                                        Height="350"
                                         LegendPosition="Bottom"
                                         IsVisible="{Binding AbsenceChart.HasData}" />
 

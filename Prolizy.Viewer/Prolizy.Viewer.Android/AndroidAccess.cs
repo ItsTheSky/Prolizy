@@ -117,6 +117,13 @@ public class AndroidAccess : IAndroidAccess
             notificationManager.CreateNotificationChannel(channel);
     }
 
+    public event EventHandler? BackButtonPressed;
+    
+    public void OnBackButtonPressed()
+    {
+        BackButtonPressed?.Invoke(this, EventArgs.Empty);
+    }
+
     public void ShowNotification(AndroidNotification notification)
     {
         var targetChannel = notification.Channel switch

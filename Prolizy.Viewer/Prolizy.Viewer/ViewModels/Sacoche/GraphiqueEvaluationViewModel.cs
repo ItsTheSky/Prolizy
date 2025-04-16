@@ -131,7 +131,6 @@ public partial class GraphiqueEvaluationViewModel : SacochePaneBaseViewModel
         
         var skills = rows.Select(skillRow => skillRow.DisplayedScore).ToArray();
         var skillsNames = rows.Select(skillRow => skillRow.SkillName).ToArray();
-        var skillsColors = rows.Select(skillRow => SKColor.Parse(skillRow.ScoreColor)).ToArray();
         
         SkillsSeries = [
             new ColumnSeries<int>

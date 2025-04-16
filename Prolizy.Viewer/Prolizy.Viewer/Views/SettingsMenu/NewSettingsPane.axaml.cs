@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using FluentAvalonia.UI.Media.Animation;
 using FluentAvalonia.UI.Navigation;
+using Prolizy.Viewer.Utilities.Android;
 using Prolizy.Viewer.ViewModels;
 using Prolizy.Viewer.Views.SettingsMenu.Sub;
 
@@ -25,5 +26,15 @@ public partial class NewSettingsPane : UserControl
             TransitionInfoOverride = new SuppressNavigationTransitionInfo()
         });
         DataContext = new NewSettingsViewModel(this, SettingsFrame);
+
+        if (AndroidAccessManager.AndroidAccess != null)
+        {
+            AndroidAccessManager.AndroidAccess.BackButtonPressed += (sender, args) =>
+            {
+                var vm = (NewSettingsViewModel)DataContext;
+                if (vm.CanGoBack)
+                    vm.GoBack();
+            };   
+        }
     }
 }

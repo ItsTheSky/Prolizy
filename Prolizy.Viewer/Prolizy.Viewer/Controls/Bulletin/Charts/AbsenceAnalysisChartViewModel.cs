@@ -104,13 +104,7 @@ public partial class AbsenceAnalysisChartViewModel : BaseObservableChartData
             }
         ];
         
-        YAxes = [
-            new Axis
-            {
-                MinLimit = 0,
-                Name = "Nombre d'absences"
-            }
-        ];
+        YAxes = [new Axis { MinLimit = 0 }];
         
         // Create stacked series
         Series = [
@@ -118,8 +112,10 @@ public partial class AbsenceAnalysisChartViewModel : BaseObservableChartData
             {
                 Name = "Absences justifiées",
                 Values = justifiedValues,
-                Fill = new SolidColorPaint(ColorMatcher.Green.ToSKColor()),
-                Stroke = null,
+                
+                Fill = new SolidColorPaint(ColorMatcher.Green.ToSKColor().LittleTransparent()),
+                Stroke = new SolidColorPaint(ColorMatcher.Green.ToSKColor()) { StrokeThickness = 1 },
+                
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Middle,
                 DataLabelsFormatter = point => point.Model > 0 ? point.Model.ToString(CultureInfo.InvariantCulture) : string.Empty
             },
@@ -127,8 +123,10 @@ public partial class AbsenceAnalysisChartViewModel : BaseObservableChartData
             {
                 Name = "Absences non justifiées",
                 Values = unjustifiedValues,
-                Fill = new SolidColorPaint(ColorMatcher.Red.ToSKColor()),
-                Stroke = null,
+                
+                Fill = new SolidColorPaint(ColorMatcher.Red.ToSKColor().LittleTransparent()),
+                Stroke = new SolidColorPaint(ColorMatcher.Red.ToSKColor()) { StrokeThickness = 1 },
+                
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Middle,
                 DataLabelsFormatter = point => point.Model > 0 ? point.Model.ToString(CultureInfo.InvariantCulture) : string.Empty
             },
@@ -136,8 +134,11 @@ public partial class AbsenceAnalysisChartViewModel : BaseObservableChartData
             {
                 Name = "Retards",
                 Values = lateValues,
-                Fill = new SolidColorPaint(ColorMatcher.Yellow.ToSKColor()),
-                Stroke = null,
+                
+                
+                Fill = new SolidColorPaint(ColorMatcher.Yellow.ToSKColor().LittleTransparent()),
+                Stroke = new SolidColorPaint(ColorMatcher.Yellow.ToSKColor()) { StrokeThickness = 1 },
+                
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Middle,
                 DataLabelsFormatter = point => point.Model > 0 ? point.Model.ToString(CultureInfo.InvariantCulture) : string.Empty
             }

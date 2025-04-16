@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Avalonia.Skia;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
@@ -67,8 +68,11 @@ public partial class UePerformanceChartViewModel : BaseObservableChartData
             new Axis
             {
                 Labels = labels,
-                LabelsRotation = -15,
-                Padding = new Padding(15)
+                LabelsRotation = -20,
+                LabelsAlignment = Align.Middle,
+                Padding = new Padding(-15, 0, 0, 0),
+                TextSize = 14,
+                ForceStepToMin = true
             }
         ];
         
@@ -86,8 +90,10 @@ public partial class UePerformanceChartViewModel : BaseObservableChartData
             {
                 Name = "Mes notes",
                 Values = studentValues,
-                Fill = new SolidColorPaint(App.GetAccentColor()),
-                Stroke = null,
+                
+                Stroke = new SolidColorPaint(App.GetAccentColor()) { StrokeThickness = 2 },
+                Fill = new SolidColorPaint(App.GetAccentColor(true)),
+                
                 Padding = 5,
                 DataLabelsPosition = DataLabelsPosition.Top
             },
@@ -95,8 +101,10 @@ public partial class UePerformanceChartViewModel : BaseObservableChartData
             {
                 Name = "Moyenne de promotion",
                 Values = averageValues,
-                Fill = new SolidColorPaint(ColorMatcher.Green.ToSKColor()),
-                Stroke = null,
+                
+                Fill = new SolidColorPaint(ColorMatcher.Green.ToSKColor().LittleTransparent()),
+                Stroke = new SolidColorPaint(ColorMatcher.Green.ToSKColor()) { StrokeThickness = 2 },
+                
                 Padding = 5,
                 DataLabelsPosition = DataLabelsPosition.Top
             }

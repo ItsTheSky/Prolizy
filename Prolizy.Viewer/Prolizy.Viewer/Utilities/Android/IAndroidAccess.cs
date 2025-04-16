@@ -1,4 +1,5 @@
-﻿using Prolizy.Viewer.Controls.Edt;
+﻿using System;
+using Prolizy.Viewer.Controls.Edt;
 
 namespace Prolizy.Viewer.Utilities.Android;
 
@@ -18,6 +19,8 @@ public interface IAndroidAccess
     public bool IsNotificationPermissionGranted();
     
     public void InitNotifications();
+    
+    public event EventHandler BackButtonPressed;
 }
 
 public static class AndroidAccessManager

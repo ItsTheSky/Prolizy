@@ -101,4 +101,10 @@ public class MainActivity : AvaloniaMainActivity<App>
             DebugPane.AddDebugText($"Error opening EDT page: {ex.Message}");
         }
     }
+
+    public override void OnBackPressed()
+    {
+        if (AndroidAccessManager.AndroidAccess != null)
+            ((AndroidAccess) AndroidAccessManager.AndroidAccess).OnBackButtonPressed();
+    }
 }
