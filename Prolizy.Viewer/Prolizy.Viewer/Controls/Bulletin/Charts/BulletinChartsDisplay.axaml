@@ -1,0 +1,163 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:controls="using:Prolizy.Viewer.Controls"
+             xmlns:charts="using:Prolizy.Viewer.Controls.Bulletin.Charts"
+             xmlns:controls1="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="charts:BulletinChartsViewModel"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.Charts.BulletinChartsDisplay">
+
+    <ScrollViewer>
+        <StackPanel Spacing="20" Margin="10">
+            <Button Classes="accent" HorizontalAlignment="Stretch"
+                    IsVisible="{x:Static utilities:Settings.IsDebug}"
+                    Command="{Binding UpdateAllCommand}">
+                Rafraîchir les données
+            </Button>
+
+            <!-- UE Performance Chart -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="{Binding UeChart.Title}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Margin="0,5,0,0" />
+
+
+                <Grid>
+                    <lvc:CartesianChart Series="{Binding UeChart.Series}"
+                                        XAxes="{Binding UeChart.XAxes}"
+                                        YAxes="{Binding UeChart.YAxes}"
+                                        Height="250"
+                                        IsVisible="{Binding UeChart.HasData}"
+                                        LegendPosition="Bottom" />
+
+                    <controls1:InfoBar Message="Pas assez de données pour afficher les UEs."
+                                       IsOpen="True"
+                                       IsClosable="False"
+                                       Severity="Informational"
+                                       IsVisible="{Binding !UeChart.HasData}" />
+                </Grid>
+            </StackPanel>
+
+            <!-- Grade Evolution Chart -->
+            <!--<StackPanel Spacing="8">
+                <TextBlock Text="{Binding EvolutionChart.Title}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Margin="0,5,0,0" />
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="250" />
+                        <RowDefinition Height="60" />
+                    </Grid.RowDefinitions>
+
+                    ~1~ Main Chart @1@
+                    <lvc:CartesianChart Grid.Row="0"
+                                        Series="{Binding EvolutionChart.Series}"
+                                        XAxes="{Binding EvolutionChart.XAxes}"
+                                        YAxes="{Binding EvolutionChart.YAxes}"
+                                        ZoomMode="X"
+                                        DrawMargin="{Binding EvolutionChart.Margin}"
+                                        UpdateStartedCommand="{Binding EvolutionChart.ChartUpdatedCommand}"
+                                        Sections="{Binding EvolutionChart.Thumbs}"
+                                        LegendPosition="Bottom"
+                                        IsVisible="{Binding EvolutionChart.HasData}" />
+
+                    ~1~ Scrollbar Chart @1@
+                    <lvc:CartesianChart Grid.Row="1"
+                                        Series="{Binding EvolutionChart.ScrollbarSeries}"
+                                        XAxes="{Binding EvolutionChart.InvisibleX}"
+                                        YAxes="{Binding EvolutionChart.InvisibleY}"
+                                        Sections="{Binding EvolutionChart.Thumbs}"
+                                        DrawMargin="{Binding EvolutionChart.Margin}"
+                                        TooltipPosition="Hidden"
+                                        IsVisible="{Binding EvolutionChart.HasData}"
+                                        PointerPressedCommand="{Binding EvolutionChart.PointerDownCommand}"
+                                        PointerMoveCommand="{Binding EvolutionChart.PointerMoveCommand}"
+                                        PointerReleasedCommand="{Binding EvolutionChart.PointerUpCommand}" />
+
+                    <controls1:InfoBar Grid.Row="0" Grid.RowSpan="2"
+                                       Message="Pas assez de données pour afficher l'évolution des notes"
+                                       IsOpen="True"
+                                       IsClosable="False"
+                                       Severity="Informational"
+                                       IsVisible="{Binding !EvolutionChart.HasData}" />
+                </Grid>
+            </StackPanel>-->
+
+            <!-- Resource/SAE Comparison Chart -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="{Binding ComparisonChart.Title}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Margin="0,5,0,0" />
+
+                <Grid>
+                    <lvc:CartesianChart Series="{Binding ComparisonChart.Series}"
+                                        XAxes="{Binding ComparisonChart.XAxes}"
+                                        YAxes="{Binding ComparisonChart.YAxes}"
+                                        Height="250"
+                                        LegendPosition="Bottom"
+                                        IsVisible="{Binding ComparisonChart.HasData}" />
+
+                    <controls1:InfoBar Message="Pas assez de données pour comparer les ressources et SAÉs"
+                                       IsOpen="True"
+                                       IsClosable="False"
+                                       Severity="Informational"
+                                       IsVisible="{Binding !ComparisonChart.HasData}" />
+                </Grid>
+            </StackPanel>
+
+            <!--<StackPanel Spacing="8">
+                <TextBlock Text="{Binding DistributionChart.Title}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Margin="0,5,0,0" />
+
+                <Grid>
+                    <lvc:PieChart Series="{Binding DistributionChart.Series}"
+                                  Height="200"
+                                  IsVisible="{Binding DistributionChart.HasData}" />
+
+                    <controls1:InfoBar Message="Pas assez de données pour la distribution"
+                                       IsOpen="True"
+                                       IsClosable="False"
+                                       Severity="Informational"
+                                       IsVisible="{Binding !DistributionChart.HasData}" />
+                </Grid>
+            </StackPanel>-->
+
+            <StackPanel Spacing="8">
+                <TextBlock Text="{Binding AbsenceChart.Title}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Margin="0,5,0,0" />
+
+                <Grid>
+                    <lvc:CartesianChart Series="{Binding AbsenceChart.Series}"
+                                        XAxes="{Binding AbsenceChart.XAxes}"
+                                        YAxes="{Binding AbsenceChart.YAxes}"
+                                        Height="200"
+                                        LegendPosition="Bottom"
+                                        IsVisible="{Binding AbsenceChart.HasData}" />
+
+                    <controls1:InfoBar Message="Pas d'absences à analyser"
+                                       IsOpen="True"
+                                       IsClosable="False"
+                                       Severity="Informational"
+                                       IsVisible="{Binding !AbsenceChart.HasData}" />
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

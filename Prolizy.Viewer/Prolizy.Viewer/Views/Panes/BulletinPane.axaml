@@ -9,9 +9,9 @@
              xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
              xmlns:viewModels="clr-namespace:Prolizy.Viewer.ViewModels"
              xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
-             xmlns:avalonia1="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
              xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:charts="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Charts"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="viewModels:BulletinPaneViewModel"
              x:Class="Prolizy.Viewer.Views.Panes.BulletinPane">
@@ -354,14 +354,14 @@
                     <TabItem.Header>
                         <controls1:IconSourceElement>
                             <controls1:IconSourceElement.IconSource>
-                                <fluent:SymbolIconSource Symbol="DataArea"
+                                <fluent:SymbolIconSource Symbol="ChartMultiple"
                                                          FontWeight="SemiBold"
                                                          FontSize="16" />
                             </controls1:IconSourceElement.IconSource>
                         </controls1:IconSourceElement>
                     </TabItem.Header>
                     <TabItem.Content>
-                        <bulletin:GraphDisplay DataContext="{Binding}" />
+                        <charts:BulletinChartsDisplay DataContext="{Binding ChartsViewModel}" />
                     </TabItem.Content>
                 </TabItem>
             </TabControl>

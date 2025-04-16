@@ -3,29 +3,23 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Layout;
+using Avalonia.Controls.Notifications;
 using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
 using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.VisualElements;
 using Prolizy.API;
 using Prolizy.API.Model;
 using Prolizy.Viewer.Controls.Bulletin;
+using Prolizy.Viewer.Controls.Bulletin.Charts;
 using Prolizy.Viewer.Controls.Wizard.Steps;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.Views;
-using SkiaSharp;
-using SpacedGridControl.Avalonia;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Prolizy.Viewer.ViewModels;
@@ -46,7 +40,7 @@ public partial class BulletinPaneViewModel : ObservableObject
     [ObservableProperty] private bool _isLoading = false;
     [ObservableProperty] private bool _isNetworkUnavailable = false;
 
-    [ObservableProperty] private Control _uEGraphDisplay;
+    [ObservableProperty] private BulletinChartsViewModel _chartsViewModel;
 
     public RelayCommand<AbsenceSortingType> ChangeAbsenceSortingTypeCommand => new(
         sortingType => SelectedAbsenceSortingType = sortingType!);
@@ -114,6 +108,9 @@ public partial class BulletinPaneViewModel : ObservableObject
         
         // Initialize network status
         UpdateNetworkStatus();
+        
+        // Initialize the charts
+        ChartsViewModel = new BulletinChartsViewModel(this);
     }
     
     private void UpdateNetworkStatus()
@@ -206,7 +203,7 @@ public partial class BulletinPaneViewModel : ObservableObject
                     vm.HasAnyNotes = false;
                     MainView.ShowNotification("Erreur de connexion", 
                         "Impossible de récupérer les notes en raison d'un problème de connexion internet", 
-                        Avalonia.Controls.Notifications.NotificationType.Error);
+                        NotificationType.Error);
                     dialog.Hide();
                 }
             }
@@ -276,7 +273,7 @@ public partial class BulletinPaneViewModel : ObservableObject
                 IsBulletinAvailable = false;
                 MainView.ShowNotification("Erreur", 
                     "Impossible de charger le bulletin.", 
-                    Avalonia.Controls.Notifications.NotificationType.Error);
+                    NotificationType.Error);
             }
         }
         finally
@@ -324,7 +321,7 @@ public partial class BulletinPaneViewModel : ObservableObject
         UpdateLatestEvaluations();
 
         // We load the charts
-        LoadCharts();
+        ChartsViewModel.UpdateAllCommand.Execute(null);
     }
 
     private void ClearCurrentData()
@@ -460,94 +457,6 @@ public partial class BulletinPaneViewModel : ObservableObject
 
         await dialog.ShowAsync();
     });
-
-    #region Graph Charts
-
-    private void LoadCharts()
-    {
-        AngleAxes =
-        [
-            new PolarAxis
-            {
-                Labels = BulletinRoot.Transcript.TeachingUnits.Select(x => x.Key).ToArray(),
-                LabelsRotation = LiveCharts.TangentAngle,
-                //IsInverted = true // enables counter clockwise draw. 
-            }
-        ];
-
-        RadialAxes =
-        [
-            new PolarAxis
-            {
-                LabelsAngle = -60,
-                Labels = Enumerable.Range(0, 21).Select(x => x.ToString()).ToArray(),
-
-                MinLimit = 0,
-                MaxLimit = 20,
-            }
-        ];
-
-        var units = new List<(string, string)>();
-        var notes = new List<double?>();
-        var moyNotes = new List<double?>();
-        foreach (var teachingUnit in BulletinRoot.Transcript.TeachingUnits)
-        {
-            var rawNote = teachingUnit.Value.Average.Value;
-            if (rawNote is null or "~")
-                notes.Add(null);
-            else
-                notes.Add(double.Parse(rawNote.Replace(".", ",")));
-
-            var rawMoyNote = teachingUnit.Value.Average.Average;
-            if (rawMoyNote is null or "~")
-                moyNotes.Add(null);
-            else
-                moyNotes.Add(double.Parse(rawMoyNote.Replace(".", ",")));
-
-            units.Add((teachingUnit.Key, teachingUnit.Value.Title));
-        }
-
-        var promoColor = ColorMatcher.TailwindColors["green"].ToSKColor();
-        var promoColorTr = promoColor.WithAlpha(128);
-
-        Series =
-        [
-            new PolarLineSeries<double?>
-            {
-                Values = notes,
-                GeometrySize = 15,
-                DataLabelsPosition = PolarLabelsPosition.Middle,
-                DataLabelsRotation = LiveCharts.CotangentAngle,
-                IsClosed = true,
-
-                Stroke = new SolidColorPaint(App.GetAccentColor()) { StrokeThickness = 4 },
-                Fill = new SolidColorPaint(App.GetAccentColor(true)),
-                GeometryStroke = new SolidColorPaint(App.GetAccentColor()) { StrokeThickness = 4 },
-
-                Name = "Note Personnelle",
-            },
-            new PolarLineSeries<double?>
-            {
-                Values = moyNotes,
-                GeometrySize = 15,
-                DataLabelsPosition = PolarLabelsPosition.Middle,
-                DataLabelsRotation = LiveCharts.CotangentAngle,
-                IsClosed = true,
-
-                Stroke = new SolidColorPaint(promoColor) { StrokeThickness = 4 },
-                Fill = new SolidColorPaint(promoColorTr),
-                GeometryStroke = new SolidColorPaint(promoColor) { StrokeThickness = 4 },
-
-                Name = "Moyenne de la Promo.",
-            }
-        ];
-    }
-
-    [ObservableProperty] private ISeries[] _series = [];
-    [ObservableProperty] private PolarAxis[] _radialAxes = [];
-    [ObservableProperty] private PolarAxis[] _angleAxes = [];
-
-    #endregion
 }
 
 public record InternalEvaluation(Evaluation Evaluation, bool IsAboveAverage, string DisplayedDate);

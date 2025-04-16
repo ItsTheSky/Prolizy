@@ -16,6 +16,7 @@ namespace Prolizy.Viewer.Utilities;
 public class Settings : INotifyPropertyChanged
 {
     public static bool IsNotAnonymous => !Instance.AnonymousMode;
+    public static bool IsDebug => !Instance.Debug;
     
     private static Settings _instance;
     private static readonly object _lock = new ();
