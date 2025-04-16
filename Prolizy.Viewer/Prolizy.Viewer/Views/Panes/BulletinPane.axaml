@@ -12,6 +12,7 @@
              xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
              xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
              xmlns:charts="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Charts"
+             xmlns:tabs="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Tabs"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="viewModels:BulletinPaneViewModel"
              x:Class="Prolizy.Viewer.Views.Panes.BulletinPane">
@@ -46,7 +47,7 @@
                 <ItemsControl ItemsSource="{Binding AvailableSemesters}" HorizontalAlignment="Left">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" Spacing="5" 
+                            <StackPanel Orientation="Horizontal" Spacing="5"
                                         HorizontalAlignment="Left" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
@@ -82,72 +83,23 @@
                     </TabItem.Header>
                     <ScrollViewer>
                         <controls:Card VerticalAlignment="Top">
-                            <StackPanel Spacing="5">
-                                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Synthèse" />
-                                <TextBlock TextWrapping="Wrap" FontStyle="Italic"
-                                           Text="La moyenne des ressources dans une UE dépend des poids donnés aux évaluations." />
-
-                                <TextBlock FontSize="16" FontWeight="SemiBold" Text="Dernières notes" />
-                                <ItemsControl ItemsSource="{Binding LatestEvals}" Grid.IsSharedSizeScope="True">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <avalonia:SpacedGrid ColumnSpacing="5">
-                                                <avalonia:SpacedGrid.ColumnDefinitions>
-                                                    <ColumnDefinition SharedSizeGroup="A" />
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition SharedSizeGroup="B" />
-                                                    <ColumnDefinition SharedSizeGroup="C" />
-                                                    <ColumnDefinition SharedSizeGroup="D" />
-                                                </avalonia:SpacedGrid.ColumnDefinitions>
-
-                                                <controls1:InfoBadge Grid.Column="0" VerticalAlignment="Center" />
-
-                                                <TextBlock Grid.Column="1" Text="{Binding Evaluation.Description}"
-                                                           VerticalAlignment="Center"
-                                                           FontWeight="SemiBold" TextWrapping="Wrap" />
-                                                <TextBlock Grid.Column="2" Text="{Binding DisplayedDate}"
-                                                           VerticalAlignment="Center"
-                                                           FontWeight="SemiLight" TextWrapping="Wrap" />
-
-                                                <fluent:SymbolIcon IsVisible="{Binding IsAboveAverage}"
-                                                                   Symbol="ChevronUp" Grid.Column="3"
-                                                                   IconVariant="Filled"
-                                                                   Foreground="{x:Static utilities:ColorMatcher.GreenBrush}" />
-
-                                                <fluent:SymbolIcon IsVisible="{Binding !IsAboveAverage}"
-                                                                   Symbol="ChevronDown" Grid.Column="3"
-                                                                   IconVariant="Filled"
-                                                                   Foreground="{x:Static utilities:ColorMatcher.RedBrush}" />
-
-                                                <TextBlock Grid.Column="4" Text="{Binding Evaluation.Grade.Value}"
-                                                           VerticalAlignment="Center"
-                                                           FontWeight="SemiBold" />
-                                            </avalonia:SpacedGrid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Vertical" Spacing="3" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
-
-                                <Separator />
-
-                                <TextBlock FontSize="16" FontWeight="SemiBold" Text="Unités d'Enseignement" />
-                                <ItemsControl ItemsSource="{Binding Units}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <bulletin:TeachingUnitDisplay DataContext="{Binding}" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Vertical" Spacing="10" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
-                            </StackPanel>
+                            <tabs:SummaryTabDisplay DataContext="{Binding SummaryTabViewModel}" />
+                        </controls:Card>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <controls1:IconSourceElement>
+                            <controls1:IconSourceElement.IconSource>
+                                <fluent:SymbolIconSource Symbol="TetrisApp"
+                                                         FontWeight="SemiBold"
+                                                         FontSize="16" />
+                            </controls1:IconSourceElement.IconSource>
+                        </controls1:IconSourceElement>
+                    </TabItem.Header>
+                    <ScrollViewer>
+                        <controls:Card VerticalAlignment="Top">
+                            <tabs:UnitsTabDisplay DataContext="{Binding UnitsViewModel}" />
                         </controls:Card>
                     </ScrollViewer>
                 </TabItem>
@@ -270,12 +222,13 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Button Classes.accent="{Binding IsSelected}"
-                                                       Command="{Binding ViewModel.ChangeAbsenceSortingTypeCommand, RelativeSource={RelativeSource AncestorType=panes:BulletinPane}}"
+                                                        Command="{Binding ViewModel.ChangeAbsenceSortingTypeCommand, RelativeSource={RelativeSource AncestorType=panes:BulletinPane}}"
                                                         CommandParameter="{Binding}">
                                                     <StackPanel Orientation="Horizontal" Spacing="2">
                                                         <fluent:SymbolIcon Symbol="{Binding Icon}"
                                                                            FontSize="16" />
-                                                        <TextBlock Text="{Binding DisplayedName}" VerticalAlignment="Center" />
+                                                        <TextBlock Text="{Binding DisplayedName}"
+                                                                   VerticalAlignment="Center" />
                                                     </StackPanel>
                                                 </Button>
                                             </DataTemplate>
@@ -399,16 +352,16 @@
                         Command="{Binding RetryConnectionCommand}" />
             </StackPanel>
         </Border>
-        
-        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                 Background="{DynamicResource CalendarViewBackground}"
                 IsVisible="{Binding !IsBulletinAvailable}">
 
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
-                      Spacing="10" VerticalAlignment="Center">
+                        Spacing="10" VerticalAlignment="Center">
 
                 <TextBlock Text="Le bulletin n'est pas configuré!"
-                         FontWeight="SemiBold" />
+                           FontWeight="SemiBold" />
                 <Button Content="Configurer" Classes="accent" HorizontalAlignment="Center"
                         Command="{x:Static viewModels:BulletinPaneViewModel.ConfigureBulletin}" />
 

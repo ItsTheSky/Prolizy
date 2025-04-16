@@ -19,6 +19,7 @@ using Prolizy.Viewer.Controls.Bulletin;
 using Prolizy.Viewer.Controls.Bulletin.Charts;
 using Prolizy.Viewer.Controls.Wizard.Steps;
 using Prolizy.Viewer.Utilities;
+using Prolizy.Viewer.ViewModels.Bulletin;
 using Prolizy.Viewer.Views;
 using Symbol = FluentIcons.Common.Symbol;
 
@@ -29,7 +30,6 @@ public partial class BulletinPaneViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<InternalTeachingUnit> _units = [];
     [ObservableProperty] private ObservableCollection<InternalResource> _resources = [];
     [ObservableProperty] private ObservableCollection<InternalSaeDisplay> _saes = [];
-    [ObservableProperty] private ObservableCollection<InternalEvaluation> _latestEvals = [];
     [ObservableProperty] private ObservableCollection<InternalAbsenceDay> _absences = [];
 
     [ObservableProperty] private ObservableCollection<InternalSemester> _availableSemesters = [];
@@ -40,7 +40,15 @@ public partial class BulletinPaneViewModel : ObservableObject
     [ObservableProperty] private bool _isLoading = false;
     [ObservableProperty] private bool _isNetworkUnavailable = false;
 
+    [ObservableProperty] private BulletinSummaryViewModel _summaryTabViewModel;
     [ObservableProperty] private BulletinChartsViewModel _chartsViewModel;
+    [ObservableProperty] private BulletinUnitsViewModel _unitsViewModel;
+    
+    public Collection<BaseBulletinTabViewModel> Tabs =>
+    [
+        SummaryTabViewModel,
+        UnitsViewModel
+    ];
 
     public RelayCommand<AbsenceSortingType> ChangeAbsenceSortingTypeCommand => new(
         sortingType => SelectedAbsenceSortingType = sortingType!);
@@ -109,8 +117,10 @@ public partial class BulletinPaneViewModel : ObservableObject
         // Initialize network status
         UpdateNetworkStatus();
         
-        // Initialize the charts
+        // Initialize the view models
         ChartsViewModel = new BulletinChartsViewModel(this);
+        SummaryTabViewModel = new BulletinSummaryViewModel(this);
+        UnitsViewModel = new BulletinUnitsViewModel(this);
     }
     
     private void UpdateNetworkStatus()
@@ -322,6 +332,10 @@ public partial class BulletinPaneViewModel : ObservableObject
 
         // We load the charts
         ChartsViewModel.UpdateAllCommand.Execute(null);
+        
+        // we fianlly update all vms
+        foreach (var vm in Tabs)
+            vm.Update();
     }
 
     private void ClearCurrentData()
@@ -329,8 +343,10 @@ public partial class BulletinPaneViewModel : ObservableObject
         Units.Clear();
         Resources.Clear();
         Saes.Clear();
-        LatestEvals.Clear();
         Absences.Clear();
+        
+        foreach (var vm in Tabs)
+            vm.Clear();
     }
 
     private async Task InitializeClientIfNeeded()
@@ -407,24 +423,7 @@ public partial class BulletinPaneViewModel : ObservableObject
     
     private void UpdateLatestEvaluations()
     {
-        var allEvals = new List<Evaluation>();
-        allEvals.AddRange(BulletinRoot.Transcript.Resources
-            .Select(x => x.Value.Evaluations).SelectMany(x => x));
-        allEvals.AddRange(BulletinRoot.Transcript.Saes
-            .Select(x => x.Value.Evaluations).SelectMany(x => x));
-
-        var latestEvals = allEvals.OrderByDescending(x => x.Date).Take(5);
-        foreach (var eval in latestEvals)
-        {
-            if (double.TryParse(eval.Grade.Value.Replace(".", ","), out var studentNote) &&
-                double.TryParse(eval.Grade.Average.Replace(".", ","), out var averageNote))
-            {
-                LatestEvals.Add(new InternalEvaluation(
-                    eval,
-                    studentNote > averageNote,
-                    eval.Date.ToString("dd/MM/yyyy")));
-            }
-        }
+        
     }
 
     private bool _lastExpandSaeState = true;

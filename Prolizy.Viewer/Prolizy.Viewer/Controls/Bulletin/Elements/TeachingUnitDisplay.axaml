@@ -12,6 +12,7 @@
              x:Class="Prolizy.Viewer.Controls.Bulletin.TeachingUnitDisplay">
     <controls:SettingsExpander Header="{Binding DisplayTitle}"
                                ItemsSource="{Binding Entries}" 
+                               IsExpanded="{Binding IsExpanded}"
                                Grid.IsSharedSizeScope="True">
         <controls:SettingsExpander.IconSource>
             <fluent:SymbolIconSource Symbol="AppFolder" IconVariant="Filled"

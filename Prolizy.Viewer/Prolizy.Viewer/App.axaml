@@ -85,6 +85,69 @@
             </GradientStops>
         </ConicGradientBrush>
         
+        <ConicGradientBrush x:Key="DeepOceanGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#0A2B4A" Offset="0"/>
+                <GradientStop Color="#1A3E5F" Offset="0.33"/>
+                <GradientStop Color="#2C5273" Offset="0.66"/>
+                <GradientStop Color="#466885" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+        
+        <ConicGradientBrush x:Key="MidnightSlateGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#091528" Offset="0"/>
+                <GradientStop Color="#152238" Offset="0.33"/>
+                <GradientStop Color="#2A3545" Offset="0.66"/>
+                <GradientStop Color="#404A57" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+        
+        <ConicGradientBrush x:Key="EmeraldGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#0A4D32" Offset="0"/>
+                <GradientStop Color="#146349" Offset="0.33"/>
+                <GradientStop Color="#1F7D5E" Offset="0.66"/>
+                <GradientStop Color="#2A9773" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+
+        <ConicGradientBrush x:Key="SkyGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#0A5686" Offset="0"/>
+                <GradientStop Color="#1A6FA3" Offset="0.33"/>
+                <GradientStop Color="#2A87BF" Offset="0.66"/>
+                <GradientStop Color="#44A0D8" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+
+        <ConicGradientBrush x:Key="RoseGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#701A4A" Offset="0"/>
+                <GradientStop Color="#8A2960" Offset="0.33"/>
+                <GradientStop Color="#A63775" Offset="0.66"/>
+                <GradientStop Color="#C2498C" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+        
+        <ConicGradientBrush x:Key="CappuccinoGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#704B00" Offset="0"/>
+                <GradientStop Color="#8A5D08" Offset="0.33"/>
+                <GradientStop Color="#A67211" Offset="0.66"/>
+                <GradientStop Color="#C28B28" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+        
+        <ConicGradientBrush x:Key="TiramisuGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#693628" Offset="0"/>
+                <GradientStop Color="#96503B" Offset="0.33"/>
+                <GradientStop Color="#BD7865" Offset="0.66"/>
+                <GradientStop Color="#D1A296" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+        
         <LinearGradientBrush x:Key="SparkleGradientBrush">
             <GradientStops>
                 <GradientStop Color="#ea580c" Offset="0"/>

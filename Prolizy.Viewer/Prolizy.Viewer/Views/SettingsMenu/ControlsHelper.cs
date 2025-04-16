@@ -40,21 +40,28 @@ public static class ControlsHelper
     }
 
     public static Control CreateSettingComboBox<T>(string settingProperty, List<T> choices,
-        Func<T, string> displayFunc, Action? onChanged = null)
+        Func<T, object> displayFunc, Action? onChanged = null)
     {
         var property = typeof(Settings).GetProperty(settingProperty);
         if (property == null)
             throw new ArgumentException($"Property {settingProperty} not found in Settings class.");
 
+        var items = choices.Select(choice => new ComboBoxItem
+        {
+            Content = displayFunc(choice),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Tag = choice
+        }).ToArray();
+        var selectedItem = items.FirstOrDefault(item =>
+        {
+            Console.WriteLine("Checking item " + item.Tag + " against " + property.GetValue(Settings.Instance) + ": " + item.Tag!.Equals(property.GetValue(Settings.Instance)));
+            return item.Tag!.Equals(property.GetValue(Settings.Instance));
+        });
+        
         var comboBox = new ComboBox
         {
-            ItemsSource = choices.Select(choice => new ComboBoxItem
-            {
-                Content = displayFunc(choice),
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                Tag = choice
-            }),
-            SelectedIndex = choices.IndexOf((T) property.GetValue(Settings.Instance)!),
+            ItemsSource = items,
+            SelectedItem = selectedItem,
             HorizontalAlignment = HorizontalAlignment.Stretch
         };
         comboBox.SelectionChanged += (sender, args) =>

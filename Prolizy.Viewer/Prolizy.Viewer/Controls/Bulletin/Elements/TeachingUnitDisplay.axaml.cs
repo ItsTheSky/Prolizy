@@ -34,6 +34,7 @@ public partial class InternalTeachingUnit : ObservableObject
 
     [ObservableProperty] private TeachingUnit _teachingUnit;
     [ObservableProperty] private string _title;
+    [ObservableProperty] private bool _isExpanded = true;
 
     public SolidColorBrush AccentBrush => new SolidColorBrush(ColorMatcher.FindClosestColor(TeachingUnit.Color));
     public SolidColorBrush TextBrush => AccentBrush.Brighten(1.5);

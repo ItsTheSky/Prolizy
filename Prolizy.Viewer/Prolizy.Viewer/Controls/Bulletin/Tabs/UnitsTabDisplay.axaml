@@ -1,0 +1,30 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:bulletin="clr-namespace:Prolizy.Viewer.ViewModels.Bulletin"
+             xmlns:bulletin1="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
+             xmlns:elements="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Elements"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="bulletin:BulletinUnitsViewModel"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.Tabs.UnitsTabDisplay">
+    <StackPanel Spacing="5">
+        <elements:BulletinTabTitle Title="Unités d'Enseignement"
+                                   SubTitle="Liste de vos UE(s) avec leurs moyennes et notes."
+                                   HasSpread="True"
+                                   SpreadClickedCommand="{Binding SpreadClickedCommand}"/>
+        
+        <ItemsControl ItemsSource="{Binding BaseViewModel.Units}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <bulletin1:TeachingUnitDisplay DataContext="{Binding}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" Spacing="10" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

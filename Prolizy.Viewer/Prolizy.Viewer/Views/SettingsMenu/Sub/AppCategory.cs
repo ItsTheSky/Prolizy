@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Layout;
 using CommunityToolkit.Mvvm.Input;
+using FluentAvalonia.UI.Controls;
 using Prolizy.Viewer.Controls;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.Utilities.Android;
@@ -15,6 +18,13 @@ public partial class AppCategory : SettingCategory
 {
     public override string Title => "Application";
     public override string? ModuleId => null;
+    
+    private static readonly string[] _newThemes =
+    {
+        "emerald", "sky", "rose", 
+        "cappuccino", "tiramisu",
+        "midnight", "deep_ocean"
+    };
 
     public override List<SettingEntry> Entries =>
     [
@@ -22,16 +32,27 @@ public partial class AppCategory : SettingCategory
         {
             Title = "Thème de couleur",
             Description = "Le thème général de couleur de l'application: change le fond, les dégradés et la couleur d'accent sur les différents éléments.",
-            Control = ControlsHelper.CreateSettingComboBox(nameof(Settings.ThemeScheme), ["purple", "cyan", "green", "red", "base"],
-                choice => choice switch
+            Control = ControlsHelper.CreateSettingComboBox(nameof(Settings.ThemeScheme), [
+                    "emerald", "sky", "rose",
+                    "cappuccino", "tiramisu",
+                    "midnight", "deep_ocean", 
+                    "purple", "cyan", "green", "red", "base"],
+                choice => CreateThemeEntry(choice switch
                 {
+                    "midnight" => "Minuit",
+                    "deep_ocean" => "Océan Profond",
+                    "cappuccino" => "Cappuccino",
+                    "tiramisu" => "Tiramisu",
+                    "emerald" => "Émeraude",
+                    "sky" => "Ciel",
+                    "rose" => "Rose",
                     "purple" => "Violet",
                     "cyan" => "Cyan",
                     "green" => "Vert",
                     "red" => "Rouge",
                     "base" => "Violet (Sans Dégradé)",
                     _ => "Inconnu"
-                }, onChanged: () => ColorSchemeManager.ApplyTheme(Settings.Instance.ThemeScheme)),
+                }, _newThemes.Contains(choice)), onChanged: () => ColorSchemeManager.ApplyTheme(Settings.Instance.ThemeScheme)),
         },
         new (this, "default_module")
         {
@@ -121,6 +142,37 @@ public partial class AppCategory : SettingCategory
             IsVisible = Settings.Instance.Debug && OperatingSystem.IsAndroid()
         }
     ];
+
+    private Control CreateThemeEntry(string theme, bool isNew)
+    {
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Spacing = 5,
+
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = theme,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Left
+                },
+                new InfoBadge()
+                {
+                    IsVisible = isNew,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    IconSource = new FontIconSource
+                    {
+                        Glyph = "New!",
+                    }
+                }
+            }
+        };
+    }
 
     private void ValidateDefaultModule()
     {

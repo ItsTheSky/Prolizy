@@ -1,0 +1,64 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             xmlns:bulletin="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
+             xmlns:bulletin1="clr-namespace:Prolizy.Viewer.ViewModels.Bulletin"
+             xmlns:elements="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Elements"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="bulletin1:BulletinSummaryViewModel"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.Tabs.SummaryTabDisplay">
+    <StackPanel Spacing="5">
+        <elements:BulletinTabTitle Title="Synthèse"
+                                   SubTitle="Une synthèse de votre bulletin ce semestre."/>
+
+        <TextBlock FontSize="16" FontWeight="SemiBold" Text="Dernières notes" />
+        <ItemsControl ItemsSource="{Binding LatestEvals}" Grid.IsSharedSizeScope="True">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <avalonia:SpacedGrid ColumnSpacing="5">
+                        <avalonia:SpacedGrid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="A" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition SharedSizeGroup="B" />
+                            <ColumnDefinition SharedSizeGroup="C" />
+                            <ColumnDefinition SharedSizeGroup="D" />
+                        </avalonia:SpacedGrid.ColumnDefinitions>
+
+                        <controls:InfoBadge Grid.Column="0" VerticalAlignment="Center" />
+
+                        <TextBlock Grid.Column="1" Text="{Binding Evaluation.Description}"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold" TextWrapping="Wrap" />
+                        <TextBlock Grid.Column="2" Text="{Binding DisplayedDate}"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiLight" TextWrapping="Wrap" />
+
+                        <fluent:SymbolIcon IsVisible="{Binding IsAboveAverage}"
+                                           Symbol="ChevronUp" Grid.Column="3"
+                                           IconVariant="Filled"
+                                           Foreground="{x:Static utilities:ColorMatcher.GreenBrush}" />
+
+                        <fluent:SymbolIcon IsVisible="{Binding !IsAboveAverage}"
+                                           Symbol="ChevronDown" Grid.Column="3"
+                                           IconVariant="Filled"
+                                           Foreground="{x:Static utilities:ColorMatcher.RedBrush}" />
+
+                        <TextBlock Grid.Column="4" Text="{Binding Evaluation.Grade.Value}"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold" />
+                    </avalonia:SpacedGrid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" Spacing="3" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

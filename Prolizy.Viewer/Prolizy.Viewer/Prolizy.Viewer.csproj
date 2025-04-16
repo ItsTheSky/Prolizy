@@ -34,13 +34,38 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Controls\Bulletin\BulletinLoginDialog.axaml.cs">
-        <DependentUpon>SacocheLoginStep.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
+      <AdditionalFiles Include="Controls\Bulletin\Other\AverageDisplay.axaml" />
+      <AdditionalFiles Include="Controls\Bulletin\Other\BulletinLoginDialog.axaml" />
+      <AdditionalFiles Include="Controls\Bulletin\Tabs\ProjectDisplay.axaml" />
+      <AdditionalFiles Include="Controls\Bulletin\Tabs\ResourceDisplay.axaml" />
+      <AdditionalFiles Include="Controls\Bulletin\Tabs\TeachingUnitDisplay.axaml" />
+      <AdditionalFiles Include="Views\SettingsMenu\SettingsSub.axaml" />
     </ItemGroup>
 
     <ItemGroup>
-      <AdditionalFiles Include="Views\SettingsMenu\SettingsSub.axaml" />
+      <Compile Update="Controls\Bulletin\Simple\BulletinLoginDialog.axaml.cs">
+        <DependentUpon>BulletinLoginDialog.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\Bulletin\Simple\AverageDisplay.axaml.cs">
+        <DependentUpon>AverageDisplay.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\Bulletin\Simple\NoteGraphDisplay.axaml.cs">
+        <DependentUpon>NoteGraphDisplay.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\Bulletin\Elements\ProjectDisplay.axaml.cs">
+        <DependentUpon>ProjectDisplay.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\Bulletin\Elements\ResourceDisplay.axaml.cs">
+        <DependentUpon>ResourceDisplay.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\Bulletin\Elements\TeachingUnitDisplay.axaml.cs">
+        <DependentUpon>TeachingUnitDisplay.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>
