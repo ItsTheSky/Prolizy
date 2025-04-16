@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -56,10 +57,11 @@ public class MainActivity : AvaloniaMainActivity<App>
             base.OnCreate(savedInstanceState);
             AndroidAccessManager.AndroidAccess!.InitNotifications();
 
-            if (Intent?.Action == AppWidget.ACTION_OPEN_EDT)
+            Task.Delay(1000).ContinueWith(_ =>
             {
-                OpenEDTPage();
-            }
+                if (Intent?.Action == AppWidget.ACTION_OPEN_EDT)
+                    OpenEDTPage();
+            });
         }
         catch (Exception ex)
         {
