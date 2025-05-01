@@ -8,9 +8,11 @@
              xmlns:bulletin="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
              xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
              xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             xmlns:elements="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Elements"
+             xmlns:other="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Other"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="bulletin:InternalResource"
-             x:Class="Prolizy.Viewer.Controls.Bulletin.ResourceDisplay">
+             x:DataType="elements:InternalResource"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.Elements.ResourceDisplay">
      <controls:SettingsExpander ItemsSource="{Binding Evals}"
                                 IsExpanded="{Binding IsExpanded}">
          <controls:SettingsExpander.Header>
@@ -20,13 +22,13 @@
              <Grid>
                  <TextBlock Text="Aucune Évaluations" IsVisible="{Binding !Evals.Count}" />
                  
-                 <bulletin:AverageDisplay IsVisible="{Binding Evals.Count}"
+                 <other:AverageDisplay IsVisible="{Binding Evals.Count}"
                                           IsAboveAverage="{Binding IsAboveAverage}"
                                           Average="{Binding Average}"/>
              </Grid>
          </controls:SettingsExpander.Footer>
          <controls:SettingsExpander.ItemTemplate>
-            <DataTemplate x:DataType="bulletin:InternalResourceEval">
+            <DataTemplate x:DataType="elements:InternalResourceEval">
                 <avalonia:SpacedGrid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="10">
                     <TextBlock Grid.Column="0" Text="{Binding Evaluation.Description}" 
                                VerticalAlignment="Center" />

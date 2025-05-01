@@ -4,7 +4,6 @@ using FluentIcons.Common;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.ViewModels;
 using Prolizy.Viewer.Views.HomeCards;
-using Prolizy.Viewer.Views.Panes;
 
 namespace Prolizy.Viewer.Cards;
 

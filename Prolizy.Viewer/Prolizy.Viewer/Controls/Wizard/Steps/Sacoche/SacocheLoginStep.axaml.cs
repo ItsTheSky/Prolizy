@@ -1,9 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Prolizy.Viewer.ViewModels.Sacoche;
+﻿using Avalonia.Controls;
+using Prolizy.Viewer.ViewModels.SacocheWizard;
 
-namespace Prolizy.Viewer.Controls.Wizard.Steps;
+namespace Prolizy.Viewer.Controls.Wizard.Steps.Sacoche;
 
 public partial class SacocheLoginStep : UserControl
 {

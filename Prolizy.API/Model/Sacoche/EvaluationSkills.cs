@@ -1,4 +1,4 @@
-﻿namespace Prolizy.API;
+﻿namespace Prolizy.API.Model.Sacoche;
 
 public class EvaluationSkills
 {

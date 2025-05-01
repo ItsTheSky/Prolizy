@@ -6,8 +6,11 @@ using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Media.Animation;
 using FluentAvalonia.UI.Navigation;
 using Prolizy.API;
-using Prolizy.Viewer.Controls.Wizard.Steps;
+using Prolizy.API.Model.Sacoche;
 using Prolizy.Viewer.Utilities;
+using SacocheApiKeyStep = Prolizy.Viewer.Controls.Wizard.Steps.Sacoche.SacocheApiKeyStep;
+using SacocheChoiceStep = Prolizy.Viewer.Controls.Wizard.Steps.Sacoche.SacocheChoiceStep;
+using SacocheLoginStep = Prolizy.Viewer.Controls.Wizard.Steps.Sacoche.SacocheLoginStep;
 
 namespace Prolizy.Viewer.ViewModels.Sacoche;
 

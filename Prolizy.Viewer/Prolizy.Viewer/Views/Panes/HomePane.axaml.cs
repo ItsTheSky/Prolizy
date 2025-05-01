@@ -1,10 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using Avalonia;
+﻿using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 using Prolizy.Viewer.ViewModels;
 
 namespace Prolizy.Viewer.Views.Panes;

@@ -10,6 +10,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
 using Prolizy.API;
+using Prolizy.API.Model.Request;
+using Prolizy.API.Utils;
 using Prolizy.Viewer.Controls.Edt;
 using Prolizy.Viewer.Controls.Wizard.Steps;
 using Prolizy.Viewer.Utilities;
@@ -162,15 +164,15 @@ public partial class TimeTableViewModel : ObservableObject
         }
     }
     
-    private async Task<bool> CheckNetworkAvailability()
+    private Task<bool> CheckNetworkAvailability()
     {
         if (!ConnectivityService.Instance.IsNetworkAvailable)
         {
             IsNetworkUnavailable = true;
-            return false;
+            return Task.FromResult(false);
         }
         
-        return true;
+        return Task.FromResult(true);
     }
 
     public async Task GoToDay()

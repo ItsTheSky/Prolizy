@@ -1,9 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.Threading;
-using Prolizy.Viewer.Controls.Wizard;
+﻿using Avalonia.Controls;
 using Prolizy.Viewer.ViewModels;
 
 namespace Prolizy.Viewer.Views.Panes;

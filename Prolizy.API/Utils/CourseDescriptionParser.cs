@@ -1,8 +1,8 @@
-﻿using System.Text.RegularExpressions;
-using System.Web;
-using System.Net;
+﻿using System.Net;
+using System.Text.RegularExpressions;
+using Prolizy.API.Model.Course;
 
-namespace Prolizy.API;
+namespace Prolizy.API.Utils;
 
 public static class CourseDescriptionParser
 {

@@ -1,4 +1,7 @@
 ﻿using System.Text.Json;
+using Prolizy.API.Model.Course;
+using Prolizy.API.Model.Request;
+using Prolizy.API.Utils;
 
 namespace Prolizy.API;
 

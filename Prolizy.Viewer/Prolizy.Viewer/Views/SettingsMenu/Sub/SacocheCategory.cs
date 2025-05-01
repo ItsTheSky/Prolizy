@@ -3,10 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Layout;
 using CommunityToolkit.Mvvm.Input;
-using FluentAvalonia.UI.Controls;
-using Prolizy.Viewer.Controls.Wizard.Steps;
 using Prolizy.Viewer.Utilities;
-using Prolizy.Viewer.ViewModels;
 using Prolizy.Viewer.ViewModels.Sacoche;
 using SpacedGridControl.Avalonia;
 
@@ -32,7 +29,7 @@ public partial class SacocheCategory : SettingCategory
                     Children =
                     {
                         ControlsHelper.CreateSettingButton("Modifier", SacochePaneViewModel.ConfigureSacocheCommand).WithColumn(0),
-                        ControlsHelper.CreateSettingButton("Supprimer", new AsyncRelayCommand(async () =>
+                        ControlsHelper.CreateSettingButton("Supprimer", new RelayCommand(() =>
                         {
                             Settings.Instance.SacocheApiKey = "";
                             MainView.Instance.NotificationManager.Show(new Notification("Clé d'API effacée", "La clé d'API a été effacée avec succès.", NotificationType.Success));

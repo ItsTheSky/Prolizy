@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:steps="clr-namespace:Prolizy.Viewer.Controls.Wizard.Steps"
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:sacoche="clr-namespace:Prolizy.Viewer.Controls.Wizard.Steps.Sacoche"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="steps:SacocheChoiceStep"
-             x:Class="Prolizy.Viewer.Controls.Wizard.Steps.SacocheChoiceStep">
+             x:DataType="sacoche:SacocheChoiceStep"
+             x:Class="Prolizy.Viewer.Controls.Wizard.Steps.Sacoche.SacocheChoiceStep">
     <StackPanel Orientation="Vertical" Spacing="4">
         <TextBlock Text="{Binding Explanation}" />
         

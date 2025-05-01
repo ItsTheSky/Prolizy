@@ -7,9 +7,10 @@
              xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
              xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
              xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:elements="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Elements"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="bulletin:InternalTeachingUnit"
-             x:Class="Prolizy.Viewer.Controls.Bulletin.TeachingUnitDisplay">
+             x:DataType="elements:InternalTeachingUnit"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.Elements.TeachingUnitDisplay">
     <controls:SettingsExpander Header="{Binding DisplayTitle}"
                                ItemsSource="{Binding Entries}" 
                                IsExpanded="{Binding IsExpanded}"
@@ -37,7 +38,7 @@
             </StackPanel>
         </controls:SettingsExpander.Footer>
         <controls:SettingsExpander.ItemTemplate>
-            <DataTemplate x:DataType="bulletin:InternalTeachingUnitEntry">
+            <DataTemplate x:DataType="elements:InternalTeachingUnitEntry">
                 <avalonia:SpacedGrid ColumnSpacing="10">
                     <avalonia:SpacedGrid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

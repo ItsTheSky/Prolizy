@@ -1,25 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Android;
 using Android.App;
 using Android.Appwidget;
 using Android.Content;
-using Android.Content.PM;
-using Android.Graphics;
 using Android.OS;
-using Android.Provider;
-using Android.Webkit;
 using Android.Widget;
-using AndroidX.Core.App;
-using AndroidX.Core.Content;
-using Avalonia.Android;
-using Prolizy.Viewer.Android.Activities;
 using Prolizy.Viewer.Controls.Edt;
-using Prolizy.Viewer.Utilities.Android;
 using Prolizy.Viewer.ViewModels;
 using Prolizy.Viewer.Views.Panes;
-using Uri = Android.Net.Uri;
 
 namespace Prolizy.Viewer.Android.Widgets;
 

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Prolizy.API;
+namespace Prolizy.API.Model.Sacoche;
 
 [Serializable]
 public class EvaluationReference

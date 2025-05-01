@@ -6,9 +6,10 @@
              xmlns:avalonia1="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:sacoche="clr-namespace:Prolizy.Viewer.ViewModels.Sacoche"
+             xmlns:sacocheWizard="clr-namespace:Prolizy.Viewer.ViewModels.SacocheWizard"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="sacoche:WizardLoginViewModel"
-             x:Class="Prolizy.Viewer.Controls.Wizard.Steps.SacocheLoginStep">
+             x:DataType="sacocheWizard:WizardLoginViewModel"
+             x:Class="Prolizy.Viewer.Controls.Wizard.Steps.Sacoche.SacocheLoginStep">
     <StackPanel Orientation="Vertical" Spacing="6">
         <StackPanel Orientation="Vertical" Spacing="4">
             <TextBlock Text="Identifiant" />

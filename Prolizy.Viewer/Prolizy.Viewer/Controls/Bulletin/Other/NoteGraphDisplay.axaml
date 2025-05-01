@@ -5,10 +5,11 @@
              xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:bulletin="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:other="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Other"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="bulletin:NoteGraphDisplayViewModel"
+             x:DataType="other:NoteGraphDisplayViewModel"
              VerticalAlignment="Stretch" Margin="-25,0,-25,0"
-             x:Class="Prolizy.Viewer.Controls.Bulletin.NoteGraphDisplay">
+             x:Class="Prolizy.Viewer.Controls.Bulletin.Other.NoteGraphDisplay">
     <Grid>
         <avalonia:CartesianChart MinHeight="250" Series="{Binding Series}" 
                                  Name="CartesianChart"

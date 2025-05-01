@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Media;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
@@ -14,6 +13,7 @@ using Prolizy.Viewer.Controls.Wizard.Steps;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.Views;
 using Prolizy.Viewer.Views.Panes;
+using BulletinLoginDialog = Prolizy.Viewer.Controls.Bulletin.Other.BulletinLoginDialog;
 
 namespace Prolizy.Viewer.ViewModels;
 
@@ -173,10 +173,11 @@ public partial class SettingsPaneViewModel : ObservableObject
     #region SACoche
 
     [RelayCommand]
-    public async Task ClearApiKey()
+    public Task ClearApiKey()
     {
         Settings.Instance.SacocheApiKey = "";
         MainView.Instance.NotificationManager.Show(new Notification("Clé d'API effacée", "La clé d'API a été effacée avec succès.", NotificationType.Success));
+        return Task.CompletedTask;
     }
 
     #endregion
@@ -250,7 +251,7 @@ public partial class SettingsPaneViewModel : ObservableObject
     [RelayCommand] public void DisableBulletinModule() { BulletinModuleEnabled = false; }
 
     [RelayCommand]
-    public async Task OpenDataFolder()
+    public Task OpenDataFolder()
     {
         if (OperatingSystem.IsWindows())
         {
@@ -260,6 +261,8 @@ public partial class SettingsPaneViewModel : ObservableObject
         {
             MainView.ShowNotification("Erreur", "Cette fonctionnalité n'est pas disponible sur votre système.", NotificationType.Error);
         }
+
+        return Task.CompletedTask;
     }
 
     [RelayCommand]

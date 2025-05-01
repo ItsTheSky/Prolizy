@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Android;
 using Android.App;
 using Android.Appwidget;
 using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
-using Android.Graphics.Drawables;
 using Android.Provider;
 using Android.Webkit;
 using AndroidX.Core.App;

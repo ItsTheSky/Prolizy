@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace Prolizy.API;
+namespace Prolizy.API.Utils;
 
 public static class RequestUtils
 {

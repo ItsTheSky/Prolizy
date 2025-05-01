@@ -12,6 +12,9 @@ using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Media.Animation;
 using FluentAvalonia.UI.Navigation;
 using Prolizy.Viewer.Controls.Wizard.Steps;
+using BulletinLoginDialog = Prolizy.Viewer.Controls.Bulletin.Other.BulletinLoginDialog;
+using SacocheApiKeyStep = Prolizy.Viewer.Controls.Wizard.Steps.Sacoche.SacocheApiKeyStep;
+using SacocheChoiceStep = Prolizy.Viewer.Controls.Wizard.Steps.Sacoche.SacocheChoiceStep;
 
 namespace Prolizy.Viewer.Controls.Wizard;
 

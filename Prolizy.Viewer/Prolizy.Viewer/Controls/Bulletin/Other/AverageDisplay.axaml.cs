@@ -1,10 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Prolizy.Viewer.Controls.Bulletin;
+namespace Prolizy.Viewer.Controls.Bulletin.Other;
 
 public partial class AverageDisplay : UserControl
 {

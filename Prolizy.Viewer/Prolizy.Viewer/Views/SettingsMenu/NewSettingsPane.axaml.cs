@@ -1,11 +1,8 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 using FluentAvalonia.UI.Media.Animation;
 using FluentAvalonia.UI.Navigation;
 using Prolizy.Viewer.Utilities.Android;
 using Prolizy.Viewer.ViewModels;
-using Prolizy.Viewer.Views.SettingsMenu.Sub;
 
 namespace Prolizy.Viewer.Views.SettingsMenu;
 

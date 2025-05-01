@@ -1,23 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Controls.Notifications;
 using Avalonia.Media;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Media.Animation;
 using FluentAvalonia.UI.Navigation;
-using Prolizy.Viewer.Controls.Wizard.Steps;
-using Prolizy.Viewer.Utilities;
-using Prolizy.Viewer.Views;
-using Prolizy.Viewer.Views.Panes;
 using Prolizy.Viewer.Views.SettingsMenu;
-using Prolizy.Viewer.Views.SettingsMenu.Sub;
 
 namespace Prolizy.Viewer.ViewModels;
 

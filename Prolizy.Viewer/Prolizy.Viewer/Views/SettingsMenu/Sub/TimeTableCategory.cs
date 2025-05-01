@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
-using Avalonia.Layout;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
 using Prolizy.Viewer.Controls.Wizard.Steps;

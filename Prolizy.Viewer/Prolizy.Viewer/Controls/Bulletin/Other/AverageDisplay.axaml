@@ -5,9 +5,10 @@
              xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
              xmlns:bulletin="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
              xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             xmlns:other="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Other"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="bulletin:AverageDisplayViewModel"
-             x:Class="Prolizy.Viewer.Controls.Bulletin.AverageDisplay">
+             x:DataType="other:AverageDisplayViewModel"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.Other.AverageDisplay">
     <StackPanel Orientation="Horizontal" Spacing="4"
                 VerticalAlignment="Center">
         <fluent:SymbolIcon IsVisible="{Binding IsAboveAverage}"

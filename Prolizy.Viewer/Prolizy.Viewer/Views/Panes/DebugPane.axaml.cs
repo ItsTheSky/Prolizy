@@ -1,11 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Prolizy.Viewer.Utilities;
 

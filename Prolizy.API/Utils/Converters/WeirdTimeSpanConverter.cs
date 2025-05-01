@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Prolizy.API.Converters;
+namespace Prolizy.API.Utils.Converters;
 
 /// <summary>
 /// Converter for <see cref="TimeSpan"/>.

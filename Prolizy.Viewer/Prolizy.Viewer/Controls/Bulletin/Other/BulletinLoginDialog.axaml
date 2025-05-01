@@ -9,7 +9,7 @@
              xmlns:viewModels="clr-namespace:Prolizy.Viewer.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="viewModels:BulletinLoginViewModel"
-             x:Class="Prolizy.Viewer.Controls.Wizard.Steps.BulletinLoginDialog">
+             x:Class="Prolizy.Viewer.Controls.Bulletin.Other.BulletinLoginDialog">
     <StackPanel Orientation="Vertical" Spacing="6">
         <StackPanel Orientation="Vertical" Spacing="4">
             <TextBlock Text="Identifiant" />

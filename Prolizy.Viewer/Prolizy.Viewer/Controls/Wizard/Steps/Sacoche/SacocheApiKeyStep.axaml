@@ -6,9 +6,10 @@
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:sacoche="clr-namespace:Prolizy.Viewer.ViewModels.Sacoche"
              xmlns:avalonia1="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
+             xmlns:sacocheWizard="clr-namespace:Prolizy.Viewer.ViewModels.SacocheWizard"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="sacoche:WizardApiKeyViewModel"
-             x:Class="Prolizy.Viewer.Controls.Wizard.Steps.SacocheApiKeyStep">
+             x:DataType="sacocheWizard:WizardApiKeyViewModel"
+             x:Class="Prolizy.Viewer.Controls.Wizard.Steps.Sacoche.SacocheApiKeyStep">
     <StackPanel Orientation="Vertical" Spacing="4">
         <TextBlock Text="Vous ne savez pas ou trouvez votre clé d'API?" />
         <HyperlinkButton HorizontalAlignment="Center" NavigateUri="https://sacoche.ac-versailles.fr/index.php?page=compte_api" Content="Ouvrir la page de l'API" />

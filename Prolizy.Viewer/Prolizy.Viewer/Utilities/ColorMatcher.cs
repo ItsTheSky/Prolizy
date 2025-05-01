@@ -4,7 +4,6 @@ namespace Prolizy.Viewer.Utilities;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 public class ColorMatcher
 {
@@ -133,7 +132,7 @@ public class ColorMatcher
 
     public static Color FindClosestColor(string rawHex)
     {
-        var (name, hex) = FindClosestTailwindColor(rawHex);
+        var (_, hex) = FindClosestTailwindColor(rawHex);
         return Color.Parse(hex);
     }
 }

@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using Prolizy.API;
+using Prolizy.API.Model.Course;
 using Prolizy.Viewer.Utilities;
 
 namespace Prolizy.Viewer.Controls.Edt;
@@ -95,7 +96,7 @@ public class ScheduleItem
         };
         dialog.Opened += async (_, _) =>
         {
-            Dispatcher.UIThread.InvokeAsync(async () =>
+            _ = Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 try
                 {

@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Avalonia;
+﻿using System.Collections.ObjectModel;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prolizy.API.Model;
 using Prolizy.Viewer.Utilities;
 
-namespace Prolizy.Viewer.Controls.Bulletin;
+namespace Prolizy.Viewer.Controls.Bulletin.Elements;
 
 public partial class TeachingUnitDisplay : UserControl
 {

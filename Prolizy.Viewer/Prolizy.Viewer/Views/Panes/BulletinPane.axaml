@@ -13,6 +13,7 @@
              xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
              xmlns:charts="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Charts"
              xmlns:tabs="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Tabs"
+             xmlns:elements="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Elements"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="viewModels:BulletinPaneViewModel"
              x:Class="Prolizy.Viewer.Views.Panes.BulletinPane">
@@ -131,7 +132,7 @@
                                 <ItemsControl ItemsSource="{Binding Resources}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <bulletin:ResourceDisplay DataContext="{Binding}" />
+                                            <elements:ResourceDisplay DataContext="{Binding}" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                     <ItemsControl.ItemsPanel>
@@ -172,7 +173,7 @@
                                 <ItemsControl ItemsSource="{Binding Saes}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <bulletin:ProjectDisplay DataContext="{Binding}" />
+                                            <elements:ProjectDisplay DataContext="{Binding}" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                     <ItemsControl.ItemsPanel>

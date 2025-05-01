@@ -1,9 +1,5 @@
 ﻿using System.Collections.Generic;
-using Avalonia;
 using Avalonia.Media;
-using Avalonia.Styling;
-using Avalonia.Themes.Fluent;
-using FluentAvalonia.Styling;
 
 namespace Prolizy.Viewer.Utilities;
 

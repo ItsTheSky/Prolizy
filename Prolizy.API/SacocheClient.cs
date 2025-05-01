@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Text.Json;
 using HtmlAgilityPack;
+using Prolizy.API.Model.Sacoche;
+using Prolizy.API.Utils;
 
 namespace Prolizy.API;
 

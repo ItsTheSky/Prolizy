@@ -1,4 +1,4 @@
-﻿namespace Prolizy.API;
+﻿namespace Prolizy.API.Utils;
 
 /// <summary>
 /// Constants used in the library.

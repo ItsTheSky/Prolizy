@@ -17,7 +17,7 @@
         <ItemsControl ItemsSource="{Binding BaseViewModel.Units}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <bulletin1:TeachingUnitDisplay DataContext="{Binding}" />
+                    <elements:TeachingUnitDisplay DataContext="{Binding}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>

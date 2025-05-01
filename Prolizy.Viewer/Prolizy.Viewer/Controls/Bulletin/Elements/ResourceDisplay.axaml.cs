@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Layout;
@@ -17,7 +16,7 @@ using SpacedGridControl.Avalonia;
 using Symbol = FluentIcons.Common.Symbol;
 using SymbolIcon = FluentIcons.Avalonia.SymbolIcon;
 
-namespace Prolizy.Viewer.Controls.Bulletin;
+namespace Prolizy.Viewer.Controls.Bulletin.Elements;
 
 public partial class ResourceDisplay : UserControl
 {
@@ -135,7 +134,14 @@ public partial class InternalResourceEval : ObservableObject
         }
         catch (Exception e)
         {
-            
+            Console.WriteLine(e);
+            var noteEntry = new TextBlock
+            {
+                Text = "Note non renseignée",
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            panel.Children.Add(noteEntry);
         }
         
         var datas = new Dictionary<string, string>()

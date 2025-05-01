@@ -11,7 +11,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.ViewModels;

@@ -1,8 +1,6 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace Prolizy.API;
+namespace Prolizy.API.Model.Request;
 
 /// <summary>
 /// A request to the calendar endpoint.

@@ -7,7 +7,7 @@ using Prolizy.API;
 using Prolizy.Viewer.Controls.Wizard;
 using Prolizy.Viewer.Utilities;
 
-namespace Prolizy.Viewer.ViewModels.Sacoche;
+namespace Prolizy.Viewer.ViewModels.SacocheWizard;
 
 public partial class WizardLoginViewModel : ObservableObject
 {

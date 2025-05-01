@@ -81,7 +81,7 @@ public class MainActivity : AvaloniaMainActivity<App>
                     case WidgetOpenAction.OpenEdt:
                     case WidgetOpenAction.OpenEdtWithDescription:
                         MainView.Instance.MoveToPane(typeof(TimeTablePane));
-                        var (item, isCurrent) = await TimeTableViewModel.GetCurrentOrNextCourse();
+                        var (item, _) = await TimeTableViewModel.GetCurrentOrNextCourse();
                         if (item != null && Settings.Instance.WidgetOpenAction == WidgetOpenAction.OpenEdtWithDescription)
                             await item.ItemClicked();
                         break;

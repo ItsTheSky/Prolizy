@@ -4,13 +4,10 @@ using System.Globalization;
 using System.Linq;
 using Avalonia.Skia;
 using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.ViewModels;
-using SkiaSharp;
 
 namespace Prolizy.Viewer.Controls.Bulletin.Charts;
 

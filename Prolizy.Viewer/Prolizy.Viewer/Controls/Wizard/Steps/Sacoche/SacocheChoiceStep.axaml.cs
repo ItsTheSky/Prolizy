@@ -1,9 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
 
-namespace Prolizy.Viewer.Controls.Wizard.Steps;
+namespace Prolizy.Viewer.Controls.Wizard.Steps.Sacoche;
 
 public partial class SacocheChoiceStep : UserControl
 {

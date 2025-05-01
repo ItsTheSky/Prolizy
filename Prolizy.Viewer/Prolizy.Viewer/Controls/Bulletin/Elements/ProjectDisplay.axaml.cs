@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Globalization;
+﻿using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prolizy.API.Model;
 using Prolizy.Viewer.ViewModels;
 
-namespace Prolizy.Viewer.Controls.Bulletin;
+namespace Prolizy.Viewer.Controls.Bulletin.Elements;
 
 public partial class ProjectDisplay : UserControl
 {

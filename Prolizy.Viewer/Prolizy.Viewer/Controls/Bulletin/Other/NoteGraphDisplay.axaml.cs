@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.Skia;
 using CommunityToolkit.Mvvm.ComponentModel;
-using FluentAvalonia.Core;
 using LiveChartsCore;
 using LiveChartsCore.ConditionalDraw;
 using LiveChartsCore.Kernel.Sketches;
@@ -13,9 +10,10 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Prolizy.Viewer.Utilities;
+using Prolizy.Viewer.ViewModels;
 using SkiaSharp;
 
-namespace Prolizy.Viewer.Controls.Bulletin;
+namespace Prolizy.Viewer.Controls.Bulletin.Other;
 
 public partial class NoteGraphDisplay : UserControl
 {
@@ -48,11 +46,7 @@ public partial class NoteGraphDisplayViewModel : ObservableObject
 
     public NoteGraphDisplayViewModel()
     {
-        PropertyChanged += (source, args) =>
-        {
-            if (args.PropertyName == nameof(NoteValues))
-                OnPropertyChanged(nameof(Series));
-        };
+        
     }
     
     public ISeries[] Series => [

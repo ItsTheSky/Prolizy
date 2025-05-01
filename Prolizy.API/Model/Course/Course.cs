@@ -1,7 +1,6 @@
-﻿using System.Drawing;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace Prolizy.API;
+namespace Prolizy.API.Model.Course;
 
 [Serializable]
 public class Course

@@ -3,8 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Layout;
 using CommunityToolkit.Mvvm.Input;
-using FluentAvalonia.UI.Controls;
-using Prolizy.Viewer.Controls.Wizard.Steps;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.ViewModels;
 using SpacedGridControl.Avalonia;
@@ -31,7 +29,7 @@ public partial class BulletinCategory : SettingCategory
                     Children =
                     {
                         ControlsHelper.CreateSettingButton("Modifier", BulletinPaneViewModel.ConfigureBulletin).WithColumn(0),
-                        ControlsHelper.CreateSettingButton("Supprimer", new AsyncRelayCommand(async () =>
+                        ControlsHelper.CreateSettingButton("Supprimer", new RelayCommand(() =>
                         {
                             Settings.Instance.BulletinUsername = "";
                             Settings.Instance.BulletinPassword = "";

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prolizy.API;
+using Prolizy.API.Model.Sacoche;
 
 namespace Prolizy.Viewer.ViewModels.Sacoche;
 

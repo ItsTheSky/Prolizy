@@ -7,6 +7,7 @@
              xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
              xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
              xmlns:bulletin="clr-namespace:Prolizy.Viewer.Controls.Bulletin"
+             xmlns:other="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Other"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Prolizy.Viewer.Views.HomeCards.LastMarkCard">
     <Button Classes="card">
@@ -24,7 +25,7 @@
 
             <TextBlock Grid.Column="0" FontSize="16" Grid.Row="2" TextWrapping="Wrap" Text="Économie" />
 
-            <bulletin:AverageDisplay Grid.Column="0" Grid.Row="3" Size="Large" />
+            <other:AverageDisplay Grid.Column="0" Grid.Row="3" Size="Large" />
             
             <fluent:SymbolIcon Grid.Row="0" Grid.RowSpan="4"
                                Grid.Column="1" VerticalAlignment="Center"

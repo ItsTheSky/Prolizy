@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Prolizy.API;
+namespace Prolizy.API.Utils;
 
 [Serializable]
 public static class JsonUtils

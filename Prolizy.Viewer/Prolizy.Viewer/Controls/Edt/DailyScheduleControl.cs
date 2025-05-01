@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -11,7 +10,7 @@ using Avalonia.Threading;
 using AvaloniaEdit.Utils;
 using FluentIcons.Avalonia.Fluent;
 using FluentIcons.Common;
-using Prolizy.API;
+using Prolizy.API.Utils;
 
 namespace Prolizy.Viewer.Controls.Edt;
 

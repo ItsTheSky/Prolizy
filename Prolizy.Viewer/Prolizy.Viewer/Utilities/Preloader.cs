@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Layout;
 using Prolizy.API;
 using Prolizy.Viewer.Controls;
 using Prolizy.Viewer.Views;

@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentIcons.Common;
 using Prolizy.API;
+using Prolizy.API.Model.Sacoche;
 using Prolizy.Viewer.Utilities;
 
 namespace Prolizy.Viewer.ViewModels.Sacoche;

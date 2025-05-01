@@ -1,10 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 using Prolizy.Viewer.ViewModels;
-using Prolizy.Viewer.ViewModels.Sacoche;
 
-namespace Prolizy.Viewer.Controls.Wizard.Steps;
+namespace Prolizy.Viewer.Controls.Bulletin.Other;
 
 public partial class BulletinLoginDialog : UserControl
 {

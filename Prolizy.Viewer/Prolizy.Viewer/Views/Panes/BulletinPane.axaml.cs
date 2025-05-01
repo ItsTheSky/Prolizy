@@ -1,11 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 using Avalonia.Threading;
-using Prolizy.API;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.ViewModels;
-using Prolizy.Viewer.ViewModels.Sacoche;
 
 namespace Prolizy.Viewer.Views.Panes;
 

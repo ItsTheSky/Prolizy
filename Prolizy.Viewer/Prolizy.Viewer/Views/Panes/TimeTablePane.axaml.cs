@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Prolizy.Viewer.Controls.Edt;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.ViewModels;
-using Prolizy.Viewer.Views.HomeCards;
 
 namespace Prolizy.Viewer.Views.Panes;
 

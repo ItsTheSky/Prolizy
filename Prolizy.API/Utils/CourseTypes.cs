@@ -1,4 +1,4 @@
-﻿namespace Prolizy.API;
+﻿namespace Prolizy.API.Utils;
 
 /// <summary>
 /// Some utility constants that define the type of course.

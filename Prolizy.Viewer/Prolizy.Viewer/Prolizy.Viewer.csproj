@@ -36,9 +36,6 @@
     <ItemGroup>
       <AdditionalFiles Include="Controls\Bulletin\Other\AverageDisplay.axaml" />
       <AdditionalFiles Include="Controls\Bulletin\Other\BulletinLoginDialog.axaml" />
-      <AdditionalFiles Include="Controls\Bulletin\Tabs\ProjectDisplay.axaml" />
-      <AdditionalFiles Include="Controls\Bulletin\Tabs\ResourceDisplay.axaml" />
-      <AdditionalFiles Include="Controls\Bulletin\Tabs\TeachingUnitDisplay.axaml" />
       <AdditionalFiles Include="Views\SettingsMenu\SettingsSub.axaml" />
     </ItemGroup>
 

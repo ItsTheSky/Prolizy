@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prolizy.Viewer.Utilities;
-using Prolizy.Viewer.Views.HomeCards;
 
 namespace Prolizy.Viewer.ViewModels;
 

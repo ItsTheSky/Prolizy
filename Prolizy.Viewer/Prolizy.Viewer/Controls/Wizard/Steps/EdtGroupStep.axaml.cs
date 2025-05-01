@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prolizy.API;
+using Prolizy.API.Model.Request;
 using Prolizy.Viewer.Utilities;
 
 namespace Prolizy.Viewer.Controls.Wizard.Steps;
