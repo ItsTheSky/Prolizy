@@ -12,29 +12,33 @@
              x:DataType="elements:InternalTeachingUnit"
              x:Class="Prolizy.Viewer.Controls.Bulletin.Elements.TeachingUnitDisplay">
     <controls:SettingsExpander Header="{Binding DisplayTitle}"
-                               ItemsSource="{Binding Entries}" 
+                               ItemsSource="{Binding Entries}"
                                IsExpanded="{Binding IsExpanded}"
                                Grid.IsSharedSizeScope="True">
         <controls:SettingsExpander.IconSource>
             <fluent:SymbolIconSource Symbol="AppFolder" IconVariant="Filled"
-                                     Foreground="{Binding AccentBrush}"/>
+                                     Foreground="{Binding AccentBrush}" />
         </controls:SettingsExpander.IconSource>
         <controls:SettingsExpander.Footer>
             <StackPanel Spacing="2">
                 <TextBlock FontWeight="SemiBold" TextAlignment="Right" Foreground="{Binding TextBrush}"
                            Text="{Binding TeachingUnit.Average.Value, StringFormat='Moyenne : {0}'}" />
-                <TextBlock TextAlignment="Right"><TextBlock.Text>
-                    <MultiBinding StringFormat="Rang : {0} / {1}">
-                        <Binding Path="TeachingUnit.Average.Rank" />
-                        <Binding Path="TeachingUnit.Average.TotalRank" />
-                    </MultiBinding>
-                </TextBlock.Text></TextBlock>
-                <TextBlock TextAlignment="Right" FontWeight="SemiLight"><TextBlock.Text>
-                    <MultiBinding StringFormat="Bonus: {0} - Malus: {1}">
-                        <Binding Path="TeachingUnit.Bonus" />
-                        <Binding Path="TeachingUnit.Malus" />
-                    </MultiBinding>
-                </TextBlock.Text></TextBlock>
+                <TextBlock TextAlignment="Right">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Rang : {0} / {1}">
+                            <Binding Path="TeachingUnit.Average.Rank" />
+                            <Binding Path="TeachingUnit.Average.TotalRank" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock TextAlignment="Right" FontWeight="SemiLight">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Bonus: {0} - Malus: {1}">
+                            <Binding Path="TeachingUnit.Bonus" />
+                            <Binding Path="TeachingUnit.Malus" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
             </StackPanel>
         </controls:SettingsExpander.Footer>
         <controls:SettingsExpander.ItemTemplate>
@@ -48,13 +52,13 @@
                     <WrapPanel Grid.Column="0" Orientation="Horizontal">
                         <TextBlock Text="[SAÉ]" FontWeight="SemiLight" Margin="0,0,5,0"
                                    IsVisible="{Binding Data.IsSae}" />
-                        
+
                         <TextBlock Text="{Binding Data.Title}" TextWrapping="Wrap"
                                    FontWeight="Medium" />
                     </WrapPanel>
-                    
+
                     <TextBlock Grid.Column="1" Text="{Binding Data.Average}" />
-                    <TextBlock FontWeight="Light" FontStyle="Italic" Grid.Column="2" 
+                    <TextBlock FontWeight="Light" FontStyle="Italic" Grid.Column="2"
                                Text="{Binding Data.Coefficient, StringFormat='Coef. {0}'}" />
                 </avalonia:SpacedGrid>
             </DataTemplate>

@@ -1,0 +1,151 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Prolizy.Viewer.Controls"
+             xmlns:elements="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Elements"
+             xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:tabs="clr-namespace:Prolizy.Viewer.ViewModels.Bulletin.Tabs"
+             xmlns:tabs1="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Tabs"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="tabs:AbsencesTabViewModel"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.Tabs.AbsencesTabDisplay">
+    <StackPanel Spacing="10">
+        <elements:BulletinTabTitle Title="Absences et Retards"
+                                   SubTitle="Liste de vos absences/retards et des justifications."/>
+        
+        <Separator />
+        
+        <ProgressBar HorizontalAlignment="Stretch"
+                     Minimum="0" Maximum="{Binding HalfDayCount}" Value="{Binding HalfDayJustifiedCount}"/>
+        
+        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0}/{1} demi-journées NON justifiées ({2} justifiées)">
+                    <Binding Path="HalfDayNotJustifiedCount"/>
+                    <Binding Path="HalfDayCount"/>
+                    <Binding Path="HalfDayJustifiedCount"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        
+        <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto" RowSpacing="5"
+                             ColumnDefinitions="Auto,*,*" ColumnSpacing="5">
+            
+            <!-- Non Justifiées -->
+            <fluent:SymbolIcon Grid.Row="0" Grid.Column="0" Symbol="PersonQuestionMark"
+                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.RedBrush}" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Non Justifiées" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding HalfDayNotJustifiedCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            
+            <!-- Justifiées -->
+            <fluent:SymbolIcon Grid.Row="1" Grid.Column="0" Symbol="PersonAvailable"
+                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.GreenBrush}" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="Justifiées" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding HalfDayJustifiedCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            
+            <!-- Total -->
+            <fluent:SymbolIcon Grid.Row="2" Grid.Column="0" Symbol="Autosum"
+                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.CyanBrush}" />
+            <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="SemiBold" Text="Total" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding HalfDayCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            
+        </avalonia:SpacedGrid>
+        
+        <Separator />
+        
+        <!-- Filtres -->
+        <ScrollViewer VerticalScrollBarVisibility="Hidden"
+                      HorizontalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding AbsenceSortingTypes}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" Spacing="4"
+                                    HorizontalAlignment="Stretch" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Classes.accent="{Binding IsSelected}"
+                                HorizontalAlignment="Stretch"
+                                Command="{Binding $parent[tabs1:AbsencesTabDisplay].((tabs:AbsencesTabViewModel)DataContext).ChangeAbsenceSortingTypeCommand}"
+                                CommandParameter="{Binding}">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <fluent:SymbolIcon Symbol="{Binding Icon}"
+                                                   FontSize="16" />
+                                <TextBlock Text="{Binding DisplayedName}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Liste des jours d'absences -->
+        <ItemsControl ItemsSource="{Binding Absences}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <controls:Card Margin="0,4" Padding="16,12">
+                        <StackPanel Spacing="8">
+                            <!-- Date du jour -->
+                            <TextBlock Text="{Binding DateDisplay}"
+                                       FontWeight="SemiBold"
+                                       FontSize="16" />
+
+                            <!-- Liste des absences du jour -->
+                            <ItemsControl ItemsSource="{Binding DayAbsences}"
+                                          Margin="0,4,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="Auto,*,Auto"
+                                              Margin="0,4">
+                                            <!-- Indicateur -->
+                                            <fluent:SymbolIcon Grid.Column="0"
+                                                Margin="0,0,12,0" FontSize="26"
+                                                Symbol="{Binding Icon}"
+                                                Foreground="{Binding TextColor}" />
+
+                                            <!-- Informations -->
+                                            <StackPanel Grid.Column="1"
+                                                Spacing="4">
+                                                <TextBlock Text="{Binding TimeDisplay}"
+                                                    Opacity="0.7" />
+                                                <TextBlock Text="{Binding TextDisplay}"
+                                                    Opacity="0.7" />
+                                            </StackPanel>
+
+                                            <!-- Status -->
+                                            <controls:Card Grid.Column="2"
+                                                Classes="badge"
+                                                Classes.badge-success="{Binding IsJustified}"
+                                                Classes.badge-danger="{Binding IsNotJustified}"
+                                                Classes.badge-warning="{Binding IsLate}"
+                                                VerticalAlignment="Top"
+                                                Margin="8,0,0,0">
+                                                <TextBlock Text="{Binding StatusText}" />
+                                            </controls:Card>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Spacing="8" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </controls:Card>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="8" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        
+    </StackPanel>
+</UserControl>

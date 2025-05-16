@@ -6,6 +6,7 @@
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
              xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.Fluent.MarkupExtensions;assembly=FluentIcons.Avalonia.Fluent"
+             xmlns:panes="clr-namespace:Prolizy.Viewer.Views.Panes"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="700"
              x:Class="Prolizy.Viewer.Views.MainView"
              Background="{DynamicResource CoreGradientBrush}"

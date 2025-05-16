@@ -186,6 +186,12 @@ public partial class MainView : UserControl
             MainNavigationView.SelectedItem = MainNavigationView.SettingsItem;
             lastPaneWasSettings = true;
         }
+        
+        Frame.NavigationFailed += (sender, args) =>
+        {
+            Console.WriteLine("Navigation failed: " + args.Exception);
+            DebugPane.AddDebugText(args.Exception.ToString());
+        };
 
         Frame.NavigateToType(paneType, null, new FrameNavigationOptions
         {

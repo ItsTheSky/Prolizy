@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Prolizy.Viewer.Controls.Bulletin.Elements;
 
-public partial class BulletinTabTitle : UserControl
+public partial class BulletinTabTitle : TemplatedControl
 {
     public static readonly StyledProperty<string> TitleProperty =
         AvaloniaProperty.Register<BulletinTabTitle, string>(nameof(Title));
@@ -16,8 +16,8 @@ public partial class BulletinTabTitle : UserControl
     public static readonly StyledProperty<bool> HasSpreadProperty =
         AvaloniaProperty.Register<BulletinTabTitle, bool>(nameof(HasSpread));
     
-    public static readonly StyledProperty<RelayCommand> SpreadClickedCommandProperty =
-        AvaloniaProperty.Register<BulletinTabTitle, RelayCommand>(nameof(SpreadClickedCommand));
+    public static readonly StyledProperty<IRelayCommand> SpreadClickedCommandProperty =
+        AvaloniaProperty.Register<BulletinTabTitle, IRelayCommand>(nameof(SpreadClickedCommand));
 
     public string Title
     {
@@ -37,21 +37,9 @@ public partial class BulletinTabTitle : UserControl
         set => SetValue(HasSpreadProperty, value);
     }
     
-    public RelayCommand SpreadClickedCommand
+    public IRelayCommand SpreadClickedCommand
     {
         get => GetValue(SpreadClickedCommandProperty);
         set => SetValue(SpreadClickedCommandProperty, value);
-    }
-    
-    public BulletinTabTitle()
-    {
-        InitializeComponent();
-    }
-
-    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-    {
-        base.OnApplyTemplate(e);
-        
-        DataContext = this;
     }
 }

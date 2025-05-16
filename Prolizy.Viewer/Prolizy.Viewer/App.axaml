@@ -25,7 +25,8 @@
         <StyleInclude Source="avares://Prolizy.Viewer/Styles/CenteredTabControlStyle.axaml" />
         <StyleInclude Source="avares://Prolizy.Viewer/Styles/TextStyles.axaml" />
         <StyleInclude Source="avares://Prolizy.Viewer/Styles/StrechingDialogStyle.axaml" />
-        
+        <StyleInclude Source="avares://Prolizy.Viewer/Styles/Components/BulletinComponents.axaml" />
+
     </Application.Styles>
 
     <Application.Resources>

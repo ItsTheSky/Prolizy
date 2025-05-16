@@ -64,5 +64,9 @@
         <DependentUpon>TeachingUnitDisplay.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Components\BulletinTabTitle.axaml.cs">
+        <DependentUpon>BulletinTabTitle.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

@@ -12,11 +12,12 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="bulletin1:BulletinSummaryViewModel"
              x:Class="Prolizy.Viewer.Controls.Bulletin.Tabs.SummaryTabDisplay">
-    <StackPanel Spacing="5">
+    <StackPanel Spacing="10">
         <elements:BulletinTabTitle Title="Synthèse"
                                    SubTitle="Une synthèse de votre bulletin ce semestre."/>
 
-        <TextBlock FontSize="16" FontWeight="SemiBold" Text="Dernières notes" />
+        <TextBlock FontSize="17" FontWeight="SemiBold" Text="Dernières Notes" HorizontalAlignment="Center" />
+        
         <ItemsControl ItemsSource="{Binding LatestEvals}" Grid.IsSharedSizeScope="True">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -28,8 +29,9 @@
                             <ColumnDefinition SharedSizeGroup="C" />
                             <ColumnDefinition SharedSizeGroup="D" />
                         </avalonia:SpacedGrid.ColumnDefinitions>
-
-                        <controls:InfoBadge Grid.Column="0" VerticalAlignment="Center" />
+                        
+                        <fluent:SymbolIcon Grid.Column="0" Symbol="{Binding Symbol}"
+                                           FontSize="16" Foreground="{DynamicResource SystemAccentColor}" />
 
                         <TextBlock Grid.Column="1" Text="{Binding Evaluation.Description}"
                                    VerticalAlignment="Center"
@@ -60,5 +62,47 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
+        
+        <TextBlock FontSize="17" FontWeight="SemiBold" Text="Absences (demi-journées)" HorizontalAlignment="Center" />
+        
+        <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto" RowSpacing="5"
+                             ColumnDefinitions="Auto,*,*" ColumnSpacing="5">
+            
+            <!-- Non Justifiées -->
+            <fluent:SymbolIcon Grid.Row="0" Grid.Column="0" Symbol="PersonQuestionMark"
+                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.RedBrush}" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Non Justifiées" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding BaseViewModel.AbsencesViewModel.HalfDayNotJustifiedCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            
+            <!-- Justifiées -->
+            <fluent:SymbolIcon Grid.Row="1" Grid.Column="0" Symbol="PersonAvailable"
+                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.GreenBrush}" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="Justifiées" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding BaseViewModel.AbsencesViewModel.HalfDayJustifiedCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            
+            <!-- Total -->
+            <fluent:SymbolIcon Grid.Row="2" Grid.Column="0" Symbol="Autosum"
+                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.CyanBrush}" />
+            <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="SemiBold" Text="Total" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding BaseViewModel.AbsencesViewModel.HalfDayCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            
+        </avalonia:SpacedGrid>
+        
+        <TextBlock FontSize="17" FontWeight="SemiBold" Text="Simulations" HorizontalAlignment="Center" />
+        
+        <controls:InfoBar Severity="Warning" Title="Attention!" 
+                          Content="Ces simulations ne sont pas toujours précises, et leurs résultats n'est ni définitif, ni officiel!"/>
+        
+        <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                Command="{Binding BaseViewModel.AbsencesViewModel.SimulateYearCommand}"
+                CommandParameter="{x:True}">
+            <TextBlock Text="Simuler l'année (avec Absences)" FontSize="16" FontWeight="SemiBold" />
+        </Button>
+        
+        <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                Command="{Binding BaseViewModel.AbsencesViewModel.SimulateYearCommand}"
+                CommandParameter="{x:False}">
+            <TextBlock Text="Simuler l'année (sans Absences)" FontSize="16" FontWeight="SemiBold" />
+        </Button>
     </StackPanel>
 </UserControl>

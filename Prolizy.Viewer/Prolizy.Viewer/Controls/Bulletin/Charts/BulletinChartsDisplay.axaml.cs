@@ -16,18 +16,19 @@ public partial class BulletinChartsDisplay : UserControl
 
 public class BulletinChartsViewModel(BulletinPaneViewModel bulletinViewModel)
 {
+    public AbsenceAnalysisChartViewModel AbsenceChart { get; } = new(bulletinViewModel);
     public UePerformanceChartViewModel UeChart { get; } = new(bulletinViewModel);
     public GradeEvolutionChartViewModel EvolutionChart { get; } = new(bulletinViewModel);
     public ResourceSaeComparisonChartViewModel ComparisonChart { get; } = new(bulletinViewModel);
-    public AbsenceAnalysisChartViewModel AbsenceChart { get; } = new(bulletinViewModel);
     public GradeDistributionChartViewModel DistributionChart { get; } = new(bulletinViewModel);
 
     public RelayCommand UpdateAllCommand => new(() =>
     {
+        AbsenceChart.UpdateChart();
+        
         UeChart.UpdateChart();
         EvolutionChart.UpdateChart();
         ComparisonChart.UpdateChart();
-        AbsenceChart.UpdateChart();
         DistributionChart.UpdateChart();
     });
 }

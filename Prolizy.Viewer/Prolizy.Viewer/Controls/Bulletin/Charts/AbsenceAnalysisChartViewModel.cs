@@ -22,9 +22,9 @@ public partial class AbsenceAnalysisChartViewModel : BaseObservableChartData
         _bulletinViewModel = bulletinViewModel;
         UpdateChart();
         
-        _bulletinViewModel.PropertyChanged += (sender, args) =>
+        _bulletinViewModel.AbsencesViewModel.PropertyChanged += (sender, args) =>
         {
-            if (args.PropertyName == nameof(_bulletinViewModel.Absences))
+            if (args.PropertyName == nameof(_bulletinViewModel.AbsencesViewModel.Absences))
             {
                 UpdateChart();
             }
@@ -33,7 +33,7 @@ public partial class AbsenceAnalysisChartViewModel : BaseObservableChartData
     
     public void UpdateChart()
     {
-        if (_bulletinViewModel.Absences == null || _bulletinViewModel.Absences.Count == 0)
+        if (_bulletinViewModel.AbsencesViewModel == null || _bulletinViewModel.AbsencesViewModel.Absences.Count == 0)
         {
             HasData = false;
             return;
@@ -44,7 +44,7 @@ public partial class AbsenceAnalysisChartViewModel : BaseObservableChartData
         // Group absences by month
         var absencesByMonth = new Dictionary<string, (int JustifiedAbsences, int UnjustifiedAbsences, int Lates)>();
         
-        foreach (var absenceDay in _bulletinViewModel.Absences)
+        foreach (var absenceDay in _bulletinViewModel.AbsencesViewModel.Absences)
         {
             foreach (var absence in absenceDay.DayAbsences)
             {

@@ -479,7 +479,7 @@ public partial class TimeTableViewModel : ObservableObject
                     var bulletinVm = BulletinPane.Instance?.ViewModel;
                     if (Settings.Instance.LinkEdt && bulletinVm is { IsBulletinAvailable: true })
                     {
-                        var absencesDay = bulletinVm.Absences;
+                        var absencesDay = bulletinVm.AbsencesViewModel.Absences;
                         var absences = absencesDay
                             .FirstOrDefault(a => a.DayAbsences[0].Date == DateOnly.FromDateTime(course.Start.Date))
                             ?.DayAbsences;

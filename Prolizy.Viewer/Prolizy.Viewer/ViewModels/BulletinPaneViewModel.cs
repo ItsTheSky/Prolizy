@@ -14,6 +14,7 @@ using Prolizy.API.Model;
 using Prolizy.Viewer.Controls.Bulletin.Charts;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.ViewModels.Bulletin;
+using Prolizy.Viewer.ViewModels.Bulletin.Tabs;
 using Prolizy.Viewer.Views;
 using BulletinLoginDialog = Prolizy.Viewer.Controls.Bulletin.Other.BulletinLoginDialog;
 using InternalResource = Prolizy.Viewer.Controls.Bulletin.Elements.InternalResource;
@@ -30,7 +31,6 @@ public partial class BulletinPaneViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<InternalTeachingUnit> _units = [];
     [ObservableProperty] private ObservableCollection<InternalResource> _resources = [];
     [ObservableProperty] private ObservableCollection<InternalSaeDisplay> _saes = [];
-    [ObservableProperty] private ObservableCollection<InternalAbsenceDay> _absences = [];
 
     [ObservableProperty] private ObservableCollection<InternalSemester> _availableSemesters = [];
     [ObservableProperty] private InternalSemester _currentSemester;
@@ -43,41 +43,18 @@ public partial class BulletinPaneViewModel : ObservableObject
     [ObservableProperty] private BulletinSummaryViewModel _summaryTabViewModel;
     [ObservableProperty] private BulletinChartsViewModel _chartsViewModel;
     [ObservableProperty] private BulletinUnitsViewModel _unitsViewModel;
+    [ObservableProperty] private AbsencesTabViewModel _absencesViewModel;
     
     public Collection<BaseBulletinTabViewModel> Tabs =>
     [
         SummaryTabViewModel,
-        UnitsViewModel
+        UnitsViewModel,
+        AbsencesViewModel
     ];
 
-    public RelayCommand<AbsenceSortingType> ChangeAbsenceSortingTypeCommand => new(
-        sortingType => SelectedAbsenceSortingType = sortingType!);
-    [ObservableProperty] private ObservableCollection<AbsenceSortingType> _absenceSortingTypes =
-    [
-        new()
-        {
-            DisplayedName = "Tous",
-            Icon = Symbol.Multiselect,
-            IsSelected = true
-        },
-
-        new()
-        {
-            DisplayedName = "Absences",
-            Icon = Symbol.PersonQuestionMark,
-            IsSelected = false
-        },
-
-        new()
-        {
-            DisplayedName = "Retards",
-            Icon = Symbol.Clock,
-            IsSelected = false
-        }
-    ];
-    [ObservableProperty] private AbsenceSortingType _selectedAbsenceSortingType;
-
+    
     private BulletinClient _client;
+    public BulletinClient BulletinClient => _client;
 
     public BulletinPaneViewModel()
     {
@@ -91,20 +68,6 @@ public partial class BulletinPaneViewModel : ObservableObject
                 Password = SecureStorage.DecryptPassword(Settings.Instance.BulletinPassword)
             };
         }
-
-        SelectedAbsenceSortingType = AbsenceSortingTypes[0];
-        PropertyChanged += (source, args) =>
-        {
-            if (args.PropertyName == nameof(SelectedAbsenceSortingType))
-            {
-                foreach (var otherSortingType in AbsenceSortingTypes)
-                {
-                    otherSortingType.IsSelected = otherSortingType == SelectedAbsenceSortingType;
-                }
-                
-                UpdateAbsences(SelectedAbsenceSortingType);
-            }
-        };
         
         ConnectivityService.Instance.PropertyChanged += (sender, args) =>
         {
@@ -118,6 +81,7 @@ public partial class BulletinPaneViewModel : ObservableObject
         UpdateNetworkStatus();
         
         // Initialize the view models
+        AbsencesViewModel = new AbsencesTabViewModel(this);
         ChartsViewModel = new BulletinChartsViewModel(this);
         SummaryTabViewModel = new BulletinSummaryViewModel(this);
         UnitsViewModel = new BulletinUnitsViewModel(this);
@@ -327,7 +291,7 @@ public partial class BulletinPaneViewModel : ObservableObject
         UpdateUnits();
         UpdateResources();
         UpdateSaes();
-        UpdateAbsences(SelectedAbsenceSortingType);
+        UpdateAbsences(null); // Nous passons null car ce paramètre n'est plus utilisé
         UpdateLatestEvaluations();
 
         // We load the charts
@@ -343,7 +307,6 @@ public partial class BulletinPaneViewModel : ObservableObject
         Units.Clear();
         Resources.Clear();
         Saes.Clear();
-        Absences.Clear();
         
         foreach (var vm in Tabs)
             vm.Clear();
@@ -387,38 +350,11 @@ public partial class BulletinPaneViewModel : ObservableObject
             Saes.Add(new InternalSaeDisplay(sae.Value, this));
     }
 
-    private void UpdateAbsences(AbsenceSortingType absenceSortingType)
+    private void UpdateAbsences(object unused)
     {
-        // On convertit directement le dictionnaire en utilisant l'extension
-        if (BulletinRoot?.Absences != null)
-        {
-            var filteredAbsences = BulletinRoot.Absences.ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value.Where(abs => abs.Status != "present").ToList()
-            );
-            
-            if (absenceSortingType == AbsenceSortingTypes[1]) // Absences
-            {
-                filteredAbsences = filteredAbsences
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Where(abs => abs.Status == "absent").ToList());
-            }
-            else if (absenceSortingType == AbsenceSortingTypes[2]) // Retards
-            {
-                filteredAbsences = filteredAbsences
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Where(abs => abs.Status == "retard").ToList());
-            }
-
-            var nonEmptyAbsences = filteredAbsences
-                .Where(kvp => kvp.Value.Any())
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-            // On utilise l'extension pour convertir en InternalAbsenceDays
-            Absences = nonEmptyAbsences.ToAbsenceDays();
-        }
-        else
-        {
-            Absences = new ObservableCollection<InternalAbsenceDay>();
-        }
+        // Cette méthode a été déplacée vers AbsencesTabViewModel
+        // On appelle simplement la méthode Update() du ViewModel
+        AbsencesViewModel.Update();
     }
     
     private void UpdateLatestEvaluations()
@@ -458,108 +394,7 @@ public partial class BulletinPaneViewModel : ObservableObject
     });
 }
 
-public record InternalEvaluation(Evaluation Evaluation, bool IsAboveAverage, string DisplayedDate);
-
-public partial class AbsenceSortingType : ObservableObject
-{
-
-    [ObservableProperty] private string _displayedName;
-    [ObservableProperty] private Symbol _icon;
-    [ObservableProperty] private bool _isSelected;
-
-}
-
-public enum AbsenceType
-{
-    Late,       // Retard
-    Absence     // Absence complète
-}
-
-public record InternalAbsence
-{
-    public InternalAbsence(Absence absence, DateOnly date)
-    {
-        Absence = absence;
-        Date = date;
-
-        // Détermine si c'est un retard ou une absence
-        AbsenceType = absence.Status == "retard" ? AbsenceType.Late : AbsenceType.Absence;
-
-        // Génération des affichages
-        TimeDisplay = $"{absence.StartTime:hh\\:mm} - {absence.EndTime:hh\\:mm}";
-        TextDisplay = AbsenceType == AbsenceType.Late 
-            ? $"Retard (cours de {(absence.EndTime - absence.StartTime).TotalMinutes:0} min)"
-            : "Absence complète";
-
-        TextColor = absence.IsJustified
-            ? ColorMatcher.GreenBrush
-            : AbsenceType == AbsenceType.Late
-                ? ColorMatcher.AmberBrush
-                : ColorMatcher.RedBrush;
-
-        Icon = AbsenceType == AbsenceType.Late
-            ? Symbol.Clock 
-            : Symbol.PersonQuestionMark;
-
-        // Statut pour le badge
-        IsJustified = absence.IsJustified;
-        IsNotJustified = !absence.IsJustified;
-        
-        IsLate = AbsenceType == AbsenceType.Late;
-        if (IsLate)
-        {
-            IsJustified = IsNotJustified = false;
-        }
-
-        StatusText = (AbsenceType, absence.IsJustified) switch
-        {
-            (AbsenceType.Late, _) => "Retard",
-            (_, true) => "Justifié(e)",
-            (_, false) => "Non justifié(e)"
-        };
-    }
-
-    public Absence Absence { get; }
-    public DateOnly Date { get; }
-    public AbsenceType AbsenceType { get; }
-    public IBrush TextColor { get; }
-    public string TextDisplay { get; }
-    public string TimeDisplay { get; }
-    public Symbol Icon { get; }
-    public bool IsJustified { get; }
-    public bool IsNotJustified { get; }
-    public bool IsLate { get; }
-    public string StatusText { get; }
-}
-
-public partial class InternalAbsenceDay : ObservableObject
-{
-    [ObservableProperty]
-    private string dateDisplay;
-
-    [ObservableProperty]
-    private ObservableCollection<InternalAbsence> dayAbsences;
-
-    public InternalAbsenceDay(DateOnly date, IEnumerable<Absence> absences)
-    {
-        DateDisplay = date.ToString("dddd dd MMMM yyyy");
-        DayAbsences = new ObservableCollection<InternalAbsence>(
-            absences.Select(a => new InternalAbsence(a, date)));
-    }
-}
-
-// Extensions pour faciliter la conversion depuis le modèle API
-public static class AbsenceExtensions
-{
-    public static ObservableCollection<InternalAbsenceDay> ToAbsenceDays(
-        this Dictionary<DateOnly, List<Absence>> absences)
-    {
-        return new ObservableCollection<InternalAbsenceDay>(
-            absences.Select(kvp => 
-                new InternalAbsenceDay(kvp.Key, kvp.Value))
-            .OrderByDescending(day => day.DayAbsences.First().Date));
-    }
-}
+public record InternalEvaluation(Evaluation Evaluation, bool IsAboveAverage, string DisplayedDate, Symbol? Symbol);
 
 public partial class InternalSemester : ObservableObject
 {
