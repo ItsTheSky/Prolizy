@@ -335,14 +335,29 @@ public partial class TimeTableViewModel : ObservableObject
 
         try
         {
+            Console.WriteLine("GetCurrentOrNextCourse: Starting course search");
+            
+            // Check if student group is configured
+            var group = Settings.Instance.StudentGroup;
+            if (string.IsNullOrEmpty(group))
+            {
+                Console.WriteLine("GetCurrentOrNextCourse: No student group configured");
+                return (null, false);
+            }
+            
             // Check network availability first
             if (!ConnectivityService.Instance.IsNetworkAvailable)
             {
+                Console.WriteLine("GetCurrentOrNextCourse: Network unavailable");
                 return (null, false);
             }
             
             // Try to get the ViewModel if available
             TimeTableViewModel? viewModel = TimeTablePane.Instance?.ViewModel;
+            if (viewModel == null)
+            {
+                Console.WriteLine("GetCurrentOrNextCourse: TimeTablePane.Instance.ViewModel is null");
+            }
 
             // We'll try for MaxDays days
             for (int dayOffset = 0; dayOffset < MaxDays; dayOffset++)
@@ -350,64 +365,73 @@ public partial class TimeTableViewModel : ObservableObject
                 var targetDate = currentDate.AddDays(dayOffset);
                 List<ScheduleItem> daySchedule;
 
-                // Try to get schedule from cache if ViewModel exists
-                if (viewModel?._scheduleCache.TryGetValue(targetDate, out daySchedule) == true)
+                try
                 {
-                    // Cache hit
-                    Console.WriteLine($"Using cached schedule for {targetDate}");
-                }
-                else
-                {
-                    // No cache or cache miss - load from API
-                    Console.WriteLine($"Loading schedule for {targetDate} from API");
-                    daySchedule = await LoadCoursesForDate(targetDate);
-                }
-                daySchedule = daySchedule.ToList(); // Copy list
-                daySchedule.RemoveAll(item => item.Course.CourseType.IsHoliday());
+                    // Try to get schedule from cache if ViewModel exists
+                    if (viewModel?._scheduleCache.TryGetValue(targetDate, out daySchedule) == true)
+                    {
+                        // Cache hit
+                        Console.WriteLine($"Using cached schedule for {targetDate}");
+                    }
+                    else
+                    {
+                        // No cache or cache miss - load from API
+                        Console.WriteLine($"Loading schedule for {targetDate} from API");
+                        daySchedule = await LoadCoursesForDate(targetDate);
+                    }
+                    daySchedule = daySchedule.ToList(); // Copy list
+                    daySchedule.RemoveAll(item => item.Course?.CourseType?.IsHoliday() == true);
 
-                if (daySchedule.Count == 0)
+                    if (daySchedule.Count == 0)
+                    {
+                        Console.WriteLine($"No courses found for {targetDate}");
+                        continue;
+                    }
+
+                    // Sort schedule by start time
+                    daySchedule = daySchedule.OrderBy(x => x.StartTime).ToList();
+
+                    if (targetDate == currentDate)
+                    {
+                        // Check for current course first
+                        var currentCourse = daySchedule.FirstOrDefault(item =>
+                            TimeOnly.FromDateTime(item.StartTime) <= currentTime &&
+                            TimeOnly.FromDateTime(item.EndTime) > currentTime);
+
+                        if (currentCourse != null)
+                        {
+                            Console.WriteLine(
+                                $"Found current course: {currentCourse.Subject} at {currentCourse.StartTime}");
+                            return (currentCourse, true);
+                        }
+
+                        // If no current course, find next course today
+                        var nextCourse = daySchedule.FirstOrDefault(item =>
+                            TimeOnly.FromDateTime(item.StartTime) > currentTime);
+
+                        if (nextCourse != null)
+                        {
+                            Console.WriteLine($"Found next course today: {nextCourse.Subject} at {nextCourse.StartTime}");
+                            return (nextCourse, false);
+                        }
+                    }
+                    else
+                    {
+                        // For future dates, just take the first course
+                        if (daySchedule.Count > 0)
+                        {
+                            var nextCourse = daySchedule[0];
+                            Console.WriteLine(
+                                $"Found next course on {targetDate}: {nextCourse.Subject} at {nextCourse.StartTime}");
+                            return (nextCourse, false);
+                        }
+                    }
+                }
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"No courses found for {targetDate}");
+                    Console.WriteLine($"Error processing date {targetDate}: {ex.Message}");
+                    // Continue to next date instead of failing completely
                     continue;
-                }
-
-                // Sort schedule by start time
-                daySchedule = daySchedule.OrderBy(x => x.StartTime).ToList();
-
-                if (targetDate == currentDate)
-                {
-                    // Check for current course first
-                    var currentCourse = daySchedule.FirstOrDefault(item =>
-                        TimeOnly.FromDateTime(item.StartTime) <= currentTime &&
-                        TimeOnly.FromDateTime(item.EndTime) > currentTime);
-
-                    if (currentCourse != null)
-                    {
-                        Console.WriteLine(
-                            $"Found current course: {currentCourse.Subject} at {currentCourse.StartTime}");
-                        return (currentCourse, true);
-                    }
-
-                    // If no current course, find next course today
-                    var nextCourse = daySchedule.FirstOrDefault(item =>
-                        TimeOnly.FromDateTime(item.StartTime) > currentTime);
-
-                    if (nextCourse != null)
-                    {
-                        Console.WriteLine($"Found next course today: {nextCourse.Subject} at {nextCourse.StartTime}");
-                        return (nextCourse, false);
-                    }
-                }
-                else
-                {
-                    // For future dates, just take the first course
-                    if (daySchedule.Count > 0)
-                    {
-                        var nextCourse = daySchedule[0];
-                        Console.WriteLine(
-                            $"Found next course on {targetDate}: {nextCourse.Subject} at {nextCourse.StartTime}");
-                        return (nextCourse, false);
-                    }
                 }
             }
 
@@ -416,7 +440,7 @@ public partial class TimeTableViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error finding course: {ex.Message}");
+            Console.WriteLine($"Error finding course: {ex.Message}\n{ex.StackTrace}");
             return (null, false);
         }
     }

@@ -40,6 +40,20 @@ public partial class MainView : UserControl
         { 
             Instance = this;
             
+            // Add a safety timeout to ensure preloading state doesn't get stuck
+            var preloadingTimeout = 10000; // 10 seconds
+            var timeoutTimer = new System.Threading.Timer(_ => 
+            {
+                Dispatcher.UIThread.InvokeAsync(() => 
+                {
+                    if (ViewModel.IsPreLoading)
+                    {
+                        Console.WriteLine("Preloading timeout reached, forcing IsPreLoading to false");
+                        ViewModel.IsPreLoading = false;
+                    }
+                });
+            }, null, preloadingTimeout, System.Threading.Timeout.Infinite);
+            
             _ = Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 try
@@ -85,6 +99,7 @@ public partial class MainView : UserControl
                 }
                 finally
                 {
+                    Console.WriteLine("Setting IsPreLoading to false");
                     ViewModel.IsPreLoading = false;
                 }
             });

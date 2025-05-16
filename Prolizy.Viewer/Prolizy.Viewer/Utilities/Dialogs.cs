@@ -8,8 +8,7 @@ namespace Prolizy.Viewer.Utilities;
 public static class Dialogs
 {
 
-    public static async Task ShowMessage(string title, object content,
-        [CallerMemberName] string caller = "")
+    public static async Task ShowMessage(string title, object content)
     {
         var dialog = new ContentDialog()
         {
@@ -18,8 +17,6 @@ public static class Dialogs
             
             CloseButtonText = "Fermer"
         };
-        
-        Console.WriteLine($"[{caller}] {title}: {content}");
         
         await dialog.ShowAsync();
     }
