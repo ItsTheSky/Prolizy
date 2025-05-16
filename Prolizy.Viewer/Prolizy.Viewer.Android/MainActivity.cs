@@ -7,6 +7,7 @@ using Android.OS;
 using Avalonia;
 using Avalonia.Android;
 using Avalonia.Threading;
+using Prolizy.Viewer.Android.Services;
 using Prolizy.Viewer.Android.Widgets;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.Utilities.Android;
@@ -69,6 +70,20 @@ public class MainActivity : AvaloniaMainActivity<App>
             AndroidAccessManager.AndroidAccess!.InitNotifications();
             
             Console.WriteLine($"MainActivity.OnCreate - Intent action: {Intent?.Action}");
+            
+            // Start the widget update service if enabled
+            if (Settings.Instance.WidgetAutoUpdateEnabled)
+            {
+                try
+                {
+                    Console.WriteLine("Starting AndroidWidgetUpdateService");
+                    AndroidWidgetUpdateService.StartService(this);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error starting AndroidWidgetUpdateService: {ex.Message}");
+                }
+            }
 
             // Only handle widget intent after app is fully initialized
             if (Intent?.Action == AppWidget.ACTION_OPEN_EDT)

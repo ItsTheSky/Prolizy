@@ -11,6 +11,7 @@ using FluentAvalonia.UI.Controls;
 using Prolizy.Viewer.Controls.Wizard;
 using Prolizy.Viewer.Controls.Wizard.Steps;
 using Prolizy.Viewer.Utilities;
+using Prolizy.Viewer.Utilities.Android;
 using Prolizy.Viewer.Views;
 using Prolizy.Viewer.Views.Panes;
 using BulletinLoginDialog = Prolizy.Viewer.Controls.Bulletin.Other.BulletinLoginDialog;
@@ -123,6 +124,94 @@ public partial class SettingsPaneViewModel : ObservableObject
             }
         }
     }
+    
+    #region Widget Settings
+    
+    public bool WidgetAutoUpdateEnabled
+    {
+        get => Settings.Instance.WidgetAutoUpdateEnabled;
+        set
+        {
+            Settings.Instance.WidgetAutoUpdateEnabled = value;
+            Settings.Instance.Save();
+            OnPropertyChanged();
+            
+            // Restart or stop the widget update service based on the setting
+            Task.Run(async () => await ReconfigureWidgetServiceAsync());
+        }
+    }
+    
+    public int WidgetUpdateIntervalMinutes
+    {
+        get => Settings.Instance.WidgetUpdateIntervalMinutes;
+        set
+        {
+            Settings.Instance.WidgetUpdateIntervalMinutes = value;
+            Settings.Instance.Save();
+            OnPropertyChanged();
+            
+            // Reconfigure the widget update service with the new interval
+            Task.Run(async () => await ReconfigureWidgetServiceAsync());
+        }
+    }
+    
+    public bool WidgetSmartUpdateEnabled
+    {
+        get => Settings.Instance.WidgetSmartUpdateEnabled;
+        set
+        {
+            Settings.Instance.WidgetSmartUpdateEnabled = value;
+            Settings.Instance.Save();
+            OnPropertyChanged();
+            
+            // Reconfigure the widget update service to enable/disable smart updates
+            Task.Run(async () => await ReconfigureWidgetServiceAsync());
+        }
+    }
+    
+    public int WidgetSmartUpdateDelayMinutes
+    {
+        get => Settings.Instance.WidgetSmartUpdateDelayMinutes;
+        set
+        {
+            Settings.Instance.WidgetSmartUpdateDelayMinutes = value;
+            Settings.Instance.Save();
+            OnPropertyChanged();
+        }
+    }
+    
+    /// <summary>
+    /// Reconfigures the widget service based on current settings.
+    /// </summary>
+    private async Task ReconfigureWidgetServiceAsync()
+    {
+        try
+        {
+            if (OperatingSystem.IsAndroid())
+            {
+                // On Android, use the static method to request reconfiguration
+                AndroidAccessManager.AndroidAccess?.RequestWidgetReconfiguration();
+            }
+            else
+            {
+                // On Desktop, directly reconfigure the service
+                if (Settings.Instance.WidgetAutoUpdateEnabled)
+                {
+                    await Services.DesktopWidgetUpdateService.Instance.ReconfigureAsync();
+                }
+                else
+                {
+                    await Services.DesktopWidgetUpdateService.Instance.StopAsync();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error reconfiguring widget service: {ex.Message}");
+        }
+    }
+    
+    #endregion
 
     [ObservableProperty] private int _selectedIndex = 3;
     private ComboBoxItem _colorScheme;

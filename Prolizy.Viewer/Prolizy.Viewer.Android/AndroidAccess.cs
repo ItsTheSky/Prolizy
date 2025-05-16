@@ -9,6 +9,7 @@ using Android.Provider;
 using Android.Webkit;
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
+using Prolizy.Viewer.Android.Services;
 using Prolizy.Viewer.Android.Widgets;
 using Prolizy.Viewer.Controls.Edt;
 using Prolizy.Viewer.Utilities.Android;
@@ -113,6 +114,11 @@ public class AndroidAccess : IAndroidAccess
             (NotificationManager)Application.Context.GetSystemService(Context.NotificationService);
         foreach (var channel in Channels)
             notificationManager.CreateNotificationChannel(channel);
+    }
+
+    public void RequestWidgetReconfiguration()
+    {
+        AndroidWidgetUpdateService.RequestReconfigure(Application.Context);
     }
 
     public event EventHandler? BackButtonPressed;

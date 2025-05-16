@@ -20,6 +20,8 @@ public interface IAndroidAccess
     
     public void InitNotifications();
     
+    public void RequestWidgetReconfiguration();
+    
     public event EventHandler BackButtonPressed;
 }
 

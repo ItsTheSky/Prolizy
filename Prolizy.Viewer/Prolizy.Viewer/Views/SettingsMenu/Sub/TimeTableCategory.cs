@@ -5,6 +5,7 @@ using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
 using Prolizy.Viewer.Controls.Wizard.Steps;
+using Prolizy.Viewer.Services;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.Utilities.Android;
 using Prolizy.Viewer.Views.Panes;
@@ -115,6 +116,71 @@ public partial class TimeTableCategory : SettingCategory
                 Control = ControlsHelper.CreateSettingToggleSwitch(nameof(Settings.Overlay))
             },
             
+            new SettingEntry(this, "widget_auto_update")
+            {
+                Title = "Mises à jour automatiques",
+                Description = "Active les mises à jour automatiques du widget selon l'intervalle défini",
+                Control = ControlsHelper.CreateSettingToggleSwitch(nameof(Settings.WidgetAutoUpdateEnabled))
+            },
+            
+            new SettingEntry(this, "widget_update_interval")
+            {
+                Title = "Intervalle de mise à jour",
+                Description = "Durée en minutes entre les mises à jour automatiques du widget",
+                Control = ControlsHelper.CreateSettingComboBox(nameof(Settings.WidgetUpdateIntervalMinutes),
+                    new List<int> { 5, 10, 15, 30, 60, 120 }, i => $"{i} minutes")
+            },
+            
+            new SettingEntry(this, "widget_smart_update")
+            {
+                Title = "Mises à jour intelligentes",
+                Description = "Programme automatiquement une mise à jour du widget après la fin de chaque cours",
+                Control = ControlsHelper.CreateSettingToggleSwitch(nameof(Settings.WidgetSmartUpdateEnabled))
+            },
+            
+            new SettingEntry(this, "widget_smart_update_delay")
+            {
+                Title = "Délai après la fin du cours",
+                Description = "Délai en minutes avant la mise à jour du widget après la fin d'un cours",
+                Control = ControlsHelper.CreateSettingComboBox(nameof(Settings.WidgetSmartUpdateDelayMinutes),
+                    new List<int> { 1, 2, 5, 10, 15 }, i => $"{i} minutes")
+            },
+            
+            new SettingEntry(this, "widget_force_update")
+            {
+                Title = "Mise à jour immédiate",
+                Description = "Force une mise à jour immédiate du widget",
+                Control = ControlsHelper.CreateSettingButton("Mettre à jour", new AsyncRelayCommand(async () =>
+                {
+                    try
+                    {
+                        if (OperatingSystem.IsAndroid())
+                        {
+                            // Android widget update
+                            AndroidAccessManager.AndroidAccess?.RequestWidgetReconfiguration();
+
+                            MainView.ShowNotification("Widget mis à jour", 
+                                "La mise à jour du widget a été demandée", 
+                                NotificationType.Success);
+                        }
+                        else
+                        {
+                            // Desktop widget update
+                            await Services.DesktopWidgetUpdateService.Instance.ForceUpdateAsync();
+                            
+                            MainView.ShowNotification("Widget mis à jour", 
+                                "Le widget a été mis à jour avec succès", 
+                                NotificationType.Success);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MainView.ShowNotification("Erreur", 
+                            $"Impossible de mettre à jour le widget: {ex.Message}", 
+                            NotificationType.Error);
+                    }
+                }))
+            }
         ];
 
 }

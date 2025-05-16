@@ -4,6 +4,9 @@
 	
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 	<application android:label="Prolizy" android:icon="@drawable/Icon">
 		<receiver
@@ -16,6 +19,22 @@
 			<meta-data
 					android:name="android.appwidget.provider"
 					android:resource="@xml/appwidgetprovider" />
+		</receiver>
+		
+		<!-- Widget update service -->
+		<service
+				android:name=".Services.AndroidWidgetUpdateService"
+				android:exported="false"
+				android:foregroundServiceType="dataSync" />
+				
+		<!-- Boot receiver to start the service when device boots -->
+		<receiver
+				android:name=".Receivers.BootReceiver"
+				android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
 		</receiver>
 	</application>
 </manifest>

@@ -44,6 +44,12 @@ public class Settings : INotifyPropertyChanged
     private bool _overlay;
     private WidgetOpenAction _widgetOpenAction = WidgetOpenAction.OpenEdtWithDescription;
     
+    // Widget Settings
+    private int _widgetUpdateIntervalMinutes = 15;
+    private bool _widgetAutoUpdateEnabled = true;
+    private bool _widgetSmartUpdateEnabled = false;
+    private int _widgetSmartUpdateDelayMinutes = 1;
+    
     // Bulletin Settings
     private string _bulletinUsername;
     private string _bulletinPassword;
@@ -156,6 +162,31 @@ public class Settings : INotifyPropertyChanged
     {
         get => _linkEdt;
         set => SetProperty(ref _linkEdt, value);
+    }
+    
+    // Widget Settings
+    public int WidgetUpdateIntervalMinutes
+    {
+        get => _widgetUpdateIntervalMinutes;
+        set => SetProperty(ref _widgetUpdateIntervalMinutes, value);
+    }
+    
+    public bool WidgetAutoUpdateEnabled
+    {
+        get => _widgetAutoUpdateEnabled;
+        set => SetProperty(ref _widgetAutoUpdateEnabled, value);
+    }
+    
+    public bool WidgetSmartUpdateEnabled
+    {
+        get => _widgetSmartUpdateEnabled;
+        set => SetProperty(ref _widgetSmartUpdateEnabled, value);
+    }
+    
+    public int WidgetSmartUpdateDelayMinutes
+    {
+        get => _widgetSmartUpdateDelayMinutes;
+        set => SetProperty(ref _widgetSmartUpdateDelayMinutes, value);
     }
 
     // Private constructor for singleton

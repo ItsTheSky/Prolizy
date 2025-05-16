@@ -5,7 +5,9 @@ using Android.Appwidget;
 using Android.Content;
 using Android.OS;
 using Android.Widget;
+using Prolizy.Viewer.Android.Services;
 using Prolizy.Viewer.Controls.Edt;
+using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.ViewModels;
 using Prolizy.Viewer.Views.Panes;
 
@@ -63,6 +65,97 @@ public class AppWidget : AppWidgetProvider
 
             appWidgetManager.UpdateAppWidget(widgetIds, updateViews);
             DebugPane.AddDebugText("Widget views updated successfully");
+            
+            // If smart updates are enabled and this is a current course, schedule the next update
+            if (Settings.Instance.WidgetSmartUpdateEnabled && isCurrent)
+            {
+                try
+                {
+                    // Try to use the service for smart updates
+                    try
+                    {
+                        // Start the service if it's not running
+                        if (Settings.Instance.WidgetAutoUpdateEnabled)
+                        {
+                            var serviceIntent = new Intent(context, Java.Lang.Class.FromType(typeof(Services.AndroidWidgetUpdateService)));
+                            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+                            {
+                                context.StartForegroundService(serviceIntent);
+                            }
+                            else
+                            {
+                                context.StartService(serviceIntent);
+                            }
+                        }
+                        
+                        // Schedule the smart update
+                        var smartUpdateIntent = new Intent(context, Java.Lang.Class.FromType(typeof(Services.AndroidWidgetUpdateService)));
+                        smartUpdateIntent.SetAction("SMART_UPDATE");
+                        smartUpdateIntent.PutExtra("COURSE_END_TIME", item.EndTime.Ticks);
+                        smartUpdateIntent.PutExtra("DELAY_MINUTES", Settings.Instance.WidgetSmartUpdateDelayMinutes);
+                        
+                        if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+                        {
+                            context.StartForegroundService(smartUpdateIntent);
+                        }
+                        else
+                        {
+                            context.StartService(smartUpdateIntent);
+                        }
+                        
+                        DebugPane.AddDebugText($"Scheduled smart update for {item.EndTime.AddMinutes(Settings.Instance.WidgetSmartUpdateDelayMinutes):HH:mm:ss}");
+                    }
+                    catch (Exception serviceEx)
+                    {
+                        DebugPane.AddDebugText($"Error using service for updates: {serviceEx.Message}. Falling back to AlarmManager.");
+                        
+                        // Fallback: Use AlarmManager to schedule an update directly
+                        try
+                        {
+                            var alarmManager = (AlarmManager)context.GetSystemService(Context.AlarmService);
+                            var updateIntent = new Intent(context, Java.Lang.Class.FromType(typeof(AppWidget)));
+                            updateIntent.SetAction(AppWidgetManager.ActionAppwidgetUpdate);
+                            
+                            var updateTime = item.EndTime.AddMinutes(Settings.Instance.WidgetSmartUpdateDelayMinutes);
+                            var millisUntilUpdate = (long)(updateTime - DateTime.Now).TotalMilliseconds;
+                            
+                            if (millisUntilUpdate > 0)
+                            {
+                                pendingIntent = PendingIntent.GetBroadcast(
+                                    context, 
+                                    2, 
+                                    updateIntent, 
+                                    PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+                                
+                                if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                                {
+                                    alarmManager.SetExactAndAllowWhileIdle(
+                                        AlarmType.RtcWakeup,
+                                        Java.Lang.JavaSystem.CurrentTimeMillis() + millisUntilUpdate,
+                                        pendingIntent);
+                                }
+                                else
+                                {
+                                    alarmManager.SetExact(
+                                        AlarmType.RtcWakeup,
+                                        Java.Lang.JavaSystem.CurrentTimeMillis() + millisUntilUpdate,
+                                        pendingIntent);
+                                }
+                                
+                                DebugPane.AddDebugText($"Scheduled direct update with AlarmManager for {updateTime:HH:mm:ss}");
+                            }
+                        }
+                        catch (Exception alarmEx)
+                        {
+                            DebugPane.AddDebugText($"Failed to schedule alarm: {alarmEx.Message}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    DebugPane.AddDebugText($"Error scheduling smart update: {ex.Message}");
+                }
+            }
         }
         catch (Exception ex)
         {

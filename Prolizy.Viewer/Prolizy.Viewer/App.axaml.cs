@@ -11,6 +11,7 @@ using Avalonia.Threading;
 using FluentAvalonia.Styling;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using Prolizy.Viewer.Services;
 using Prolizy.Viewer.Utilities;
 using Prolizy.Viewer.ViewModels;
 using Prolizy.Viewer.Views;
@@ -140,6 +141,13 @@ public partial class App : Application
         try
         {
             _ = ConnectivityService.Instance;
+            
+            // Start the desktop widget update service if enabled
+            if (Settings.Instance.WidgetAutoUpdateEnabled)
+            {
+                Console.WriteLine("Starting desktop widget update service");
+                Task.Run(async () => await DesktopWidgetUpdateService.Instance.StartAsync());
+            }
             
             switch (ApplicationLifetime)
             {
