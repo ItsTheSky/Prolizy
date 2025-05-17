@@ -1,12 +1,17 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:elements="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Elements"
-        xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.MarkupExtensions;assembly=FluentIcons.Avalonia">
+        xmlns:markupExtensions="clr-namespace:FluentIcons.Avalonia.MarkupExtensions;assembly=FluentIcons.Avalonia"
+        xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+        xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
+        xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities">
     <Design.PreviewWith>
         <Border Padding="20">
             <!-- Add Controls for Previewer Here -->
         </Border>
     </Design.PreviewWith>
+
+    <!-- Bulletin Tab Title -->
 
     <Style Selector="elements|BulletinTabTitle">
         <Setter Property="Template">
@@ -24,6 +29,59 @@
                             Content="{markupExtensions:SymbolIcon Symbol=ArrowBidirectionalUpDown}"
                             Command="{TemplateBinding SpreadClickedCommand}" />
                 </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <!-- Bulletin Absence Sum Up -->
+    <Style Selector="elements|BulletinAbsenceSumUp">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Orientation="Vertical" Spacing="10">
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0}/{1} demi-journées justifiées ({2} NON justifiées)">
+                                <TemplateBinding Property="HalfJustifiedDay"/>
+                                <TemplateBinding Property="TotalHalfDays"/>
+                                <TemplateBinding Property="HalfNotJustifiedDay"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    
+                    <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="5"
+                                         ColumnDefinitions="Auto,*,*" ColumnSpacing="5">
+
+                        <!-- Non Justifiées -->
+                        <fluent:SymbolIcon Grid.Row="0" Grid.Column="0" Symbol="PersonQuestionMark"
+                                           FontSize="16" Foreground="{x:Static utilities:ColorMatcher.RedBrush}" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="Non Justifiées" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="{TemplateBinding HalfNotJustifiedDay}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Right" />
+
+                        <!-- Justifiées -->
+                        <fluent:SymbolIcon Grid.Row="1" Grid.Column="0" Symbol="PersonAvailable"
+                                           FontSize="16" Foreground="{x:Static utilities:ColorMatcher.GreenBrush}" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Justifiées" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{TemplateBinding HalfJustifiedDay}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Right" />
+
+                        <!-- Total -->
+                        <fluent:SymbolIcon Grid.Row="2" Grid.Column="0" Symbol="Autosum"
+                                           FontSize="16" Foreground="{x:Static utilities:ColorMatcher.CyanBrush}" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="SemiBold" Text="Total"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="{TemplateBinding TotalHalfDays}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Right" />
+
+                        <!-- Retards -->
+                        <fluent:SymbolIcon Grid.Row="3" Grid.Column="0" Symbol="ClockAlarm"
+                                           FontSize="16" Foreground="{x:Static utilities:ColorMatcher.AmberBrush}" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="Retards" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="3" Grid.Column="2" Text="{TemplateBinding TotalRetards}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Right" />
+
+                    </avalonia:SpacedGrid>
+                </StackPanel>
             </ControlTemplate>
         </Setter>
     </Style>

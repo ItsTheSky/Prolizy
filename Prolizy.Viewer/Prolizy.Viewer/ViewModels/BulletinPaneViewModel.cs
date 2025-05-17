@@ -235,6 +235,7 @@ public partial class BulletinPaneViewModel : ObservableObject
         catch (Exception ex)
         {
             Console.WriteLine($"Error refreshing bulletin: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
             
             // Check if it's a network connectivity issue
             if (await ConnectivityService.Instance.IsNetworkIssue())

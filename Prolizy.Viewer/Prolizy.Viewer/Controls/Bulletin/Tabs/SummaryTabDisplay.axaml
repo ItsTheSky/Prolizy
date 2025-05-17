@@ -64,29 +64,11 @@
         </ItemsControl>
         
         <TextBlock FontSize="17" FontWeight="SemiBold" Text="Absences (demi-journées)" HorizontalAlignment="Center" />
-        
-        <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto" RowSpacing="5"
-                             ColumnDefinitions="Auto,*,*" ColumnSpacing="5">
-            
-            <!-- Non Justifiées -->
-            <fluent:SymbolIcon Grid.Row="0" Grid.Column="0" Symbol="PersonQuestionMark"
-                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.RedBrush}" />
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="Non Justifiées" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding BaseViewModel.AbsencesViewModel.HalfDayNotJustifiedCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            
-            <!-- Justifiées -->
-            <fluent:SymbolIcon Grid.Row="1" Grid.Column="0" Symbol="PersonAvailable"
-                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.GreenBrush}" />
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="Justifiées" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding BaseViewModel.AbsencesViewModel.HalfDayJustifiedCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            
-            <!-- Total -->
-            <fluent:SymbolIcon Grid.Row="2" Grid.Column="0" Symbol="Autosum"
-                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.CyanBrush}" />
-            <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="SemiBold" Text="Total" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding BaseViewModel.AbsencesViewModel.HalfDayCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            
-        </avalonia:SpacedGrid>
+
+        <elements:BulletinAbsenceSumUp HalfNotJustifiedDay="{Binding BaseViewModel.AbsencesViewModel.HalfDayNotJustifiedCount}"
+                                       HalfJustifiedDay="{Binding BaseViewModel.AbsencesViewModel.HalfDayJustifiedCount}"
+                                       TotalHalfDays="{Binding BaseViewModel.AbsencesViewModel.HalfDayCount}"
+                                       TotalRetards="{Binding BaseViewModel.AbsencesViewModel.RetardsCount}" />
         
         <TextBlock FontSize="17" FontWeight="SemiBold" Text="Simulations" HorizontalAlignment="Center" />
         

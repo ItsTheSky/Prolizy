@@ -1,0 +1,151 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:simulation="clr-namespace:Prolizy.Viewer.ViewModels.Bulletin.Simulation;assembly=Prolizy.Viewer"
+             xmlns:converters="clr-namespace:Prolizy.Viewer.Utilities.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="simulation:YearSimulationViewModel"
+             x:Class="Prolizy.Viewer.Controls.Bulletin.Simulation.YearSimulationView">
+
+    <Grid>
+        <!-- Loading State -->
+        <Grid IsVisible="{Binding IsLoading}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="15">
+                <TextBlock Text="{Binding LoadingStatus}" HorizontalAlignment="Center" FontSize="16" />
+                <ProgressBar Value="{Binding LoadingProgress}"
+                             Maximum="1.0"
+                             Width="300"
+                             Height="8"
+                             ShowProgressText="True" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Results State -->
+        <ScrollViewer IsVisible="{Binding !IsLoading}" Margin="-10">
+            <StackPanel Spacing="20" Margin="10">
+                <!-- Result Info Bar -->
+                <controls:InfoBar Title="Résultat de simulation"
+                                  Message="{Binding SimulationResultMessage}"
+                                  IsOpen="True"
+                                  IsClosable="False"
+                                  Severity="{Binding ResultSeverity}" />
+
+                <!-- UE Table -->
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Unités d'Enseignement"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center" />
+
+                    <TextBlock Text="Une UE en rouge indique qu'elle est en dessous du seuil minimum (8/20)"
+                               FontSize="12"
+                               FontStyle="Italic"
+                               HorizontalAlignment="Center" />
+
+                    <Border BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Margin="0,5,0,0">
+                        <Grid RowDefinitions="Auto,*" Margin="1">
+                            <!-- Headers -->
+                            <Grid Grid.Row="0"
+                                  ColumnDefinitions="2*,*,*,*"
+                                  Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+                                <TextBlock Grid.Column="0" Text="UE"
+                                           Margin="8,5" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="1" Text="Semestre 1"
+                                           Margin="8,5" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="2" Text="Semestre 2"
+                                           Margin="8,5" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="3" Text="Année"
+                                           Margin="8,5" FontWeight="SemiBold" />
+                            </Grid>
+
+                            <!-- Content -->
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding Units}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="2*,*,*,*">
+                                            <TextBlock Grid.Column="0" Text="{Binding UnitName}"
+                                                       Margin="8,5" TextWrapping="Wrap" />
+                                            <TextBlock Grid.Column="1" Text="{Binding DisplayedS1}"
+                                                       Margin="8,5" />
+                                            <TextBlock Grid.Column="2" Text="{Binding DisplayedS2}"
+                                                       Margin="8,5" />
+                                            <TextBlock Grid.Column="3" Text="{Binding DisplayedYear}"
+                                                       Margin="8,5"
+                                                       Foreground="{Binding IsBelowMinimum, Converter={StaticResource BooleanToRedBrushConverter}}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- Absences Table -->
+                <StackPanel Spacing="5" IsVisible="{Binding IncludeAbsences}">
+                    <TextBlock Text="Absences par semestre"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center" />
+
+                    <TextBlock Text="Un semestre en rouge indique un dépassement du seuil autorisé (5 demi-journées)"
+                               FontSize="12"
+                               FontStyle="Italic"
+                               HorizontalAlignment="Center" />
+
+                    <Border BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Margin="0,5,0,0">
+                        <Grid RowDefinitions="Auto,*" Margin="1">
+                            <!-- Headers -->
+                            <Grid Grid.Row="0"
+                                  ColumnDefinitions="*,*,*"
+                                  Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+                                <TextBlock Grid.Column="0" Text="Semestre"
+                                           Margin="8,5" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="1" Text="Absences"
+                                           Margin="8,5" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="2" Text="Demi-journées"
+                                           Margin="8,5" FontWeight="SemiBold" />
+                            </Grid>
+
+                            <!-- Content -->
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding AbsencesItems}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="*,*,*">
+                                            <TextBlock Grid.Column="0"
+                                                       Text="{Binding SemesterNumber, StringFormat='Semestre {0}'}"
+                                                       Margin="8,5" />
+                                            <TextBlock Grid.Column="1" Text="{Binding AbsencesCount}"
+                                                       Margin="8,5" />
+                                            <TextBlock Grid.Column="2" Text="{Binding HalfDayCount}"
+                                                       Margin="8,5"
+                                                       Foreground="{Binding IsFailing, 
+                                                   Converter={StaticResource BooleanToRedBrushConverter}}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

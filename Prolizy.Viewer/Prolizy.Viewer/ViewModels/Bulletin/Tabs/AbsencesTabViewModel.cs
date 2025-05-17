@@ -7,9 +7,13 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FluentAvalonia.Core;
+using FluentAvalonia.UI.Controls;
 using FluentIcons.Common;
 using Prolizy.API.Model;
 using Prolizy.Viewer.Utilities;
+using Prolizy.Viewer.ViewModels.Bulletin.Simulation;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Prolizy.Viewer.ViewModels.Bulletin.Tabs;
 
@@ -49,6 +53,7 @@ public partial class AbsencesTabViewModel : BaseBulletinTabViewModel
     [ObservableProperty] private int _halfDayJustifiedCount;
     [ObservableProperty] private int _halfDayNotJustifiedCount;
     [ObservableProperty] private int _halfDayCount;
+    [ObservableProperty] private int _retardsCount;
 
     public AbsencesTabViewModel(BulletinPaneViewModel baseVm) : base(baseVm)
     {
@@ -104,27 +109,70 @@ public partial class AbsencesTabViewModel : BaseBulletinTabViewModel
             filteredAbsences = filteredAbsences
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Where(abs => abs.Status == "retard").ToList());
         }
-
+        
         var nonEmptyAbsences = filteredAbsences
-            .Where(kvp => kvp.Value.Any())
+            .Where(kvp => kvp.Value.Count != 0)
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-        Absences = nonEmptyAbsences.ToAbsenceDays();
+        Absences = nonEmptyAbsences
+            .ToAbsenceDays();
+
+        RetardsCount = baseAbsences.SelectMany(kv => kv.Value).Count(abs => abs.Status == "retard");
+
+        var absencesList = baseAbsences.ToAbsenceDays()
+            .SelectMany(day => day.DayAbsences)
+            .Select(abs => abs.Absence)
+            .ToList();
+
+        var scannedJustifiedHalfDaysData = new Dictionary<string, List<AbsenceDayPart>>();
+        var scannedNotJustifiedHalfDaysData = new Dictionary<string, List<AbsenceDayPart>>();
 
         // On compte les demi journées justifiées et non justifiées
         // deux absences la même après-midi ne compte qu'une
         // demi-journée (une demie journée étant de 0h à 12h ou de 12h à 24h)
-        HalfDayJustifiedCount = baseAbsences
-            .SelectMany(kvp => kvp.Value)
-            .Count(abs => abs.IsJustified &&
-                          (abs.StartTime.Hours < 12 && abs.EndTime.Hours >= 12 ||
-                           abs.StartTime.Hours >= 12 && abs.EndTime.Hours < 24));
-
-        HalfDayNotJustifiedCount = baseAbsences
-            .SelectMany(kvp => kvp.Value)
-            .Count(abs => !abs.IsJustified &&
-                          (abs.StartTime.Hours < 12 && abs.EndTime.Hours >= 12 ||
-                           abs.StartTime.Hours >= 12 && abs.EndTime.Hours < 24));
+        HalfDayJustifiedCount = 0;
+        foreach (var absence in absencesList.Where(abs => abs is { IsJustified: true, Status: "absent" }))
+        {
+            var dayPart = absence.StartTime.Hours < 12 
+                ? AbsenceDayPart.Morning
+                : AbsenceDayPart.Afternoon;
+            
+            if (scannedJustifiedHalfDaysData.ContainsKey(absence.EndDate))
+            {
+                if (!scannedJustifiedHalfDaysData[absence.EndDate].Contains(dayPart))
+                {
+                    HalfDayJustifiedCount++;
+                    scannedJustifiedHalfDaysData[absence.EndDate].Add(dayPart);
+                }
+            }
+            else
+            {
+                HalfDayJustifiedCount++;
+                scannedJustifiedHalfDaysData.Add(absence.EndDate, [dayPart]);
+            }
+        }
+        
+        HalfDayNotJustifiedCount = 0;
+        foreach (var absence in absencesList.Where(abs => abs is { IsJustified: false, Status: "absent" }))
+        {
+            var dayPart = absence.StartTime.Hours < 12 
+                ? AbsenceDayPart.Morning
+                : AbsenceDayPart.Afternoon;
+            
+            if (scannedNotJustifiedHalfDaysData.ContainsKey(absence.EndDate))
+            {
+                if (!scannedNotJustifiedHalfDaysData[absence.EndDate].Contains(dayPart))
+                {
+                    HalfDayNotJustifiedCount++;
+                    scannedNotJustifiedHalfDaysData[absence.EndDate].Add(dayPart);
+                }
+            }
+            else
+            {
+                HalfDayNotJustifiedCount++;
+                scannedNotJustifiedHalfDaysData.Add(absence.EndDate, [dayPart]);
+            }
+        }
 
         HalfDayCount = HalfDayJustifiedCount + HalfDayNotJustifiedCount;
     }
@@ -134,88 +182,35 @@ public partial class AbsencesTabViewModel : BaseBulletinTabViewModel
     [RelayCommand]
     public async Task SimulateYear(bool simulateAbsences)
     {
-        Console.WriteLine("Simulating year... with absences: " + simulateAbsences);
-        var currentYear = DateTime.Now.Year;
+        // Créer le ViewModel pour la simulation
+        var simulationViewModel = new Simulation.YearSimulationViewModel(BaseViewModel, simulateAbsences);
 
-        var baseRoot = await BaseViewModel.BulletinClient.FetchDatas();
-        var semesters = baseRoot.Semesters
-            .Where(semester => int.Parse(semester.AcademicYear.Split("/")[1]) == currentYear)
-            .Select(semester => semester.SemesterId);
-        //.Where(id => id != baseRoot.Transcript.SemesterId);
+        // Créer la vue pour afficher les résultats
+        var simulationView = new Controls.Bulletin.Simulation.YearSimulationView(simulationViewModel);
 
-        var units = new Dictionary<string, TeachingUnit>();
-        var absences = new List<Absence>();
-
-        Console.WriteLine("Fetching semesters...");
-        foreach (var semesterId in semesters)
+        // Créer la boîte de dialogue
+        var dialog = new FluentAvalonia.UI.Controls.ContentDialog
         {
-            var bulletinRoot = semesterId == baseRoot.Transcript.SemesterId
-                ? baseRoot
-                : await BaseViewModel.BulletinClient.FetchDatas(semesterId);
-            Console.WriteLine("   -> Fetched semester: " + semesterId + " successfully (was base? " +
-                              (semesterId == baseRoot.Transcript.SemesterId) + ")");
-            
-            if (bulletinRoot == null)
-            {
-                Console.WriteLine("Failed to fetch bulletin root for semester: " + semesterId);
-                continue;
-            }
+            Title = "Simulation de réussite de l'année",
+            Content = simulationView,
+            CloseButtonText = "Fermer",
+            DefaultButton = FluentAvalonia.UI.Controls.ContentDialogButton.Close
+        };
 
-            foreach (var unit in bulletinRoot.Transcript.TeachingUnits)
-                units.Add(unit.Key, unit.Value);
+        // Lancer la simulation en arrière-plan
+        _ = Task.Run(async () => { await simulationViewModel.RunSimulation(); });
 
-            foreach (var abs in bulletinRoot.Absences.SelectMany(kvp => kvp.Value))
-                if (abs is { IsJustified: false, Status: "absent" })
-                    absences.Add(abs);
-        }
-
-        Console.WriteLine("Fetched " + units.Count + " units and " + absences.Count +
-                          " absences in total. Applying base calculations...");
-
-        // Calcul des moyennes.
-        // Clé: ID (= numéro) de l'UE, Valeur: Moyenne entre les (deux, ou plus) semestres
-        var allSemestersUnitAvg = new Dictionary<int, (int, double)>();
-
-        foreach (var unitPair in units)
-        {
-            var unit = unitPair.Value;
-            if (!double.TryParse(unit.Average.Value.Replace(".", ","), out var avg))
-            {
-                Console.WriteLine("Unit " + unit.Title + " ["+ unitPair.Key +"] has no average. (found '" + unit.Average.Value + "')");
-                continue;
-            }
-            
-            var unitNumber = int.Parse(unitPair.Key[^1].ToString());
-
-            if (allSemestersUnitAvg.ContainsKey(unitNumber))
-            {
-                var (count, sum) = allSemestersUnitAvg[unitNumber];
-                allSemestersUnitAvg[unitNumber] = (count + 1, sum + avg);
-            }
-            else
-            {
-                allSemestersUnitAvg[unitNumber] = (1, avg);
-            }
-        }
-
-        // Calcul de la moyenne générale par UE
-        var allUnitsAvg = new Dictionary<int, double>();
-        foreach (var unit in allSemestersUnitAvg)
-        {
-            var (count, sum) = unit.Value;
-            allUnitsAvg[unit.Key] = sum / count;
-        }
-
-        foreach (var unit in allUnitsAvg)
-        {
-            var unitId = unit.Key;
-            var avg = unit.Value;
-
-            Console.WriteLine("Unit " + unitId + " has an average of " + avg + " in the year.");
-        }
+        // Afficher la boîte de dialogue
+        await dialog.ShowAsync();
     }
 
     #endregion
+}
+
+public enum AbsenceDayPart
+{
+    Morning,
+    Afternoon
 }
 
 public partial class AbsenceSortingType : ObservableObject
@@ -308,8 +303,8 @@ public static class AbsenceExtensions
         this Dictionary<DateOnly, List<Absence>> absences)
     {
         return new ObservableCollection<InternalAbsenceDay>(
-            absences.Select(kvp =>
-                    new InternalAbsenceDay(kvp.Key, kvp.Value))
-                .OrderByDescending(day => day.DayAbsences.First().Date));
+            absences.Select(kvp => new InternalAbsenceDay(kvp.Key, kvp.Value))
+                .Where(day => day.DayAbsences.Any())
+                .OrderByDescending(day => day.DayAbsences.First().Absence.StartTime));
     }
 }

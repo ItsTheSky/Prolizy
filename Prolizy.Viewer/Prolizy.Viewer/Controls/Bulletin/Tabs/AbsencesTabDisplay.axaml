@@ -7,55 +7,22 @@
              xmlns:fluent="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
              xmlns:tabs="clr-namespace:Prolizy.Viewer.ViewModels.Bulletin.Tabs"
              xmlns:tabs1="clr-namespace:Prolizy.Viewer.Controls.Bulletin.Tabs"
-             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
-             xmlns:utilities="clr-namespace:Prolizy.Viewer.Utilities"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="tabs:AbsencesTabViewModel"
              x:Class="Prolizy.Viewer.Controls.Bulletin.Tabs.AbsencesTabDisplay">
     <StackPanel Spacing="10">
         <elements:BulletinTabTitle Title="Absences et Retards"
-                                   SubTitle="Liste de vos absences/retards et des justifications."/>
-        
+                                   SubTitle="Liste de vos absences/retards et des justifications." />
+
         <Separator />
-        
-        <ProgressBar HorizontalAlignment="Stretch"
-                     Minimum="0" Maximum="{Binding HalfDayCount}" Value="{Binding HalfDayJustifiedCount}"/>
-        
-        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0}/{1} demi-journées NON justifiées ({2} justifiées)">
-                    <Binding Path="HalfDayNotJustifiedCount"/>
-                    <Binding Path="HalfDayCount"/>
-                    <Binding Path="HalfDayJustifiedCount"/>
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
-        
-        <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto" RowSpacing="5"
-                             ColumnDefinitions="Auto,*,*" ColumnSpacing="5">
-            
-            <!-- Non Justifiées -->
-            <fluent:SymbolIcon Grid.Row="0" Grid.Column="0" Symbol="PersonQuestionMark"
-                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.RedBrush}" />
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="Non Justifiées" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding HalfDayNotJustifiedCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            
-            <!-- Justifiées -->
-            <fluent:SymbolIcon Grid.Row="1" Grid.Column="0" Symbol="PersonAvailable"
-                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.GreenBrush}" />
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="Justifiées" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding HalfDayJustifiedCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            
-            <!-- Total -->
-            <fluent:SymbolIcon Grid.Row="2" Grid.Column="0" Symbol="Autosum"
-                               FontSize="16" Foreground="{x:Static utilities:ColorMatcher.CyanBrush}" />
-            <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="SemiBold" Text="Total" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding HalfDayCount}" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            
-        </avalonia:SpacedGrid>
-        
+
+        <elements:BulletinAbsenceSumUp HalfNotJustifiedDay="{Binding HalfDayNotJustifiedCount}"
+                                       HalfJustifiedDay="{Binding HalfDayJustifiedCount}"
+                                       TotalHalfDays="{Binding HalfDayCount}"
+                                       TotalRetards="{Binding RetardsCount}" />
+
         <Separator />
-        
+
         <!-- Filtres -->
         <ScrollViewer VerticalScrollBarVisibility="Hidden"
                       HorizontalScrollBarVisibility="Auto">
@@ -104,27 +71,27 @@
                                               Margin="0,4">
                                             <!-- Indicateur -->
                                             <fluent:SymbolIcon Grid.Column="0"
-                                                Margin="0,0,12,0" FontSize="26"
-                                                Symbol="{Binding Icon}"
-                                                Foreground="{Binding TextColor}" />
+                                                               Margin="0,0,12,0" FontSize="26"
+                                                               Symbol="{Binding Icon}"
+                                                               Foreground="{Binding TextColor}" />
 
                                             <!-- Informations -->
                                             <StackPanel Grid.Column="1"
-                                                Spacing="4">
+                                                        Spacing="4">
                                                 <TextBlock Text="{Binding TimeDisplay}"
-                                                    Opacity="0.7" />
+                                                           Opacity="0.7" />
                                                 <TextBlock Text="{Binding TextDisplay}"
-                                                    Opacity="0.7" />
+                                                           Opacity="0.7" />
                                             </StackPanel>
 
                                             <!-- Status -->
                                             <controls:Card Grid.Column="2"
-                                                Classes="badge"
-                                                Classes.badge-success="{Binding IsJustified}"
-                                                Classes.badge-danger="{Binding IsNotJustified}"
-                                                Classes.badge-warning="{Binding IsLate}"
-                                                VerticalAlignment="Top"
-                                                Margin="8,0,0,0">
+                                                           Classes="badge"
+                                                           Classes.badge-success="{Binding IsJustified}"
+                                                           Classes.badge-danger="{Binding IsNotJustified}"
+                                                           Classes.badge-warning="{Binding IsLate}"
+                                                           VerticalAlignment="Top"
+                                                           Margin="8,0,0,0">
                                                 <TextBlock Text="{Binding StatusText}" />
                                             </controls:Card>
                                         </Grid>
@@ -146,6 +113,6 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-        
+
     </StackPanel>
 </UserControl>
