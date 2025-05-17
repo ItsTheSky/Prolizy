@@ -81,6 +81,7 @@ public class ColorMatcher
     public static IBrush FuchsiaBrush => new SolidColorBrush(Fuchsia);
     public static IBrush PinkBrush => new SolidColorBrush(Pink);
     public static IBrush RoseBrush => new SolidColorBrush(Rose);
+    public static IBrush WhiteBrush => new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
 
     #endregion
 

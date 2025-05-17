@@ -8,12 +8,12 @@ namespace Prolizy.Viewer.Utilities.Converters;
 
 public class BooleanToRedBrushConverter : IValueConverter
 {
-    private static readonly IBrush RedBrush = new SolidColorBrush(Color.Parse(ColorMatcher.TailwindColors["red"]));
-    private static readonly IBrush DefaultBrush = null;
+    private static readonly IBrush RedBrush = ColorMatcher.RedBrush;
+    private static readonly IBrush DefaultBrush = ColorMatcher.LimeBrush;
     
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool isRed && isRed)
+        if (value is true)
         {
             return RedBrush;
         }
