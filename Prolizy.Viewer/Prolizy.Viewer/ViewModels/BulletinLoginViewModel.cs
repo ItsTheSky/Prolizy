@@ -47,8 +47,6 @@ public partial class BulletinLoginViewModel : ObservableObject
             if (data == null)
                 throw new Exception("Failed to fetch API key (null)");
             
-            Console.WriteLine(JsonSerializer.Serialize(data));
-            
             InfoBarMessage = $"Connexion réussie ({data.Transcript.Student.FullName})! Identifiants sauvegardés.";
             InfoBarSeverity = InfoBarSeverity.Success;
             

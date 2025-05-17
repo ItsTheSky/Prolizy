@@ -22,7 +22,10 @@ public partial class BulletinPane : UserControl
         Settings.Instance.PropertyChanged += async (source, args) =>
         {
             if (args.PropertyName is nameof(Settings.Instance.BulletinUsername) or nameof(Settings.Instance.BulletinPassword))
+            {
+                ViewModel.UpdateClient();
                 await ViewModel.RefreshBulletin();
+            }
         };
         
         // Subscribe to connectivity service changes

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using HtmlAgilityPack;
 using Prolizy.API.Model;
@@ -59,12 +60,19 @@ public class BulletinClient
     /// </summary>
     /// <param name="semesterId">The desired semester ID, that can be got through <see cref="Semester"/> class.</param>
     /// <returns>The bulletin data.</returns>
-    public async Task<BulletinRoot?> FetchDatas(int semesterId = -1)
+    public async Task<BulletinRoot?> FetchDatas(int semesterId = -1, [CallerMemberName] string caller = "")
     {
+        if (!IsLoggedIn)
+        {
+            var code = await Login();
+            if (code != HttpStatusCode.OK)
+                return null;
+        }
+        
         var url = semesterId == -1 
             ? "https://bulletins.iut-velizy.uvsq.fr/services/data.php?q=dataPremi%C3%A8reConnexion" 
             : $"https://bulletins.iut-velizy.uvsq.fr/services/data.php?q=relev%C3%A9Etudiant&semestre={semesterId}";
-        
+     
         var response = await _client.PostAsync(url, null);
         var json = (await response.Content.ReadAsStringAsync()).ReplaceLineEndings("")
             .Replace("\"absences\":[]", "\"absences\":{}"); // Fixing the JSON format

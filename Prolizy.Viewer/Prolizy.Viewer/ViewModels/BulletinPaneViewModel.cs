@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Controls.Notifications;
 using Avalonia.Media;
@@ -185,6 +186,15 @@ public partial class BulletinPaneViewModel : ObservableObject
         await dialog.ShowAsync();
     }
 
+    public void UpdateClient()
+    {
+        _client = new BulletinClient
+        {
+            Username = Settings.Instance.BulletinUsername,
+            Password = SecureStorage.DecryptPassword(Settings.Instance.BulletinPassword)
+        };
+    }
+
     [RelayCommand]
     public async Task RefreshBulletin()
     {
@@ -215,7 +225,7 @@ public partial class BulletinPaneViewModel : ObservableObject
                 IsBulletinAvailable = false;
                 return;
             }
-
+            
             // Update available semesters
             AvailableSemesters = new ObservableCollection<InternalSemester>(
                 initialRoot.Semesters.OrderByDescending(s => s.SemesterId)
@@ -324,7 +334,11 @@ public partial class BulletinPaneViewModel : ObservableObject
         if (string.IsNullOrEmpty(Settings.Instance.BulletinUsername) ||
             string.IsNullOrEmpty(Settings.Instance.BulletinPassword))
             return;
-
+        
+        if (_client != null!)
+            return;
+        
+        Console.WriteLine("CREATING CLIENT: " + Settings.Instance.BulletinUsername);
         _client = new BulletinClient
         {
             Username = Settings.Instance.BulletinUsername,
