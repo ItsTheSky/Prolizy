@@ -106,17 +106,36 @@ public partial class YearSimulationViewModel : ObservableObject
             {
                 var semesterNumber = semesterItem.Key;
                 var absences = semesterItem.Value;
+                var bulletinRoot = semesterData[semesterNumber];
                 
-                // Calculer le nombre de demi-journées d'absences
+                // Récupérer aussi les absences justifiées et les retards pour ce semestre
+                var justifiedAbsences = bulletinRoot.Absences
+                    .SelectMany(kvp => kvp.Value)
+                    .Where(a => a.IsJustified && a.Status == "absent")
+                    .ToList();
+                
+                var retards = bulletinRoot.Absences
+                    .SelectMany(kvp => kvp.Value)
+                    .Where(a => a.Status == "retard")
+                    .ToList();
+                
+                // Calculer le nombre de demi-journées d'absences justifiées et non justifiées
                 var halfDayCount = CountHalfDays(absences);
+                var halfDayJustifiedCount = CountHalfDays(justifiedAbsences);
+                var halfDayTotalCount = halfDayCount + halfDayJustifiedCount;
+                
                 halfDaysBySemester[semesterNumber] = halfDayCount;
                 
                 // Créer l'élément d'absence pour ce semestre
                 var absentItem = new AbsencesSemesterItem
                 {
                     SemesterNumber = semesterNumber,
-                    AbsencesCount = absences.Count,
-                    HalfDayCount = halfDayCount,
+                    AbsencesCount = absences.Count + justifiedAbsences.Count,
+                    AbsencesNonJustifiedCount = absences.Count,
+                    RetardsCount = retards.Count,
+                    HalfDayCount = halfDayTotalCount,
+                    HalfDayJustifiedCount = halfDayJustifiedCount,
+                    HalfDayNonJustifiedCount = halfDayCount,
                     IsFailing = halfDayCount > MAX_ABSENCES_PER_SEMESTER
                 };
                 
@@ -220,20 +239,26 @@ public partial class YearSimulationViewModel : ObservableObject
     
     private int CountHalfDays(List<Absence> absences)
     {
-        // Une demi-journée étant de 0h à 12h ou de 12h à 24h
-        var distinctMornings = absences
-            .Where(abs => abs.StartTime.Hours < 12)
-            .Select(abs => DateOnly.FromDateTime(DateTime.Today))  // Utiliser une date arbitraire car seule l'heure compte
-            .Distinct()
-            .Count();
+        // Regrouper les absences par date (EndDate contient la date au format string)
+        var absencesByDate = absences.GroupBy(abs => abs.EndDate);
+        
+        int totalHalfDays = 0;
+        
+        // Pour chaque date, compter séparément les demi-journées du matin et de l'après-midi
+        foreach (var dateGroup in absencesByDate)
+        {
+            bool hasMorningAbsence = dateGroup.Any(abs => abs.StartTime.Hours < 12);
+            bool hasAfternoonAbsence = dateGroup.Any(abs => abs.StartTime.Hours >= 12);
             
-        var distinctAfternoons = absences
-            .Where(abs => abs.StartTime.Hours >= 12)
-            .Select(abs => DateOnly.FromDateTime(DateTime.Today))  // Utiliser une date arbitraire car seule l'heure compte
-            .Distinct()
-            .Count();
-            
-        return distinctMornings + distinctAfternoons;
+            // Ajouter les demi-journées pour cette date
+            if (hasMorningAbsence)
+                totalHalfDays++;
+                
+            if (hasAfternoonAbsence)
+                totalHalfDays++;
+        }
+        
+        return totalHalfDays;
     }
     
     private void GenerateResultMessage(bool failedDueToUnits, bool failedDueToAbsences, int unitsAboveMin, int unitsAbovePass)
@@ -310,4 +335,17 @@ public partial class AbsencesSemesterItem : ObservableObject
     [ObservableProperty] private int _absencesCount;
     [ObservableProperty] private int _halfDayCount;
     [ObservableProperty] private bool _isFailing;
+    [ObservableProperty] private int _absencesNonJustifiedCount;
+    [ObservableProperty] private int _retardsCount;
+    [ObservableProperty] private int _halfDayJustifiedCount;
+    [ObservableProperty] private int _halfDayNonJustifiedCount;
+    
+    public string DisplayedHalfDayJustified => $"{HalfDayJustifiedCount}";
+    public string DisplayedHalfDayNonJustified => $"{HalfDayNonJustifiedCount}";
+    public string DisplayedHalfDayTotal => $"{HalfDayCount}";
+    
+    // Update the properties so the display values are updated when the base values change
+    partial void OnHalfDayJustifiedCountChanged(int value) => OnPropertyChanged(nameof(DisplayedHalfDayJustified));
+    partial void OnHalfDayNonJustifiedCountChanged(int value) => OnPropertyChanged(nameof(DisplayedHalfDayNonJustified));
+    partial void OnHalfDayCountChanged(int value) => OnPropertyChanged(nameof(DisplayedHalfDayTotal));
 }

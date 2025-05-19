@@ -46,6 +46,7 @@
         <converters:IntConverter x:Key="IntConverter" />
         <converters:TextToBrushConverter x:Key="TextToBrushConverter" />
         <converters:BooleanToRedBrushConverter x:Key="BooleanToRedBrushConverter" />
+        <converters:BooleanToBoldConverter x:Key="BooleanToBoldConverter" />
 
         <converters:IsGreaterThanConverter x:Key="IsGreaterThanConverter" />
         <converters:IsLessThanConverter x:Key="IsLessThanConverter" />
